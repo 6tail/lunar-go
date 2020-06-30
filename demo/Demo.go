@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"lunar-go/HolidayUtil"
-	"lunar-go/calendar"
+	"github.com/6tail/lunar-go/HolidayUtil"
+	"github.com/6tail/lunar-go/calendar"
 	"time"
 )
 

@@ -8,11 +8,11 @@ import "strings"
 // 节假日
 type Holiday struct {
 	// 日期，YYYY-MM-DD格式
-	day    string
+	day string
 	// 名称，如：国庆
-	name   string
+	name string
 	// 是否调休，即是否要上班
-	work   bool
+	work bool
 	// 关联的节日，YYYY-MM-DD格式
 	target string
 }
@@ -27,8 +27,8 @@ func NewHoliday(day string, name string, work bool, target string) *Holiday {
 }
 
 func (holiday *Holiday) SetDay(day string) {
-	if !strings.Contains(day,"-") {
-		holiday.day = day[0:4]+"-"+day[4:6]+"-"+day[6:]
+	if !strings.Contains(day, "-") {
+		holiday.day = day[0:4] + "-" + day[4:6] + "-" + day[6:]
 	} else {
 		holiday.day = day
 	}
@@ -43,8 +43,8 @@ func (holiday *Holiday) SetWork(work bool) {
 }
 
 func (holiday *Holiday) SetTarget(target string) {
-	if !strings.Contains(target,"-") {
-		holiday.target = target[0:4]+"-"+target[4:6]+"-"+target[6:]
+	if !strings.Contains(target, "-") {
+		holiday.target = target[0:4] + "-" + target[4:6] + "-" + target[6:]
 	} else {
 		holiday.target = target
 	}
@@ -67,7 +67,7 @@ func (holiday *Holiday) GetTarget() string {
 }
 
 func (holiday *Holiday) String() string {
-	if nil==holiday {
+	if nil == holiday {
 		return ""
 	}
 	workDesc := ""

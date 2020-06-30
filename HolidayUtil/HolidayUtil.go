@@ -5,7 +5,7 @@ package HolidayUtil
 
 import (
 	"container/list"
-	"lunar-go/calendar"
+	"github.com/6tail/lunar-go/calendar"
 	"strconv"
 	"strings"
 )
@@ -27,32 +27,32 @@ func padding(n int) string {
 func buildHolidayForward(s string) *calendar.Holiday {
 	day := s[0:8]
 	name := names[[]rune(s[8:9])[0]-zero]
-	work := []rune(s[9:10])[0]==zero
+	work := []rune(s[9:10])[0] == zero
 	target := s[10:size]
 	return calendar.NewHoliday(day, name, work, target)
 }
 
 func buildHolidayBackward(s string) *calendar.Holiday {
 	length := len(s)
-	day := s[length-18:length-10]
-	name := names[[]rune(s[length-10:length-9])[0]-zero]
-	work := []rune(s[length-9:length-8])[0]==zero
+	day := s[length-18 : length-10]
+	name := names[[]rune(s[length-10 : length-9])[0]-zero]
+	work := []rune(s[length-9 : length-8])[0] == zero
 	target := s[length-8:]
 	return calendar.NewHoliday(day, name, work, target)
 }
 
 func findForward(key string) string {
-	start := strings.Index(data,key)
-	if start<0 {
-	    return ""
+	start := strings.Index(data, key)
+	if start < 0 {
+		return ""
 	}
 	right := data[start:]
-	n := len(right)%size
-	if n>0 {
+	n := len(right) % size
+	if n > 0 {
 		right = right[n:]
 	}
 	for {
-		if len(right)<size {
+		if len(right) < size {
 			break
 		}
 		if strings.HasPrefix(right, key) {
@@ -78,20 +78,20 @@ func findBackward(key string) string {
 	for {
 		if length < size {
 			break
-			}
-			if strings.HasSuffix(left, key) {
-				break
-				}
-				left = left[:length-size]
-				length = len(left)
+		}
+		if strings.HasSuffix(left, key) {
+			break
+		}
+		left = left[:length-size]
+		length = len(left)
 	}
 	return left
 }
 
-func findHolidaysForward(key string) *list.List{
+func findHolidaysForward(key string) *list.List {
 	l := list.New()
 	s := findForward(key)
-	if ""==s {
+	if "" == s {
 		return l
 	}
 	for {
@@ -104,10 +104,10 @@ func findHolidaysForward(key string) *list.List{
 	return l
 }
 
-func findHolidaysBackward(key string) *list.List{
+func findHolidaysBackward(key string) *list.List {
 	l := list.New()
 	s := findBackward(key)
-	if ""==s {
+	if "" == s {
 		return l
 	}
 	for {
@@ -115,39 +115,39 @@ func findHolidaysBackward(key string) *list.List{
 			break
 		}
 		l.PushFront(buildHolidayBackward(s))
-		s = s[0:len(s)-size]
+		s = s[0 : len(s)-size]
 	}
 	return l
 }
 
 func GetHoliday(ymd string) *calendar.Holiday {
-	l := findHolidaysForward(strings.Replace(ymd,"-","",-1))
-	if l.Len()<1 {
+	l := findHolidaysForward(strings.Replace(ymd, "-", "", -1))
+	if l.Len() < 1 {
 		return nil
 	}
 	return l.Front().Value.(*calendar.Holiday)
 }
 
 func GetHolidayByYmd(year int, month int, day int) *calendar.Holiday {
-	return GetHoliday(strconv.Itoa(year)+padding(month)+padding(day))
+	return GetHoliday(strconv.Itoa(year) + padding(month) + padding(day))
 }
 
-func GetHolidaysByYm(year int, month int) *list.List{
-	return findHolidaysForward(strconv.Itoa(year)+padding(month))
+func GetHolidaysByYm(year int, month int) *list.List {
+	return findHolidaysForward(strconv.Itoa(year) + padding(month))
 }
 
-func GetHolidaysByYear(year int) *list.List{
+func GetHolidaysByYear(year int) *list.List {
 	return findHolidaysForward(strconv.Itoa(year))
 }
 
-func GetHolidays(ymd string) *list.List{
-	return findHolidaysForward(strings.Replace(ymd,"-","",-1))
+func GetHolidays(ymd string) *list.List {
+	return findHolidaysForward(strings.Replace(ymd, "-", "", -1))
 }
 
 func GetHolidaysByTargetYmd(year int, month int, day int) *list.List {
-	return findHolidaysBackward(strconv.Itoa(year)+padding(month)+padding(day))
+	return findHolidaysBackward(strconv.Itoa(year) + padding(month) + padding(day))
 }
 
 func getHolidaysByTarget(ymd string) *list.List {
-	return findHolidaysBackward(strings.Replace(ymd,"-","",-1))
+	return findHolidaysBackward(strings.Replace(ymd, "-", "", -1))
 }

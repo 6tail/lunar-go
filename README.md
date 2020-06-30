@@ -12,7 +12,7 @@ lunar是一款无第三方依赖的公历(阳历)和农历(阴历、老黄历)�
  
     import (
         "fmt"
-        "lunar-go/calendar"
+        "github.com/6tail/lunar-go/calendar"
     )
      
     func main() {

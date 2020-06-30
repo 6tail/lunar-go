@@ -12,7 +12,7 @@ lunar is a calendar library for Solar and Chinese Lunar.
  
     import (
         "fmt"
-        "lunar-go/calendar"
+        "github.com/6tail/lunar-go/calendar"
     )
      
     func main() {

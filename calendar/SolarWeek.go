@@ -2,7 +2,7 @@ package calendar
 
 import (
 	"container/list"
-	"lunar-go/SolarUtil"
+	"github.com/6tail/lunar-go/SolarUtil"
 	"math"
 	"strconv"
 	"time"
