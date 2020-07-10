@@ -76,4 +76,27 @@ func main() {
 		fmt.Print(" ")
 	}
 	fmt.Println()
+
+	// 月相
+	fmt.Println(lunar.GetYueXiang())
+
+	// 值年九星
+	jx := lunar.GetYearNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值月九星
+	jx = lunar.GetMonthNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值日九星
+	jx = lunar.GetDayNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值时九星
+	jx = lunar.GetTimeNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
 }

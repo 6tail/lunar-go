@@ -15,6 +15,7 @@ const BASE_YEAR = 1900
 const BASE_MONTH = 11
 const BASE_DAY = 11
 const BASE_INDEX = 0
+const BASE_YEAR_JIU_XING_INDEX = 0
 const BASE_YEAR_GANZHI_INDEX = -4
 const BASE_DAY_GANZHI_INDEX = 15
 const BASE_MONTH_ZHI_INDEX = 2
@@ -87,8 +88,17 @@ var JIE = []string{"小寒", "立春", "惊蛰", "清明", "立夏", "芒种", "
 
 /** 日 */
 var DAY = []string{"", "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"}
+
+/** 月相 */
+var YUE_XIANG = []string{"", "朔", "既朔", "蛾眉新", "蛾眉新", "蛾眉", "夕月", "上弦", "上弦", "九夜", "宵", "宵", "宵", "渐盈凸", "小望", "望", "既望", "立待", "居待", "寝待", "更待", "渐亏凸", "下弦", "下弦", "有明", "有明", "蛾眉残", "蛾眉残", "残", "晓", "晦"}
+
+/** 地支相冲（子午相冲，丑未相冲，寅申相冲，辰戌相冲，卯酉相冲，巳亥相冲），由于地支对应十二生肖，也就对应了生肖相冲 */
 var CHONG = []string{"", "午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰", "巳"}
+
+/** 天干相冲之无情之克（阳克阳，阴克阴） */
 var CHONG_GAN = []string{"", "戊", "己", "庚", "辛", "壬", "癸", "甲", "乙", "丙", "丁"}
+
+/** 天干相冲之有情之克（阳克阴，阴克阳） */
 var CHONG_GAN_TIE = []string{"", "己", "戊", "辛", "庚", "癸", "壬", "乙", "甲", "丁", "丙"}
 
 // 宜忌
@@ -438,6 +448,7 @@ var POSITION_DESC = map[string]string{
 	"坤": "西南",
 	"兑": "正西",
 	"乾": "西北",
+	"中": "中宫",
 }
 var GONG = map[string]string{
 	"角": "东",
@@ -1123,7 +1134,7 @@ func hex(n int) string {
 	return strings.ToUpper(h)
 }
 
-func getJiaZiIndex(ganZhi string) int {
+func GetJiaZiIndex(ganZhi string) int {
 	j := len(JIA_ZI)
 	for i := 0; i < j; i++ {
 		if JIA_ZI[i] == ganZhi {
@@ -1135,8 +1146,8 @@ func getJiaZiIndex(ganZhi string) int {
 
 func GetDayYi(monthGanZhi string, dayGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
-	month := hex(getJiaZiIndex(monthGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
+	month := hex(GetJiaZiIndex(monthGanZhi))
 	right := dayYiJi
 	index := strings.Index(right, day+"=")
 	for {
@@ -1178,8 +1189,8 @@ func GetDayYi(monthGanZhi string, dayGanZhi string) *list.List {
 
 func GetDayJi(monthGanZhi string, dayGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
-	month := hex(getJiaZiIndex(monthGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
+	month := hex(GetJiaZiIndex(monthGanZhi))
 	right := dayYiJi
 	index := strings.Index(right, day+"=")
 	for {
@@ -1221,7 +1232,7 @@ func GetDayJi(monthGanZhi string, dayGanZhi string) *list.List {
 
 func GetDayJiShen(lunarMonth int, dayGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
 	month := ""
 	if lunarMonth < 0 {
 		month = strings.ToUpper(fmt.Sprintf("%x", -lunarMonth))
@@ -1250,7 +1261,7 @@ func GetDayJiShen(lunarMonth int, dayGanZhi string) *list.List {
 
 func GetDayXiongSha(lunarMonth int, dayGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
 	month := ""
 	if lunarMonth < 0 {
 		month = strings.ToUpper(fmt.Sprintf("%x", -lunarMonth))
@@ -1279,8 +1290,8 @@ func GetDayXiongSha(lunarMonth int, dayGanZhi string) *list.List {
 
 func GetTimeYi(dayGanZhi string, timeGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
-	time := hex(getJiaZiIndex(timeGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
+	time := hex(GetJiaZiIndex(timeGanZhi))
 	index := strings.Index(timeYiJi, day+time+"=")
 	if index > -1 {
 		left := timeYiJi[index+5:]
@@ -1303,8 +1314,8 @@ func GetTimeYi(dayGanZhi string, timeGanZhi string) *list.List {
 
 func GetTimeJi(dayGanZhi string, timeGanZhi string) *list.List {
 	l := list.New()
-	day := hex(getJiaZiIndex(dayGanZhi))
-	time := hex(getJiaZiIndex(timeGanZhi))
+	day := hex(GetJiaZiIndex(dayGanZhi))
+	time := hex(GetJiaZiIndex(timeGanZhi))
 	index := strings.Index(timeYiJi, day+time+"=")
 	if index > -1 {
 		left := timeYiJi[index+5:]

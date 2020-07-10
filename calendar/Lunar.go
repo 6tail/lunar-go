@@ -965,6 +965,112 @@ func (lunar *Lunar) GetTimeJi() *list.List {
 	return LunarUtil.GetTimeJi(lunar.GetDayInGanZhiExact(), lunar.GetTimeInGanZhi())
 }
 
+func (lunar *Lunar) GetYueXiang() string {
+	return LunarUtil.YUE_XIANG[lunar.day]
+}
+
+func (lunar *Lunar) GetYearNineStar() *NineStar {
+	index := LunarUtil.BASE_YEAR_JIU_XING_INDEX - int(math.Mod(float64(lunar.year-LunarUtil.BASE_YEAR), 9))
+	if index < 0 {
+		index += 9
+	}
+	return NewNineStar(index)
+}
+
+func (lunar *Lunar) GetMonthNineStar() *NineStar {
+	start := 2
+	yearZhi := lunar.GetYearZhi()
+	if strings.Index("子午卯酉", yearZhi) > -1 {
+		start = 8
+	} else if strings.Index("辰戌丑未", yearZhi) > -1 {
+		start = 5
+	}
+	// 寅月起，所以需要-2
+	monthIndex := lunar.monthZhiIndex - 2
+	index := start - monthIndex - 1
+	if index < 0 {
+		index += 9
+	}
+	return NewNineStar(index)
+}
+
+func (lunar *Lunar) GetDayNineStar() *NineStar {
+	//顺逆
+	solarYmd := lunar.solar.ToYmd()
+	yuShui := lunar.jieQi["雨水"].ToYmd()
+	guYu := lunar.jieQi["谷雨"].ToYmd()
+	xiaZhi := lunar.jieQi["夏至"].ToYmd()
+	chuShu := lunar.jieQi["处暑"].ToYmd()
+	shuangJiang := lunar.jieQi["霜降"].ToYmd()
+
+	start := 6
+	asc := false
+	if strings.Compare(solarYmd, lunar.jieQi["冬至"].ToYmd()) >= 0 && strings.Compare(solarYmd, yuShui) < 0 {
+		asc = true
+		start = 1
+	} else if strings.Compare(solarYmd, yuShui) >= 0 && strings.Compare(solarYmd, guYu) < 0 {
+		asc = true
+		start = 7
+	} else if strings.Compare(solarYmd, guYu) >= 0 && strings.Compare(solarYmd, xiaZhi) < 0 {
+		asc = true
+		start = 4
+	} else if strings.Compare(solarYmd, xiaZhi) >= 0 && strings.Compare(solarYmd, chuShu) < 0 {
+		start = 9
+	} else if strings.Compare(solarYmd, chuShu) >= 0 && strings.Compare(solarYmd, shuangJiang) < 0 {
+		start = 3
+	}
+	ganZhiIndex := LunarUtil.GetJiaZiIndex(lunar.GetDayInGanZhi()) % 9
+	index := start - ganZhiIndex - 1
+	if asc {
+		index = start + ganZhiIndex - 1
+	}
+	if index > 8 {
+		index -= 9
+	}
+	if index < 0 {
+		index += 9
+	}
+	return NewNineStar(index)
+}
+
+func (lunar *Lunar) GetTimeNineStar() *NineStar {
+	//顺逆
+	solarYmd := lunar.solar.ToYmd()
+	asc := false
+	if strings.Compare(solarYmd, lunar.jieQi["冬至"].ToYmd()) >= 0 && strings.Compare(solarYmd, lunar.jieQi["夏至"].ToYmd()) < 0 {
+		asc = true
+	}
+	start := 3
+	if asc {
+		start = 7
+	}
+	dayZhi := lunar.GetDayZhi()
+	if strings.Index("子午卯酉", dayZhi) > -1 {
+		if asc {
+			start = 1
+		} else {
+			start = 9
+		}
+	} else if strings.Index("辰戌丑未", dayZhi) > -1 {
+		if asc {
+			start = 4
+		} else {
+			start = 6
+		}
+	}
+	index := start - lunar.timeZhiIndex - 1
+	if asc {
+		index = start + lunar.timeZhiIndex - 1
+	}
+	if index > 8 {
+		index -= 9
+	}
+	if index < 0 {
+		index += 9
+	}
+	return NewNineStar(index)
+}
+
 func (lunar *Lunar) String() string {
 	return lunar.GetYearInChinese() + "年" + lunar.GetMonthInChinese() + "月" + lunar.GetDayInChinese()
 }
