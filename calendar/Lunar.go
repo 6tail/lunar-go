@@ -683,6 +683,10 @@ func (lunar *Lunar) GetQi() string {
 			return qi
 		}
 	}
+	d := lunar.jieQi["DONG_ZHI"]
+	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
+		return "冬至"
+	}
 	return ""
 }
 
