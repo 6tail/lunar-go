@@ -41,56 +41,37 @@ func NewSolarFromDate(date time.Time) *Solar {
 }
 
 func NewSolarFromJulianDay(julianDay float64) *Solar {
-	julianDay += 0.5
+	d := int(julianDay + 0.5)
+	f := julianDay + 0.5 - float64(d)
 
-	// 日数的整数部份
-	a := int2(julianDay)
-	// 日数的小数部分
-	f := julianDay - a
-	jd := float64(0)
-
-	if a > 2299161 {
-		jd = int2((a - 1867216.25) / 36524.25)
-		a += 1 + jd - int2(jd/4)
+	if d >= 2299161 {
+		c := int((float64(d) - 1867216.25) / 36524.25)
+		d += 1 + c - c/4
 	}
-	// 向前移4年零2个月
-	a += 1524
-	y := int(int2((a - 122.1) / 365.25))
-	// 去除整年日数后余下日数
-	jd = a - int2(365.25*float64(y))
-	m := int(int2(jd / 30.6001))
-	// 去除整月日数后余下日数
-	d := int(int2(jd - int2(float64(m)*30.6001)))
-	y -= 4716
-	m--
-	if m > 12 {
-		m -= 12
-	}
-	if m <= 2 {
-		y++
-	}
-
-	// 日的小数转为时分秒
-	f *= 24
-	h := int(int2(f))
-
-	f -= float64(h)
-	f *= 60
-	mi := int(int2(f))
-
-	f -= float64(mi)
-	f *= 60
-	s := int(int2(f))
-	return NewSolar(y, m, d, h, mi, s)
-}
-
-func int2(v float64) float64 {
-	v = math.Floor(v)
-	if v < 0 {
-		return v + 1
+	d += 1524
+	year := int((float64(d) - 122.1) / 365.25)
+	d -= int(365.25 * float64(year))
+	month := int(float64(d) / 30.601)
+	d -= int(30.601 * float64(month))
+	day := d
+	if month > 13 {
+		month -= 13
+		year -= 4715
 	} else {
-		return v
+		month -= 1
+		year -= 4716
 	}
+	f *= 24
+	hour := int(f)
+
+	f -= float64(hour)
+	f *= 60
+	minute := int(f)
+
+	f -= float64(minute)
+	f *= 60
+	second := int(math.Round(f))
+	return NewSolar(year, month, day, hour, minute, second)
 }
 
 func padding(n int) string {
@@ -207,28 +188,23 @@ func (solar *Solar) GetCalendar() time.Time {
 }
 
 func (solar *Solar) GetJulianDay() float64 {
-	y := float64(solar.year)
-	m := float64(solar.month)
-	n := float64(0)
-
+	y := solar.year
+	m := solar.month
+	d := float64(solar.day) + ((float64(solar.second)/60+float64(solar.minute))/60+float64(solar.hour))/24
+	n := 0
+	g := false
+	if y*372+m*31+int(d) >= 588829 {
+		g = true
+	}
 	if m <= 2 {
 		m += 12
 		y--
 	}
-
-	// 判断是否为UTC日1582*372+10*31+15
-	if solar.year*372+solar.month*31+solar.day >= 588829 {
-		n = int2(y / 100)
-		// 加百年闰
-		n = 2 - n + int2(n/4)
+	if g {
+		n = y / 100
+		n = 2 - n + n/4
 	}
-
-	// 加上年引起的偏移日数
-	n += int2(365.2500001 * (y + 4716))
-	// 加上月引起的偏移日数及日偏移数
-	n += int2(30.6*(m+1)) + float64(solar.day)
-	n += ((float64(solar.second)/60+float64(solar.minute))/60+float64(solar.hour))/24 - 1524.5
-	return n
+	return float64(int(365.25*(float64(y)+4716))) + float64(int(30.6001*(float64(m)+1))) + d + float64(n) - 1524.5
 }
 
 func (solar *Solar) ToYmd() string {

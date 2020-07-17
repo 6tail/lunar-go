@@ -19,6 +19,22 @@ func main() {
 	solar := calendar.NewSolarFromDate(time.Now())
 	fmt.Println(solar.ToFullString())
 
+	// 儒略日
+	solar = calendar.NewSolarFromJulianDay(2459045.5)
+	fmt.Println(solar.ToYmdHms())
+
+	solar = calendar.NewSolarFromYmd(2020, 7, 15)
+	fmt.Println(solar.GetJulianDay())
+
+	// 节气表
+	solar = calendar.NewSolarFromYmd(2022, 7, 15)
+	lunar := solar.GetLunar()
+	jieQi := lunar.GetJieQiTable()
+	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
+		name := i.Value.(string)
+		fmt.Println(name, jieQi[name].ToYmdHms())
+	}
+
 	// 阳历往后推一天
 	solar = solar.Next(1)
 	fmt.Println(solar.ToFullString())
@@ -30,7 +46,7 @@ func main() {
 	}
 
 	// 阴历
-	lunar := calendar.NewLunarFromYmd(1986, 4, 21)
+	lunar = calendar.NewLunarFromYmd(1986, 4, 21)
 	fmt.Println(lunar.ToFullString())
 	fmt.Println(lunar.GetSolar().ToFullString())
 
