@@ -2,9 +2,11 @@ package calendar
 
 import (
 	"container/list"
+	"github.com/6tail/lunar-go/LunarUtil"
 	"github.com/6tail/lunar-go/SolarUtil"
 	"math"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -72,6 +74,84 @@ func NewSolarFromJulianDay(julianDay float64) *Solar {
 	f *= 60
 	second := int(math.Round(f))
 	return NewSolar(year, month, day, hour, minute, second)
+}
+
+func ListSolarFromBaZi(yearGanZhi string, monthGanZhi string, dayGanZhi string, timeGanZhi string) *list.List {
+	l := list.New()
+	today := NewSolarFromDate(time.Now())
+	lunar := today.GetLunar()
+	offsetYear := LunarUtil.GetJiaZiIndex(lunar.GetYearInGanZhiExact()) - LunarUtil.GetJiaZiIndex(yearGanZhi)
+	if offsetYear < 0 {
+		offsetYear = offsetYear + 60
+	}
+	startYear := today.GetYear() - offsetYear
+	hour := 0
+	timeZhi := timeGanZhi[len(timeGanZhi)/2:]
+	j := len(LunarUtil.ZHI)
+	for i := 0; i < j; i++ {
+		if strings.Compare(LunarUtil.ZHI[i], timeZhi) == 0 {
+			hour = (i - 1) * 2
+		}
+	}
+	for {
+		if startYear < SolarUtil.BASE_YEAR-1 {
+			break
+		}
+		year := startYear - 1
+		counter := 0
+		month := 12
+		found := false
+		for {
+			if counter >= 15 {
+				break
+			}
+			if year >= SolarUtil.BASE_YEAR {
+				day := 1
+				if year == SolarUtil.BASE_YEAR && month == SolarUtil.BASE_MONTH {
+					day = SolarUtil.BASE_DAY
+				}
+				solar := NewSolar(year, month, day, hour, 0, 0)
+				lunar = solar.GetLunar()
+				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 {
+					found = true
+					break
+				}
+			}
+			month++
+			if month > 12 {
+				month = 1
+				year++
+			}
+			counter++
+		}
+		if found {
+			counter = 0
+			month--
+			if month < 1 {
+				month = 12
+				year--
+			}
+			day := 1
+			if year == SolarUtil.BASE_YEAR && month == SolarUtil.BASE_MONTH {
+				day = SolarUtil.BASE_DAY
+			}
+			solar := NewSolar(year, month, day, hour, 0, 0)
+			for {
+				if counter >= 61 {
+					break
+				}
+				lunar = solar.GetLunar()
+				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(lunar.GetDayInGanZhiExact(), dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
+					l.PushBack(solar)
+					break
+				}
+				solar = solar.Next(1)
+				counter++
+			}
+		}
+		startYear -= 60
+	}
+	return l
 }
 
 func padding(n int) string {

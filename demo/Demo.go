@@ -115,4 +115,10 @@ func main() {
 	jx = lunar.GetTimeNineStar()
 	fmt.Println(jx)
 	fmt.Println(jx.ToFullString())
+
+	// 八字转阳历
+	for i := calendar.ListSolarFromBaZi("庚子", "戊子", "己卯", "庚午").Front(); i != nil; i = i.Next() {
+		fmt.Println(i.Value.(*calendar.Solar).ToFullString())
+	}
+	fmt.Println()
 }

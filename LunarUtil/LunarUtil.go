@@ -1036,19 +1036,24 @@ func padding(n int) string {
 }
 
 func ComputeAddDays(year int, month int, day int) int {
+	if BASE_YEAR == year && BASE_MONTH == month {
+		return day - BASE_DAY
+	}
 	y := BASE_YEAR
 	m := BASE_MONTH
 	diff := GetDaysOfMonth(y, m) - BASE_DAY
-	m = NextMonth(y, m)
 	for {
-		diff += GetDaysOfMonth(y, m)
+		if y == year && m == month {
+			break
+		}
 		m = NextMonth(y, m)
 		if m == 1 {
 			y++
 		}
 		if y == year && m == month {
 			diff += day
-			break
+		} else {
+			diff += GetDaysOfMonth(y, m)
 		}
 	}
 	return diff
