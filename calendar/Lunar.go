@@ -969,8 +969,9 @@ func (lunar *Lunar) GetBaZiWuXing() [4]string {
 	l := [4]string{}
 	for i := 0; i < j; i++ {
 		ganZhi := baZi[i]
-		gan := ganZhi[0:1]
-		zhi := ganZhi[1:]
+		size := len(ganZhi) / 2
+		gan := ganZhi[0:size]
+		zhi := ganZhi[size:]
 		l[i] = LunarUtil.WU_XING_GAN[gan] + LunarUtil.WU_XING_ZHI[zhi]
 	}
 	return l
@@ -989,22 +990,22 @@ func (lunar *Lunar) GetBaZiNaYin() [4]string {
 
 func (lunar *Lunar) GetBaZiShiShenGan() [4]string {
 	baZi := lunar.GetBaZi()
-	yearGan := baZi[0][0:1]
-	monthGan := baZi[1][0:1]
-	dayGan := baZi[2][0:1]
-	timeGan := baZi[3][0:1]
+	yearGan := baZi[0][0 : len(baZi[0])/2]
+	monthGan := baZi[1][0 : len(baZi[1])/2]
+	dayGan := baZi[2][0 : len(baZi[2])/2]
+	timeGan := baZi[3][0 : len(baZi[3])/2]
 	l := [4]string{LunarUtil.SHI_SHEN_GAN[dayGan+yearGan], LunarUtil.SHI_SHEN_GAN[dayGan+monthGan], "日主", LunarUtil.SHI_SHEN_GAN[dayGan+timeGan]}
 	return l
 }
 
 func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
 	baZi := lunar.GetBaZi()
-	dayGan := baZi[2][0:1]
+	dayGan := baZi[2][0 : len(baZi[2])/2]
 	j := len(baZi)
 	l := [4]string{}
 	for i := 0; i < j; i++ {
 		ganZhi := baZi[i]
-		zhi := ganZhi[1:]
+		zhi := ganZhi[len(ganZhi)/2:]
 		l[i] = LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+LunarUtil.ZHI_HIDE_GAN[zhi][0]]
 	}
 	return l

@@ -50,6 +50,34 @@ func main() {
 	fmt.Println(lunar.ToFullString())
 	fmt.Println(lunar.GetSolar().ToFullString())
 
+	// 八字
+	for _, v := range lunar.GetBaZi() {
+		fmt.Print(v)
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	// 八字五行
+	for _, v := range lunar.GetBaZiWuXing() {
+		fmt.Print(v)
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	// 八字天干十神
+	for _, v := range lunar.GetBaZiShiShenGan() {
+		fmt.Print(v)
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	// 八字地支十神
+	for _, v := range lunar.GetBaZiShiShenZhi() {
+		fmt.Print(v)
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
 	// 日宜
 	lunar = calendar.NewLunarFromDate(time.Now())
 	for i := lunar.GetDayYi().Front(); i != nil; i = i.Next() {
