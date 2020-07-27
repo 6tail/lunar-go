@@ -968,10 +968,9 @@ func (lunar *Lunar) GetBaZiWuXing() [4]string {
 	j := len(baZi)
 	l := [4]string{}
 	for i := 0; i < j; i++ {
-		ganZhi := baZi[i]
-		size := len(ganZhi) / 2
-		gan := ganZhi[0:size]
-		zhi := ganZhi[size:]
+		ganZhi := []rune(baZi[i])
+		gan := string(ganZhi[:1])
+		zhi := string(ganZhi[1:])
 		l[i] = LunarUtil.WU_XING_GAN[gan] + LunarUtil.WU_XING_ZHI[zhi]
 	}
 	return l
@@ -990,25 +989,56 @@ func (lunar *Lunar) GetBaZiNaYin() [4]string {
 
 func (lunar *Lunar) GetBaZiShiShenGan() [4]string {
 	baZi := lunar.GetBaZi()
-	yearGan := baZi[0][0 : len(baZi[0])/2]
-	monthGan := baZi[1][0 : len(baZi[1])/2]
-	dayGan := baZi[2][0 : len(baZi[2])/2]
-	timeGan := baZi[3][0 : len(baZi[3])/2]
+	yearGan := string([]rune(baZi[0])[:1])
+	monthGan := string([]rune(baZi[1])[:1])
+	dayGan := string([]rune(baZi[2])[:1])
+	timeGan := string([]rune(baZi[3])[:1])
 	l := [4]string{LunarUtil.SHI_SHEN_GAN[dayGan+yearGan], LunarUtil.SHI_SHEN_GAN[dayGan+monthGan], "日主", LunarUtil.SHI_SHEN_GAN[dayGan+timeGan]}
 	return l
 }
 
 func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
 	baZi := lunar.GetBaZi()
-	dayGan := baZi[2][0 : len(baZi[2])/2]
+	dayGan := string([]rune(baZi[2])[:1])
 	j := len(baZi)
 	l := [4]string{}
 	for i := 0; i < j; i++ {
 		ganZhi := baZi[i]
-		zhi := ganZhi[len(ganZhi)/2:]
+		zhi := string([]rune(ganZhi)[1:])
 		l[i] = LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+LunarUtil.ZHI_HIDE_GAN[zhi][0]]
 	}
 	return l
+}
+
+func (lunar *Lunar) getBaZiShiShenZhi(zhi string) *list.List {
+	baZi := lunar.GetBaZi()
+	dayGan := string([]rune(baZi[2])[:1])
+	hideGan := LunarUtil.ZHI_HIDE_GAN[zhi]
+	l := list.New()
+	for i := 0; i < len(hideGan); i++ {
+		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+hideGan[i]])
+	}
+	return l
+}
+
+func (lunar *Lunar) GetBaZiShiShenYearZhi() *list.List {
+	baZi := lunar.GetBaZi()
+	return lunar.getBaZiShiShenZhi(string([]rune(baZi[0])[1:]))
+}
+
+func (lunar *Lunar) GetBaZiShiShenMonthZhi() *list.List {
+	baZi := lunar.GetBaZi()
+	return lunar.getBaZiShiShenZhi(string([]rune(baZi[1])[1:]))
+}
+
+func (lunar *Lunar) GetBaZiShiShenDayZhi() *list.List {
+	baZi := lunar.GetBaZi()
+	return lunar.getBaZiShiShenZhi(string([]rune(baZi[2])[1:]))
+}
+
+func (lunar *Lunar) GetBaZiShiShenTimeZhi() *list.List {
+	baZi := lunar.GetBaZi()
+	return lunar.getBaZiShiShenZhi(string([]rune(baZi[3])[1:]))
 }
 
 func (lunar *Lunar) GetZhiXing() string {
