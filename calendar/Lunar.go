@@ -48,6 +48,7 @@ type Lunar struct {
 	jieQi                map[string]*Solar
 	jieQiList            *list.List
 	solar                *Solar
+	eightChar            *EightChar
 }
 
 func NewLunar(lunarYear int, lunarMonth int, lunarDay int, hour int, minute int, second int) *Lunar {
@@ -959,86 +960,86 @@ func (lunar *Lunar) GetTimeNaYin() string {
 	return LunarUtil.NAYIN[lunar.GetTimeInGanZhi()]
 }
 
+func (lunar *Lunar) GetEightChar() *EightChar {
+	if lunar.eightChar == nil {
+		lunar.eightChar = NewEightChar(lunar)
+	}
+	return lunar.eightChar
+}
+
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZi() [4]string {
-	return [4]string{lunar.GetYearInGanZhiExact(), lunar.GetMonthInGanZhiExact(), lunar.GetDayInGanZhiExact(), lunar.GetTimeInGanZhi()}
+	baZi := lunar.GetEightChar()
+	l := [4]string{}
+	l[0] = baZi.GetYear()
+	l[1] = baZi.GetMonth()
+	l[2] = baZi.GetDay()
+	l[3] = baZi.GetTime()
+	return l
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiWuXing() [4]string {
-	baZi := lunar.GetBaZi()
-	j := len(baZi)
+	baZi := lunar.GetEightChar()
 	l := [4]string{}
-	for i := 0; i < j; i++ {
-		ganZhi := []rune(baZi[i])
-		gan := string(ganZhi[:1])
-		zhi := string(ganZhi[1:])
-		l[i] = LunarUtil.WU_XING_GAN[gan] + LunarUtil.WU_XING_ZHI[zhi]
-	}
+	l[0] = baZi.GetYearWuXing()
+	l[1] = baZi.GetMonthWuXing()
+	l[2] = baZi.GetDayWuXing()
+	l[3] = baZi.GetTimeWuXing()
 	return l
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiNaYin() [4]string {
-	baZi := lunar.GetBaZi()
-	j := len(baZi)
+	baZi := lunar.GetEightChar()
 	l := [4]string{}
-	for i := 0; i < j; i++ {
-		ganZhi := baZi[i]
-		l[i] = LunarUtil.NAYIN[ganZhi]
-	}
+	l[0] = baZi.GetYearNaYin()
+	l[1] = baZi.GetMonthNaYin()
+	l[2] = baZi.GetDayNaYin()
+	l[3] = baZi.GetTimeNaYin()
 	return l
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenGan() [4]string {
-	baZi := lunar.GetBaZi()
-	yearGan := string([]rune(baZi[0])[:1])
-	monthGan := string([]rune(baZi[1])[:1])
-	dayGan := string([]rune(baZi[2])[:1])
-	timeGan := string([]rune(baZi[3])[:1])
-	l := [4]string{LunarUtil.SHI_SHEN_GAN[dayGan+yearGan], LunarUtil.SHI_SHEN_GAN[dayGan+monthGan], "日主", LunarUtil.SHI_SHEN_GAN[dayGan+timeGan]}
-	return l
-}
-
-func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
-	baZi := lunar.GetBaZi()
-	dayGan := string([]rune(baZi[2])[:1])
-	j := len(baZi)
+	baZi := lunar.GetEightChar()
 	l := [4]string{}
-	for i := 0; i < j; i++ {
-		ganZhi := baZi[i]
-		zhi := string([]rune(ganZhi)[1:])
-		l[i] = LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+LunarUtil.ZHI_HIDE_GAN[zhi][0]]
-	}
+	l[0] = baZi.GetYearShiShenGan()
+	l[1] = baZi.GetMonthShiShenGan()
+	l[2] = baZi.GetDayShiShenGan()
+	l[3] = baZi.GetTimeShiShenGan()
 	return l
 }
 
-func (lunar *Lunar) getBaZiShiShenZhi(zhi string) *list.List {
-	baZi := lunar.GetBaZi()
-	dayGan := string([]rune(baZi[2])[:1])
-	hideGan := LunarUtil.ZHI_HIDE_GAN[zhi]
-	l := list.New()
-	for i := 0; i < len(hideGan); i++ {
-		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+hideGan[i]])
-	}
+// @Deprecated: 该方法已废弃，请使用GetEightChar
+func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
+	baZi := lunar.GetEightChar()
+	l := [4]string{}
+	l[0] = baZi.GetYearShiShenZhi().Front().Value.(string)
+	l[1] = baZi.GetMonthShiShenZhi().Front().Value.(string)
+	l[2] = baZi.GetDayShiShenZhi().Front().Value.(string)
+	l[3] = baZi.GetTimeShiShenZhi().Front().Value.(string)
 	return l
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenYearZhi() *list.List {
-	baZi := lunar.GetBaZi()
-	return lunar.getBaZiShiShenZhi(string([]rune(baZi[0])[1:]))
+	return lunar.GetEightChar().GetYearShiShenZhi()
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenMonthZhi() *list.List {
-	baZi := lunar.GetBaZi()
-	return lunar.getBaZiShiShenZhi(string([]rune(baZi[1])[1:]))
+	return lunar.GetEightChar().GetMonthShiShenZhi()
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenDayZhi() *list.List {
-	baZi := lunar.GetBaZi()
-	return lunar.getBaZiShiShenZhi(string([]rune(baZi[2])[1:]))
+	return lunar.GetEightChar().GetDayShiShenZhi()
 }
 
+// @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenTimeZhi() *list.List {
-	baZi := lunar.GetBaZi()
-	return lunar.getBaZiShiShenZhi(string([]rune(baZi[3])[1:]))
+	return lunar.GetEightChar().GetTimeShiShenZhi()
 }
 
 func (lunar *Lunar) GetZhiXing() string {
@@ -1375,6 +1376,38 @@ func (lunar *Lunar) GetMinute() int {
 
 func (lunar *Lunar) GetSecond() int {
 	return lunar.second
+}
+
+func (lunar *Lunar) GetTimeGanIndex() int {
+	return lunar.timeGanIndex
+}
+
+func (lunar *Lunar) GetTimeZhiIndex() int {
+	return lunar.timeZhiIndex
+}
+
+func (lunar *Lunar) GetDayGanIndexExact() int {
+	return lunar.dayGanIndexExact
+}
+
+func (lunar *Lunar) GetDayZhiIndexExact() int {
+	return lunar.dayZhiIndexExact
+}
+
+func (lunar *Lunar) GetMonthGanIndexExact() int {
+	return lunar.monthGanIndexExact
+}
+
+func (lunar *Lunar) GetMonthZhiIndexExact() int {
+	return lunar.monthZhiIndexExact
+}
+
+func (lunar *Lunar) GetYearGanIndexExact() int {
+	return lunar.yearGanIndexExact
+}
+
+func (lunar *Lunar) GetYearZhiIndexExact() int {
+	return lunar.yearZhiIndexExact
 }
 
 func (lunar *Lunar) GetSolar() *Solar {

@@ -51,38 +51,21 @@ func main() {
 	fmt.Println(lunar.GetSolar().ToFullString())
 
 	// 八字
-	for _, v := range lunar.GetBaZi() {
-		fmt.Print(v)
-		fmt.Print(" ")
-	}
-	fmt.Println()
+	baZi := lunar.GetEightChar()
+	fmt.Println(baZi.GetYear() + " " + baZi.GetMonth() + " " + baZi.GetDay() + " " + baZi.GetTime())
 
 	// 八字五行
-	for _, v := range lunar.GetBaZiWuXing() {
-		fmt.Print(v)
-		fmt.Print(" ")
-	}
-	fmt.Println()
+	fmt.Println(baZi.GetYearWuXing() + " " + baZi.GetMonthWuXing() + " " + baZi.GetDayWuXing() + " " + baZi.GetTimeWuXing())
 
 	// 八字天干十神
-	fmt.Print("八字天干十神 = ")
-	for _, v := range lunar.GetBaZiShiShenGan() {
-		fmt.Print(v)
-		fmt.Print(" ")
-	}
-	fmt.Println()
+	fmt.Println("八字天干十神 = " + baZi.GetYearShiShenGan() + " " + baZi.GetMonthShiShenGan() + " " + baZi.GetDayShiShenGan() + " " + baZi.GetTimeShiShenGan())
 
 	// 八字地支十神
-	fmt.Print("八字地支十神 = ")
-	for _, v := range lunar.GetBaZiShiShenZhi() {
-		fmt.Print(v)
-		fmt.Print(" ")
-	}
-	fmt.Println()
+	fmt.Println("八字地支十神 = " + baZi.GetYearShiShenZhi().Front().Value.(string) + " " + baZi.GetMonthShiShenZhi().Front().Value.(string) + " " + baZi.GetDayShiShenZhi().Front().Value.(string) + " " + baZi.GetTimeShiShenZhi().Front().Value.(string))
 
 	// 八字年支十神
 	fmt.Print("年支十神 = ")
-	for i := lunar.GetBaZiShiShenYearZhi().Front(); i != nil; i = i.Next() {
+	for i := baZi.GetYearShiShenZhi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
 	}
@@ -90,7 +73,7 @@ func main() {
 
 	// 八字月支十神
 	fmt.Print("月支十神 = ")
-	for i := lunar.GetBaZiShiShenMonthZhi().Front(); i != nil; i = i.Next() {
+	for i := baZi.GetMonthShiShenZhi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
 	}
@@ -98,7 +81,7 @@ func main() {
 
 	// 八字日支十神
 	fmt.Print("日支十神 = ")
-	for i := lunar.GetBaZiShiShenDayZhi().Front(); i != nil; i = i.Next() {
+	for i := baZi.GetDayShiShenZhi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
 	}
@@ -106,7 +89,7 @@ func main() {
 
 	// 八字时支十神
 	fmt.Print("时支十神 = ")
-	for i := lunar.GetBaZiShiShenTimeZhi().Front(); i != nil; i = i.Next() {
+	for i := baZi.GetTimeShiShenZhi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
 	}
