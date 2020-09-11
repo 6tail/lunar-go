@@ -52,6 +52,7 @@ func main() {
 
 	// 八字
 	baZi := lunar.GetEightChar()
+	fmt.Println(baZi)
 	fmt.Println(baZi.GetYear() + " " + baZi.GetMonth() + " " + baZi.GetDay() + " " + baZi.GetTime())
 
 	// 八字五行
@@ -92,6 +93,54 @@ func main() {
 	for i := baZi.GetTimeShiShenZhi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	// 指定阳历时间得到八字信息
+	solar = calendar.NewSolar(1983, 2, 15, 20, 0, 0)
+	lunar = solar.GetLunar()
+	baZi = lunar.GetEightChar()
+
+	// 女运
+	yun := baZi.GetYun(1)
+
+	fmt.Println()
+	fmt.Printf("阳历%s出生\n", solar.ToYmdHms())
+	fmt.Printf("出生%d年%d个月%d天后起运\n", yun.GetStartYear(), yun.GetStartMonth(), yun.GetStartDay())
+	fmt.Printf("阳历%s后起运\n", yun.GetStartSolar().ToYmd())
+
+	fmt.Println()
+
+	// 大运
+	daYunArr := yun.GetDaYun()
+	for i := 0; i < len(daYunArr); i++ {
+		daYun := daYunArr[i]
+		fmt.Printf("大运[%d] = %d年 %d岁 %s\n", daYun.GetIndex(), daYun.GetStartYear(), daYun.GetStartAge(), daYun.GetGanZhi())
+	}
+
+	fmt.Println()
+
+	// 第1次大运流年
+	liuNianArr := daYunArr[1].GetLiuNian()
+	for i := 0; i < len(liuNianArr); i++ {
+		liuNian := liuNianArr[i]
+		fmt.Printf("流年[%d] = %d年 %d岁 %s\n", liuNian.GetIndex(), liuNian.GetYear(), liuNian.GetAge(), liuNian.GetGanZhi())
+	}
+	fmt.Println()
+
+	// 第1次大运小运
+	xiaoYunArr := daYunArr[1].GetXiaoYun()
+	for i := 0; i < len(xiaoYunArr); i++ {
+		xiaoYun := xiaoYunArr[i]
+		fmt.Printf("小运[%d] = %d年 %d岁 %s\n", xiaoYun.GetIndex(), xiaoYun.GetYear(), xiaoYun.GetAge(), xiaoYun.GetGanZhi())
+	}
+	fmt.Println()
+
+	// 第1次大运首个流年的流月
+	liuYueArr := liuNianArr[0].GetLiuYue()
+	for i := 0; i < len(liuYueArr); i++ {
+		liuYue := liuYueArr[i]
+		fmt.Printf("流月[%d] = %s月 %s\n", liuYue.GetIndex(), liuYue.GetMonthInChinese(), liuYue.GetGanZhi())
 	}
 	fmt.Println()
 

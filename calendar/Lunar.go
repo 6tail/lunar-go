@@ -1262,6 +1262,75 @@ func (lunar *Lunar) GetTimeNineStar() *NineStar {
 	return NewNineStar(index)
 }
 
+// 获取下一节（顺推的第一个节）
+func (lunar *Lunar) GetNextJie() *JieQi {
+	return lunar.getNearJieQi(true, LunarUtil.JIE)
+}
+
+// 获取上一节（逆推的第一个节）
+func (lunar *Lunar) GetPrevJie() *JieQi {
+	return lunar.getNearJieQi(false, LunarUtil.JIE)
+}
+
+// 获取下一节气（顺推的第一个节气）
+func (lunar *Lunar) GetNextJieQi() *JieQi {
+	return lunar.getNearJieQi(true, nil)
+}
+
+// 获取上一节气（逆推的第一个节气）
+func (lunar *Lunar) GetPrevJieQi() *JieQi {
+	return lunar.getNearJieQi(false, nil)
+}
+
+// 获取最近的节气，如果未找到匹配的，返回null
+func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
+	var name string
+	var near *Solar
+	filters := map[string]bool{}
+	if nil != conditions {
+		for i := 0; i < len(conditions); i++ {
+			filters[conditions[i]] = true
+		}
+	}
+	filter := len(filters) > 0
+	today := lunar.solar.ToYmdHms()
+	jieQi := lunar.GetJieQiTable()
+	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
+		jq := i.Value.(string)
+		solar := jieQi[jq]
+		if strings.Compare("DONG_ZHI", jq) == 0 {
+			jq = "冬至"
+		}
+		if filter {
+			if !filters[jq] {
+				continue
+			}
+		}
+		day := solar.ToYmdHms()
+		if forward {
+			if strings.Compare(day, today) < 0 {
+				continue
+			}
+			if nil == near || strings.Compare(day, near.ToYmdHms()) < 0 {
+				name = jq
+				near = solar
+			}
+		} else {
+			if strings.Compare(day, today) > 0 {
+				continue
+			}
+			if nil == near || strings.Compare(day, near.ToYmdHms()) > 0 {
+				name = jq
+				near = solar
+			}
+		}
+	}
+	if nil == near {
+		return nil
+	}
+	return NewJieQi(name, near)
+}
+
 func (lunar *Lunar) String() string {
 	return lunar.GetYearInChinese() + "年" + lunar.GetMonthInChinese() + "月" + lunar.GetDayInChinese()
 }

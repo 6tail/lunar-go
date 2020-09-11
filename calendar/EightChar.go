@@ -38,7 +38,7 @@ func NewEightChar(lunar *Lunar) *EightChar {
 }
 
 func (eightChar *EightChar) String() string {
-	return eightChar.GetYear()
+	return eightChar.GetYear() + " " + eightChar.GetMonth() + " " + eightChar.GetDay() + " " + eightChar.GetTime()
 }
 
 func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
@@ -284,4 +284,13 @@ func (eightChar *EightChar) GetShenGong() string {
 
 func (eightChar *EightChar) GetShenGongNaYin() string {
 	return LunarUtil.NAYIN[eightChar.GetShenGong()]
+}
+
+func (eightChar *EightChar) GetLunar() *Lunar {
+	return eightChar.lunar
+}
+
+// 获取运
+func (eightChar *EightChar) GetYun(gender int) *Yun {
+	return NewYun(eightChar, gender)
 }
