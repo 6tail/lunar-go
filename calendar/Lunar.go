@@ -10,6 +10,18 @@ import (
 	"time"
 )
 
+// 节气表头部追加农历上年末的节气名(节令：大雪)，以示区分
+const JIE_QI_PREPEND = "DA_XUE"
+
+// 节气表尾部追加农历下年初的节气名(气令：冬至)，以示区分
+const JIE_QI_APPEND = "DONG_ZHI"
+
+// 农历年初节气名(气令：冬至)
+const JIE_QI_FIRST = "冬至"
+
+// 农历年末节气名(节令：大雪)
+const JIE_QI_LAST = "大雪"
+
 const secondPerRad = 180 * 3600 / math.Pi
 
 var jieQi = []string{"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪"}
@@ -324,18 +336,26 @@ func computeJieQi(lunar *Lunar) {
 	if calcJieQi(w) > jd {
 		w -= 365.2422
 	}
-	size := len(jieQi)
 	table := make(map[string]*Solar)
 	jieQiList := list.New()
+
+	//追加上一农历年末的大雪
+	name := JIE_QI_PREPEND
+	q := calcJieQi(w - 15.2184)
+	table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
+	jieQiList.PushBack(name)
+
+	size := len(jieQi)
 	for i := 0; i < size; i++ {
 		q := calcJieQi(w + 15.2184*float64(i))
 		name := jieQi[i]
 		table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
 		jieQiList.PushBack(name)
 	}
-	//追加下一农历年的冬至
-	q := calcJieQi(w + 15.2184*float64(size))
-	name := "DONG_ZHI"
+
+	//追加下一农历年初的冬至
+	name = JIE_QI_APPEND
+	q = calcJieQi(w + 15.2184*float64(size))
 	table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
 	jieQiList.PushBack(name)
 	lunar.jieQiList = jieQiList
@@ -672,6 +692,10 @@ func (lunar *Lunar) GetJie() string {
 			return jie
 		}
 	}
+	d := lunar.jieQi[JIE_QI_PREPEND]
+	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
+		return JIE_QI_LAST
+	}
 	return ""
 }
 
@@ -684,9 +708,9 @@ func (lunar *Lunar) GetQi() string {
 			return qi
 		}
 	}
-	d := lunar.jieQi["DONG_ZHI"]
+	d := lunar.jieQi[JIE_QI_APPEND]
 	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
-		return "冬至"
+		return JIE_QI_FIRST
 	}
 	return ""
 }
@@ -1298,8 +1322,11 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
 		jq := i.Value.(string)
 		solar := jieQi[jq]
-		if strings.Compare("DONG_ZHI", jq) == 0 {
-			jq = "冬至"
+		if strings.Compare(JIE_QI_APPEND, jq) == 0 {
+			jq = JIE_QI_FIRST
+		}
+		if strings.Compare(JIE_QI_PREPEND, jq) == 0 {
+			jq = JIE_QI_LAST
 		}
 		if filter {
 			if !filters[jq] {
