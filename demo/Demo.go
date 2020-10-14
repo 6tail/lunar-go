@@ -35,6 +35,13 @@ func main() {
 		fmt.Println(name, jieQi[name].ToYmdHms())
 	}
 
+	// 下个节气
+	fmt.Println(lunar.GetNextJieQi())
+	// 下个节令
+	fmt.Println(lunar.GetNextJie())
+	// 下个气令
+	fmt.Println(lunar.GetNextQi())
+
 	// 阳历往后推一天
 	solar = solar.Next(1)
 	fmt.Println(solar.ToFullString())

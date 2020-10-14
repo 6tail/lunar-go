@@ -1296,6 +1296,16 @@ func (lunar *Lunar) GetPrevJie() *JieQi {
 	return lunar.getNearJieQi(false, LunarUtil.JIE)
 }
 
+// 获取下一气令（顺推的第一个气令）
+func (lunar *Lunar) GetNextQi() *JieQi {
+	return lunar.getNearJieQi(true, LunarUtil.QI)
+}
+
+// 获取上一气令（逆推的第一个气令）
+func (lunar *Lunar) GetPrevQi() *JieQi {
+	return lunar.getNearJieQi(false, LunarUtil.QI)
+}
+
 // 获取下一节气（顺推的第一个节气）
 func (lunar *Lunar) GetNextJieQi() *JieQi {
 	return lunar.getNearJieQi(true, nil)
@@ -1356,6 +1366,53 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 		return nil
 	}
 	return NewJieQi(name, near)
+}
+
+// 获取节气名称，如果无节气，返回空字符串
+func (lunar *Lunar) GetJieQi() string {
+	name := ""
+	jieQi := lunar.GetJieQiTable()
+	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
+		jq := i.Value.(string)
+		d := jieQi[jq]
+		if d.GetYear() == lunar.solar.GetYear() && d.GetMonth() == lunar.solar.GetMonth() && d.GetDay() == lunar.solar.GetDay() {
+			name = jq
+			break
+		}
+	}
+	if strings.Compare(JIE_QI_APPEND, name) == 0 {
+		name = JIE_QI_APPEND
+	} else if JIE_QI_PREPEND == name {
+		name = JIE_QI_LAST
+	}
+	return name
+}
+
+// 获取当天节气对象，如果无节气，返回nil
+func (lunar *Lunar) GetCurrentJieQi() *JieQi {
+	name := lunar.GetJieQi()
+	if len(name) > 0 {
+		return NewJieQi(name, lunar.solar)
+	}
+	return nil
+}
+
+// 获取当天节令对象，如果无节令，返回nil
+func (lunar *Lunar) GetCurrentJie() *JieQi {
+	name := lunar.GetJie()
+	if len(name) > 0 {
+		return NewJieQi(name, lunar.solar)
+	}
+	return nil
+}
+
+// 获取当天气令对象，如果无气令，返回nil
+func (lunar *Lunar) GetCurrentQi() *JieQi {
+	name := lunar.GetQi()
+	if len(name) > 0 {
+		return NewJieQi(name, lunar.solar)
+	}
+	return nil
 }
 
 func (lunar *Lunar) String() string {
