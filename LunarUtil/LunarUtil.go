@@ -1059,13 +1059,17 @@ func ComputeAddDays(year int, month int, day int) int {
 	return diff
 }
 
+func GetLeapMonth(year int) int {
+	index := year - BASE_YEAR + BASE_INDEX
+	v := LUNAR_MONTH[2*index+1]
+	v = (v >> 4) & 0x0F
+	return v
+}
+
 func NextMonth(y int, m int) int {
 	n := int(math.Abs(float64(m))) + 1
 	if m > 0 {
-		index := y - BASE_YEAR + BASE_INDEX
-		v := LUNAR_MONTH[2*index+1]
-		v = (v >> 4) & 0x0F
-		if v == m {
+		if m == GetLeapMonth(y) {
 			n = -m
 		}
 	}

@@ -52,13 +52,20 @@ func main() {
 		fmt.Println(i.Value.(*calendar.Holiday))
 	}
 
+	// 阳历转八字
+	solar = calendar.NewSolar(1988, 2, 15, 23, 30, 0)
+	lunar = solar.GetLunar()
+	baZi := lunar.GetEightChar()
+	fmt.Println(baZi)
+	fmt.Println(baZi.GetYear() + " " + baZi.GetMonth() + " " + baZi.GetDay() + " " + baZi.GetTime())
+
 	// 阴历
 	lunar = calendar.NewLunarFromYmd(1986, 4, 21)
 	fmt.Println(lunar.ToFullString())
 	fmt.Println(lunar.GetSolar().ToFullString())
 
 	// 八字
-	baZi := lunar.GetEightChar()
+	baZi = lunar.GetEightChar()
 	fmt.Println(baZi)
 	fmt.Println(baZi.GetYear() + " " + baZi.GetMonth() + " " + baZi.GetDay() + " " + baZi.GetTime())
 

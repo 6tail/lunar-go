@@ -363,6 +363,7 @@ func computeJieQi(lunar *Lunar) {
 }
 
 func computeYear(lunar *Lunar) {
+	//以正月初一开始
 	lunar.yearGanIndex = (lunar.year + LunarUtil.BASE_YEAR_GANZHI_INDEX) % 10
 	lunar.yearZhiIndex = (lunar.year + LunarUtil.BASE_YEAR_GANZHI_INDEX) % 12
 
@@ -376,31 +377,54 @@ func computeYear(lunar *Lunar) {
 
 	solar := lunar.solar
 
+	//获取立春的阳历时刻
+	liChun := lunar.jieQi["立春"]
+
+	//阳历和阴历年份相同代表正月初一及以后
 	if lunar.year == solar.GetYear() {
-		//获取立春的阳历时刻
-		liChun := lunar.jieQi["立春"]
 		//立春日期判断
 		if strings.Compare(solar.ToYmd(), liChun.ToYmd()) < 0 {
 			g--
-			if g < 0 {
-				g += 10
-			}
 			z--
-			if z < 0 {
-				z += 12
-			}
 		}
 		//立春交接时刻判断
 		if strings.Compare(solar.ToYmdHms(), liChun.ToYmdHms()) < 0 {
 			gExact--
-			if gExact < 0 {
-				gExact += 10
-			}
 			zExact--
-			if zExact < 0 {
-				zExact += 12
-			}
 		}
+	} else {
+		if strings.Compare(solar.ToYmd(), liChun.ToYmd()) >= 0 {
+			g++
+			z++
+		}
+		if strings.Compare(solar.ToYmdHms(), liChun.ToYmdHms()) >= 0 {
+			gExact++
+			zExact++
+		}
+	}
+	if g < 0 {
+		g += 10
+	}
+	if g >= 10 {
+		g -= 10
+	}
+	if z < 0 {
+		z += 12
+	}
+	if z >= 12 {
+		z -= 12
+	}
+	if gExact < 0 {
+		gExact += 10
+	}
+	if gExact >= 10 {
+		gExact -= 10
+	}
+	if zExact < 0 {
+		zExact += 12
+	}
+	if zExact >= 12 {
+		zExact -= 12
 	}
 	lunar.yearGanIndexByLiChun = g
 	lunar.yearZhiIndexByLiChun = z
@@ -1459,7 +1483,7 @@ func (lunar *Lunar) ToFullString() string {
 		s += ")"
 	}
 
-	jq := lunar.GetJie() + lunar.GetQi()
+	jq := lunar.GetJieQi()
 	if len(jq) > 0 {
 		s += " ["
 		s += jq
@@ -1565,4 +1589,61 @@ func (lunar *Lunar) GetYearZhiIndexExact() int {
 
 func (lunar *Lunar) GetSolar() *Solar {
 	return lunar.solar
+}
+
+// 获取往后推几天的农历日期，如果要往前推，则天数用负数
+func (lunar *Lunar) Next(days int) *Lunar {
+	y := lunar.year
+	m := lunar.month
+	d := lunar.day
+	if days > 0 {
+		daysInMonth := LunarUtil.GetDaysOfMonth(y, m)
+		rest := lunar.day + days
+		for {
+			if daysInMonth >= rest {
+				break
+			}
+			if m > 0 {
+				if LunarUtil.GetLeapMonth(y) != m {
+					m++
+				} else {
+					m = -m
+				}
+			} else {
+				m = 1 - m
+			}
+			if 13 == m {
+				y++
+				m = 1
+			}
+			rest -= daysInMonth
+			daysInMonth = LunarUtil.GetDaysOfMonth(y, m)
+		}
+		d = rest
+	} else if days < 0 {
+		daysInMonth := lunar.day
+		rest := -days
+		for {
+			if daysInMonth > rest {
+				break
+			}
+			if m > 0 {
+				m--
+				if 0 == m {
+					y--
+					if LunarUtil.GetLeapMonth(y) != 12 {
+						m = 12
+					} else {
+						m = -12
+					}
+				}
+			} else {
+				m = -m
+			}
+			rest -= daysInMonth
+			daysInMonth = LunarUtil.GetDaysOfMonth(y, m)
+		}
+		d = daysInMonth - rest
+	}
+	return NewLunar(y, m, d, lunar.hour, lunar.minute, lunar.second)
 }
