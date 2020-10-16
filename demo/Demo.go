@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-func main() {
+func test() {
 	// 法定假日
 	holiday := HolidayUtil.GetHoliday("2020-01-01")
 	fmt.Println(holiday)
@@ -234,4 +234,35 @@ func main() {
 		fmt.Println(i.Value.(*calendar.Solar).ToFullString())
 	}
 	fmt.Println()
+}
+
+func test1() {
+	solar := calendar.NewSolar(1981, 12, 10, 12, 30, 0)
+	lunar := solar.GetLunar()
+	fmt.Println(lunar.ToFullString())
+
+	// 值年九星
+	jx := lunar.GetYearNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值月九星
+	jx = lunar.GetMonthNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值日九星
+	jx = lunar.GetDayNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值时九星
+	jx = lunar.GetTimeNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+}
+
+func main() {
+	test()
+	test1()
 }
