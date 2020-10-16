@@ -16,11 +16,23 @@ const JIE_QI_PREPEND = "DA_XUE"
 // 节气表尾部追加农历下年初的节气名(气令：冬至)，以示区分
 const JIE_QI_APPEND = "DONG_ZHI"
 
+// 节气表尾部追加阳历下年初的第一个节气名(节令：小寒)，以示区分
+const JIE_APPEND_SOLAR_FIRST = "XIAO_HAN"
+
+// 节气表尾部追加阳历下年初的第二个节气名(气令：大寒)，以示区分
+const QI_APPEND_SOLAR_SECOND = "DA_HAN"
+
 // 农历年初节气名(气令：冬至)
 const JIE_QI_FIRST = "冬至"
 
 // 农历年末节气名(节令：大雪)
 const JIE_QI_LAST = "大雪"
+
+// 阳历下年初的第一个节气名(节令：小寒)
+const JIE_SOLAR_FIRST = "小寒"
+
+// 阳历下年初的第二个节气名(气令：大寒)
+const QI_SOLAR_SECOND = "大寒"
 
 const secondPerRad = 180 * 3600 / math.Pi
 
@@ -358,6 +370,21 @@ func computeJieQi(lunar *Lunar) {
 	q = calcJieQi(w + 15.2184*float64(size))
 	table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
 	jieQiList.PushBack(name)
+
+	//追加下一阳历年初的小寒
+	size += 1
+	name = JIE_APPEND_SOLAR_FIRST
+	q = calcJieQi(w + 15.2184*float64(size))
+	table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
+	jieQiList.PushBack(name)
+
+	//追加下一阳历年初的大寒
+	size += 1
+	name = QI_APPEND_SOLAR_SECOND
+	q = calcJieQi(w + 15.2184*float64(size))
+	table[name] = NewSolarFromJulianDay(qiAccurate2(q) + J2000)
+	jieQiList.PushBack(name)
+
 	lunar.jieQiList = jieQiList
 	lunar.jieQi = table
 }
@@ -720,6 +747,10 @@ func (lunar *Lunar) GetJie() string {
 	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
 		return JIE_QI_LAST
 	}
+	d = lunar.jieQi[JIE_APPEND_SOLAR_FIRST]
+	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
+		return JIE_SOLAR_FIRST
+	}
 	return ""
 }
 
@@ -735,6 +766,10 @@ func (lunar *Lunar) GetQi() string {
 	d := lunar.jieQi[JIE_QI_APPEND]
 	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
 		return JIE_QI_FIRST
+	}
+	d = lunar.jieQi[QI_APPEND_SOLAR_SECOND]
+	if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
+		return QI_SOLAR_SECOND
 	}
 	return ""
 }
@@ -1362,6 +1397,12 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 		if strings.Compare(JIE_QI_PREPEND, jq) == 0 {
 			jq = JIE_QI_LAST
 		}
+		if strings.Compare(JIE_APPEND_SOLAR_FIRST, jq) == 0 {
+			jq = JIE_SOLAR_FIRST
+		}
+		if strings.Compare(QI_APPEND_SOLAR_SECOND, jq) == 0 {
+			jq = QI_SOLAR_SECOND
+		}
 		if filter {
 			if !filters[jq] {
 				continue
@@ -1406,8 +1447,12 @@ func (lunar *Lunar) GetJieQi() string {
 	}
 	if strings.Compare(JIE_QI_APPEND, name) == 0 {
 		name = JIE_QI_APPEND
-	} else if JIE_QI_PREPEND == name {
+	} else if strings.Compare(JIE_QI_PREPEND, name) == 0 {
 		name = JIE_QI_LAST
+	} else if strings.Compare(JIE_APPEND_SOLAR_FIRST, name) == 0 {
+		name = JIE_SOLAR_FIRST
+	} else if strings.Compare(QI_APPEND_SOLAR_SECOND, name) == 0 {
+		name = QI_SOLAR_SECOND
 	}
 	return name
 }

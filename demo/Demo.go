@@ -111,11 +111,16 @@ func main() {
 	fmt.Println()
 
 	// 指定阳历时间得到八字信息
-	solar = calendar.NewSolar(1983, 2, 15, 20, 0, 0)
+	solar = calendar.NewSolar(2012, 12, 18, 12, 0, 0)
 	lunar = solar.GetLunar()
 	baZi = lunar.GetEightChar()
+	jieQi = lunar.GetJieQiTable()
+	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
+		name := i.Value.(string)
+		fmt.Println(name, jieQi[name].ToYmdHms())
+	}
 
-	// 女运
+	// 男运
 	yun := baZi.GetYun(1)
 
 	fmt.Println()
