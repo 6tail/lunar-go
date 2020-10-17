@@ -262,7 +262,40 @@ func test1() {
 	fmt.Println(jx.ToFullString())
 }
 
+func test2() {
+	lunar := calendar.NewLunar(1983, 12, 15, 12, 30, 0)
+	fmt.Println(lunar.ToFullString())
+	fmt.Println(lunar.GetMonthZhi())
+
+	// 值年九星
+	jx := lunar.GetYearNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值月九星
+	jx = lunar.GetMonthNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值日九星
+	jx = lunar.GetDayNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 值时九星
+	jx = lunar.GetTimeNineStar()
+	fmt.Println(jx)
+	fmt.Println(jx.ToFullString())
+
+	// 八字转阳历
+	for i := calendar.ListSolarFromBaZi("庚子", "戊子", "己卯", "庚午").Front(); i != nil; i = i.Next() {
+		fmt.Println(i.Value.(*calendar.Solar).ToFullString())
+	}
+	fmt.Println()
+}
+
 func main() {
 	test()
 	test1()
+	test2()
 }

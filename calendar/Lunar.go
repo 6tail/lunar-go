@@ -1265,7 +1265,10 @@ func (lunar *Lunar) GetMonthNineStar() *NineStar {
 		monthIndex += 12
 	}
 	index := start - monthIndex - 1
-	if index < 0 {
+	for {
+		if index >= 0 {
+			break
+		}
 		index += 9
 	}
 	return NewNineStar(index)
