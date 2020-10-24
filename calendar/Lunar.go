@@ -267,7 +267,7 @@ func qiLow(w float64) float64 {
 	t -= (53*t*t + 334116*math.Cos(4.67+628.307585*t) + 2061*math.Cos(2.678+628.3076*t)*t) / v / 10000000
 	l := 48950621.66 + 6283319653.318*t + 53*t*t + 334166*math.Cos(4.669257+628.307585*t) + 3489*math.Cos(4.6261+1256.61517*t) + 2060.6*math.Cos(2.67823+628.307585*t)*t - 994 - 834*math.Sin(2.1824-33.75705*t)
 	t -= (l/10000000-w)/628.332 + (32*(t+1.8)*(t+1.8)-20)/86400/36525
-	return t*36525 + 8/24
+	return t*36525 + float64(8)/24
 }
 
 func saLonT2(w float64) float64 {
@@ -283,7 +283,7 @@ func qiHigh(w float64) float64 {
 	t = t - dtT(t) + float64(8)/24
 	v := math.Mod(t+0.5, 1) * 86400
 	if v < 1200 || v > 86400-1200 {
-		t = saLonT(w)*36525 - dtT(t) + 8/24
+		t = saLonT(w)*36525 - dtT(t) + float64(8)/24
 	}
 	return t
 }
