@@ -23,16 +23,17 @@ func NewDaYun(yun *Yun, index int) *DaYun {
 	daYun.yun = yun
 	daYun.lunar = yun.GetLunar()
 	daYun.index = index
+	birthYear := yun.GetLunar().GetSolar().GetYear()
 	year := yun.GetStartSolar().GetYear()
 	if daYun.index < 1 {
-		daYun.startYear = yun.lunar.GetSolar().GetYear()
+		daYun.startYear = birthYear
 		daYun.startAge = 1
 		daYun.endYear = year - 1
-		daYun.endAge = yun.GetStartYear()
+		daYun.endAge = year - birthYear
 	} else {
 		add := (index - 1) * 10
 		daYun.startYear = year + add
-		daYun.startAge = yun.GetStartYear() + add + 1
+		daYun.startAge = daYun.startYear - birthYear + 1
 		daYun.endYear = daYun.startYear + 9
 		daYun.endAge = daYun.startAge + 9
 	}
