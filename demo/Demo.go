@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/6tail/lunar-go/HolidayUtil"
 	"github.com/6tail/lunar-go/calendar"
+	"strings"
 	"time"
 )
 
@@ -294,8 +295,109 @@ func test2() {
 	fmt.Println()
 }
 
+// 工作日推移
+func NextWorkday(solar *calendar.Solar, days int) *calendar.Solar {
+	c := time.Date(solar.GetYear(), time.Month(solar.GetMonth()), solar.GetDay(), solar.GetHour(), solar.GetMinute(), solar.GetSecond(), 0, time.Local)
+	if 0 != days {
+		rest := days
+		if rest < 0 {
+			rest = -days
+		}
+		add := 1
+		if days < 0 {
+			add = -1
+		}
+		for {
+			if rest <= 0 {
+				break
+			}
+			c = c.AddDate(0, 0, add)
+			work := true
+			holiday := HolidayUtil.GetHolidayByYmd(c.Year(), int(c.Month()), c.Day())
+			if nil == holiday {
+				week := int(c.Weekday())
+				if 0 == week || 6 == week {
+					work = false
+				}
+			} else {
+				work = holiday.IsWork()
+			}
+			if work {
+				rest--
+			}
+		}
+	}
+	return calendar.NewSolar(c.Year(), int(c.Month()), c.Day(), c.Hour(), c.Minute(), c.Second())
+}
+
+func test3() {
+	date := calendar.NewSolarFromYmd(2020, 1, 23)
+	fmt.Print(strings.Compare("2020-01-24", date.Next(1).ToYmd()))
+	// 仅工作日，跨越春节假期
+	fmt.Print(strings.Compare("2020-02-03", NextWorkday(date, 1).ToYmd()))
+
+	date = calendar.NewSolarFromYmd(2020, 2, 3)
+	fmt.Print(strings.Compare("2020-01-31", date.Next(-3).ToYmd()))
+	// 仅工作日，跨越春节假期
+	fmt.Print(strings.Compare("2020-01-21", NextWorkday(date, -3).ToYmd()))
+
+	date = calendar.NewSolarFromYmd(2020, 2, 9)
+	fmt.Print(strings.Compare("2020-02-15", date.Next(6).ToYmd()))
+	// 仅工作日，跨越周末
+	fmt.Print(strings.Compare("2020-02-17", NextWorkday(date, 6).ToYmd()))
+
+	date = calendar.NewSolarFromYmd(2020, 1, 17)
+	fmt.Print(strings.Compare("2020-01-18", date.Next(1).ToYmd()))
+	// 仅工作日，周日调休按上班算
+	fmt.Print(strings.Compare("2020-01-19", NextWorkday(date, 1).ToYmd()))
+	fmt.Println()
+}
+
+func test4() {
+	fmt.Print(strings.Compare("2020-01-01 元旦节 2020-01-01", HolidayUtil.GetHoliday("2020-01-01").String()))
+
+	// 将2020-01-01修改为春节
+	HolidayUtil.Fix(nil, "202001011120200101")
+	fmt.Print(strings.Compare("2020-01-01 春节 2020-01-01", HolidayUtil.GetHoliday("2020-01-01").String()))
+
+	// 追加2099-01-01为元旦节
+	HolidayUtil.Fix(nil, "209901010120990101")
+	fmt.Print(strings.Compare("2099-01-01 元旦节 2099-01-01", HolidayUtil.GetHoliday("2099-01-01").String()))
+
+	// 将2020-01-01修改为春节，并追加2099-01-01为元旦节
+	HolidayUtil.Fix(nil, "202001011120200101209901010120990101")
+	fmt.Print(strings.Compare("2020-01-01 春节 2020-01-01", HolidayUtil.GetHoliday("2020-01-01").String()))
+	fmt.Print(strings.Compare("2099-01-01 元旦节 2099-01-01", HolidayUtil.GetHoliday("2099-01-01").String()))
+
+	// 更改节假日名称
+	names := HolidayUtil.NAMES
+	names[0] = "元旦"
+	names[1] = "大年初一"
+
+	HolidayUtil.Fix(names, "")
+	fmt.Print(strings.Compare("2020-01-01 大年初一 2020-01-01", HolidayUtil.GetHoliday("2020-01-01").String()))
+	fmt.Print(strings.Compare("2099-01-01 元旦 2099-01-01", HolidayUtil.GetHoliday("2099-01-01").String()))
+
+	// 追加节假日名称和数据
+	names = make([]string, 12)
+	for i := 0; i < len(HolidayUtil.NAMES); i++ {
+		names[i] = HolidayUtil.NAMES[i]
+	}
+	names[9] = "我的生日"
+	names[10] = "结婚纪念日"
+	names[11] = "她的生日"
+
+	HolidayUtil.Fix(names, "20210529912021052920211111:12021111120211201;120211201")
+	fmt.Print(strings.Compare("2021-05-29 我的生日 2021-05-29", HolidayUtil.GetHoliday("2021-05-29").String()))
+	fmt.Print(strings.Compare("2021-11-11 结婚纪念日 2021-11-11", HolidayUtil.GetHoliday("2021-11-11").String()))
+	fmt.Print(strings.Compare("2021-12-01 她的生日 2021-12-01", HolidayUtil.GetHoliday("2021-12-01").String()))
+	fmt.Println()
+}
+
 func main() {
 	test()
 	test1()
 	test2()
+	test3()
+	test4()
 }
