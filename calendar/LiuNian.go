@@ -46,6 +46,16 @@ func (liuNian *LiuNian) GetGanZhi() string {
 	return LunarUtil.JIA_ZI[offset]
 }
 
+// 获取所在旬
+func (liuNian *LiuNian) GetXun() string {
+	return LunarUtil.GetXun(liuNian.GetGanZhi())
+}
+
+// 获取旬空(空亡)
+func (liuNian *LiuNian) GetXunKong() string {
+	return LunarUtil.GetXunKong(liuNian.GetGanZhi())
+}
+
 func (liuNian *LiuNian) GetLiuYue() []*LiuYue {
 	n := 12
 	l := make([]*LiuYue, n)

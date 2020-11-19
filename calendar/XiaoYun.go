@@ -62,3 +62,13 @@ func (xiaoYun *XiaoYun) GetGanZhi() string {
 	offset %= size
 	return LunarUtil.JIA_ZI[offset]
 }
+
+// 获取所在旬
+func (xiaoYun *XiaoYun) GetXun() string {
+	return LunarUtil.GetXun(xiaoYun.GetGanZhi())
+}
+
+// 获取旬空(空亡)
+func (xiaoYun *XiaoYun) GetXunKong() string {
+	return LunarUtil.GetXunKong(xiaoYun.GetGanZhi())
+}

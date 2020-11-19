@@ -294,3 +294,43 @@ func (eightChar *EightChar) GetLunar() *Lunar {
 func (eightChar *EightChar) GetYun(gender int) *Yun {
 	return NewYun(eightChar, gender)
 }
+
+// 获取年柱所在旬
+func (eightChar *EightChar) GetYearXun() string {
+	return eightChar.lunar.GetYearXunExact()
+}
+
+// 获取年柱旬空(空亡)
+func (eightChar *EightChar) GetYearXunKong() string {
+	return eightChar.lunar.GetYearXunKongExact()
+}
+
+// 获取月柱所在旬
+func (eightChar *EightChar) GetMonthXun() string {
+	return eightChar.lunar.GetMonthXunExact()
+}
+
+// 获取月柱旬空(空亡)
+func (eightChar *EightChar) GetMonthXunKong() string {
+	return eightChar.lunar.GetMonthXunKongExact()
+}
+
+// 获取日柱所在旬
+func (eightChar *EightChar) GetDayXun() string {
+	return eightChar.lunar.GetDayXunExact()
+}
+
+// 获取日柱旬空(空亡)
+func (eightChar *EightChar) GetDayXunKong() string {
+	return eightChar.lunar.GetDayXunKongExact()
+}
+
+// 获取时柱所在旬
+func (eightChar *EightChar) GetTimeXun() string {
+	return eightChar.lunar.GetTimeXun()
+}
+
+// 获取时柱旬空(空亡)
+func (eightChar *EightChar) GetTimeXunKong() string {
+	return eightChar.lunar.GetTimeXunKong()
+}

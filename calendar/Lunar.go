@@ -1698,3 +1698,83 @@ func (lunar *Lunar) Next(days int) *Lunar {
 	}
 	return NewLunar(y, m, d, lunar.hour, lunar.minute, lunar.second)
 }
+
+// 获取年所在旬（以正月初一作为新年的开始）
+func (lunar *Lunar) GetYearXun() string {
+	return LunarUtil.GetXun(lunar.GetYearInGanZhi())
+}
+
+// 获取年所在旬（以立春当天作为新年的开始）
+func (lunar *Lunar) GetYearXunByLiChun() string {
+	return LunarUtil.GetXun(lunar.GetYearInGanZhiByLiChun())
+}
+
+// 获取年所在旬（以立春交接时刻作为新年的开始）
+func (lunar *Lunar) GetYearXunExact() string {
+	return LunarUtil.GetXun(lunar.GetYearInGanZhiExact())
+}
+
+// 获取值年空亡（以正月初一作为新年的开始）
+func (lunar *Lunar) GetYearXunKong() string {
+	return LunarUtil.GetXunKong(lunar.GetYearInGanZhi())
+}
+
+// 获取值年空亡（以立春当天作为新年的开始）
+func (lunar *Lunar) GetYearXunKongByLiChun() string {
+	return LunarUtil.GetXunKong(lunar.GetYearInGanZhiByLiChun())
+}
+
+// 获取值年空亡（以立春交接时刻作为新年的开始）
+func (lunar *Lunar) GetYearXunKongExact() string {
+	return LunarUtil.GetXunKong(lunar.GetYearInGanZhiExact())
+}
+
+// 获取月所在旬（以节交接当天起算）
+func (lunar *Lunar) GetMonthXun() string {
+	return LunarUtil.GetXun(lunar.GetMonthInGanZhi())
+}
+
+// 获取月所在旬（以节交接时刻起算）
+func (lunar *Lunar) GetMonthXunExact() string {
+	return LunarUtil.GetXun(lunar.GetMonthInGanZhiExact())
+}
+
+// 获取值月空亡（以节交接当天起算）
+func (lunar *Lunar) GetMonthXunKong() string {
+	return LunarUtil.GetXunKong(lunar.GetMonthInGanZhi())
+}
+
+// 获取值月空亡（以节交接时刻起算）
+func (lunar *Lunar) GetMonthXunKongExact() string {
+	return LunarUtil.GetXunKong(lunar.GetMonthInGanZhiExact())
+}
+
+// 获取日所在旬（以节交接当天起算）
+func (lunar *Lunar) GetDayXun() string {
+	return LunarUtil.GetXun(lunar.GetDayInGanZhi())
+}
+
+// 获取日所在旬（晚子时算第二天）
+func (lunar *Lunar) GetDayXunExact() string {
+	return LunarUtil.GetXun(lunar.GetDayInGanZhiExact())
+}
+
+// 获取值日空亡
+func (lunar *Lunar) GetDayXunKong() string {
+	return LunarUtil.GetXunKong(lunar.GetDayInGanZhi())
+}
+
+// 获取值日空亡（晚子时算第二天）
+func (lunar *Lunar) GetDayXunKongExact() string {
+	return LunarUtil.GetXunKong(lunar.GetDayInGanZhiExact())
+}
+
+// 获取时辰所在旬
+func (lunar *Lunar) GetTimeXun() string {
+	return LunarUtil.GetXun(lunar.GetTimeInGanZhi())
+}
+
+// 获取值时空亡
+func (lunar *Lunar) GetTimeXunKong() string {
+	return LunarUtil.GetXunKong(lunar.GetTimeInGanZhi())
+}

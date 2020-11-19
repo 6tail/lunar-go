@@ -86,6 +86,16 @@ func (daYun *DaYun) GetGanZhi() string {
 	return LunarUtil.JIA_ZI[offset]
 }
 
+// 获取所在旬
+func (daYun *DaYun) GetXun() string {
+	return LunarUtil.GetXun(daYun.GetGanZhi())
+}
+
+// 获取旬空(空亡)
+func (daYun *DaYun) GetXunKong() string {
+	return LunarUtil.GetXunKong(daYun.GetGanZhi())
+}
+
 // 获取流年
 func (daYun *DaYun) GetLiuNian() []*LiuNian {
 	n := 10

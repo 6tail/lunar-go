@@ -39,11 +39,22 @@ func (liuYue *LiuYue) GetMonthInChinese() string {
 func (liuYue *LiuYue) GetGanZhi() string {
 	offset := 0
 	ganZhi := liuYue.liuNian.GetGanZhi()
-	yearGan := ganZhi[0 : len(ganZhi)/2]
+	gz := []rune(ganZhi)
+	yearGan := string(gz[:1])
 	if strings.Compare("甲", yearGan) == 0 || strings.Compare("己", yearGan) == 0 {
 		offset = 2
 	}
 	gan := LunarUtil.GAN[(liuYue.index+offset)%10+1]
 	zhi := LunarUtil.ZHI[(liuYue.index+LunarUtil.BASE_MONTH_ZHI_INDEX)%12+1]
 	return gan + zhi
+}
+
+// 获取所在旬
+func (liuYue *LiuYue) GetXun() string {
+	return LunarUtil.GetXun(liuYue.GetGanZhi())
+}
+
+// 获取旬空(空亡)
+func (liuYue *LiuYue) GetXunKong() string {
+	return LunarUtil.GetXunKong(liuYue.GetGanZhi())
 }

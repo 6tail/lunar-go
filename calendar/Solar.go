@@ -86,7 +86,8 @@ func ListSolarFromBaZi(yearGanZhi string, monthGanZhi string, dayGanZhi string, 
 	}
 	startYear := today.GetYear() - offsetYear
 	hour := 0
-	timeZhi := timeGanZhi[len(timeGanZhi)/2:]
+	gz := []rune(timeGanZhi)
+	timeZhi := string(gz[1:])
 	j := len(LunarUtil.ZHI)
 	for i := 0; i < j; i++ {
 		if strings.Compare(LunarUtil.ZHI[i], timeZhi) == 0 {
@@ -217,13 +218,9 @@ func (solar *Solar) GetFestivals() *list.List {
 		l.PushBack(f)
 	}
 	//计算几月第几个星期几对应的节日
-	//第几周
+	weeks := int(math.Ceil(float64(solar.day) / 7.0))
 	week := solar.GetWeek()
-	weekInMonth := int(math.Ceil(float64((solar.day - week) / 7)))
-	if week > 0 {
-		weekInMonth++
-	}
-	if f, ok := SolarUtil.WEEK_FESTIVAL[strconv.Itoa(solar.month)+"-"+strconv.Itoa(weekInMonth)+"-"+strconv.Itoa(week)]; ok {
+	if f, ok := SolarUtil.WEEK_FESTIVAL[strconv.Itoa(solar.month)+"-"+strconv.Itoa(weeks)+"-"+strconv.Itoa(week)]; ok {
 		l.PushBack(f)
 	}
 	return l

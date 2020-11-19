@@ -394,10 +394,75 @@ func test4() {
 	fmt.Println()
 }
 
+func test5() {
+	solar := calendar.NewSolarFromYmd(2020, 11, 26)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	solar = calendar.NewSolarFromYmd(2020, 6, 21)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	solar = calendar.NewSolarFromYmd(2021, 5, 9)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	solar = calendar.NewSolarFromYmd(1986, 11, 27)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	solar = calendar.NewSolarFromYmd(1985, 6, 16)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+
+	solar = calendar.NewSolarFromYmd(1984, 5, 13)
+	for i := solar.GetFestivals().Front(); i != nil; i = i.Next() {
+		fmt.Print(i.Value.(string))
+		fmt.Print(" ")
+	}
+	fmt.Println()
+}
+
+func test6() {
+	solar := calendar.NewSolar(2020, 11, 19, 0, 0, 0)
+	lunar := solar.GetLunar()
+	// 甲午
+	fmt.Println(lunar.GetYearXun())
+	// 辰巳
+	fmt.Println(lunar.GetYearXunKong())
+	// 午未
+	fmt.Println(lunar.GetMonthXunKong())
+	// 戌亥
+	fmt.Println(lunar.GetDayXunKong())
+
+	solar = calendar.NewSolar(1990, 12, 23, 8, 37, 0)
+	lunar = solar.GetLunar()
+	eightChar := lunar.GetEightChar()
+	// 子丑
+	fmt.Println(eightChar.GetDayXunKong())
+}
+
 func main() {
 	test()
 	test1()
 	test2()
 	test3()
 	test4()
+	test5()
+	test6()
 }
