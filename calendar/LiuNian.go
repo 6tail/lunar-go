@@ -38,7 +38,8 @@ func (liuNian *LiuNian) GetAge() int {
 
 // 获取干支
 func (liuNian *LiuNian) GetGanZhi() string {
-	offset := LunarUtil.GetJiaZiIndex(liuNian.lunar.GetYearInGanZhiExact()) + liuNian.index
+	jieQi := liuNian.lunar.GetJieQiTable()
+	offset := LunarUtil.GetJiaZiIndex(jieQi["立春"].GetLunar().GetYearInGanZhiExact()) + liuNian.index
 	if liuNian.daYun.GetIndex() > 0 {
 		offset += liuNian.daYun.GetStartAge() - 1
 	}
