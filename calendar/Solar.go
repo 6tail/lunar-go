@@ -77,6 +77,13 @@ func NewSolarFromJulianDay(julianDay float64) *Solar {
 }
 
 func ListSolarFromBaZi(yearGanZhi string, monthGanZhi string, dayGanZhi string, timeGanZhi string) *list.List {
+	return ListSolarFromBaZiBySect(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, 2)
+}
+
+func ListSolarFromBaZiBySect(yearGanZhi string, monthGanZhi string, dayGanZhi string, timeGanZhi string, sect int) *list.List {
+	if sect != 1 {
+		sect = 2
+	}
 	l := list.New()
 	today := NewSolarFromDate(time.Now())
 	lunar := today.GetLunar()
@@ -142,7 +149,11 @@ func ListSolarFromBaZi(yearGanZhi string, monthGanZhi string, dayGanZhi string, 
 					break
 				}
 				lunar = solar.GetLunar()
-				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(lunar.GetDayInGanZhiExact(), dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
+				dgz := lunar.GetDayInGanZhiExact2()
+				if sect == 1 {
+					dgz = lunar.GetDayInGanZhiExact()
+				}
+				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(dgz, dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
 					l.PushBack(solar)
 					break
 				}

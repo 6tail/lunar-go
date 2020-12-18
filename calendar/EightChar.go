@@ -28,6 +28,7 @@ var changShengOffset = map[string]int{
 
 // 八字
 type EightChar struct {
+	sect  int
 	lunar *Lunar
 }
 
@@ -41,6 +42,17 @@ func (eightChar *EightChar) String() string {
 	return eightChar.GetYear() + " " + eightChar.GetMonth() + " " + eightChar.GetDay() + " " + eightChar.GetTime()
 }
 
+func (eightChar *EightChar) GetSect() int {
+	return eightChar.sect
+}
+
+func (eightChar *EightChar) SetSect(sect int) {
+	if sect != 1 {
+		sect = 2
+	}
+	eightChar.sect = sect
+}
+
 func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
 	l := list.New()
 	hideGan := LunarUtil.ZHI_HIDE_GAN[zhi]
@@ -50,10 +62,24 @@ func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
 	return l
 }
 
+func (eightChar *EightChar) GetDayGanIndex() int {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayGanIndexExact2()
+	}
+	return eightChar.lunar.GetDayGanIndexExact()
+}
+
+func (eightChar *EightChar) GetDayZhiIndex() int {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayZhiIndexExact2()
+	}
+	return eightChar.lunar.GetDayZhiIndexExact()
+}
+
 func (eightChar *EightChar) getDiShi(zhiIndex int) string {
 	offset := changShengOffset[eightChar.GetDayGan()]
 	index := offset
-	if eightChar.lunar.GetDayGanIndexExact()%2 == 0 {
+	if eightChar.GetDayGanIndex()%2 == 0 {
 		index += zhiIndex
 	} else {
 		index -= zhiIndex
@@ -140,14 +166,23 @@ func (eightChar *EightChar) GetMonthDiShi() string {
 }
 
 func (eightChar *EightChar) GetDay() string {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayInGanZhiExact2()
+	}
 	return eightChar.lunar.GetDayInGanZhiExact()
 }
 
 func (eightChar *EightChar) GetDayGan() string {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayGanExact2()
+	}
 	return eightChar.lunar.GetDayGanExact()
 }
 
 func (eightChar *EightChar) GetDayZhi() string {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayZhiExact2()
+	}
 	return eightChar.lunar.GetDayZhiExact()
 }
 
@@ -317,11 +352,17 @@ func (eightChar *EightChar) GetMonthXunKong() string {
 
 // 获取日柱所在旬
 func (eightChar *EightChar) GetDayXun() string {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayXunExact2()
+	}
 	return eightChar.lunar.GetDayXunExact()
 }
 
 // 获取日柱旬空(空亡)
 func (eightChar *EightChar) GetDayXunKong() string {
+	if eightChar.sect == 2 {
+		return eightChar.lunar.GetDayXunKongExact2()
+	}
 	return eightChar.lunar.GetDayXunKongExact()
 }
 

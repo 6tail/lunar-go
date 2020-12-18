@@ -66,6 +66,8 @@ type Lunar struct {
 	dayZhiIndex          int
 	dayGanIndexExact     int
 	dayZhiIndexExact     int
+	dayGanIndexExact2    int
+	dayZhiIndexExact2    int
 	timeGanIndex         int
 	timeZhiIndex         int
 	weekIndex            int
@@ -524,7 +526,9 @@ func computeDay(lunar *Lunar) {
 	dayGanExact := lunar.dayGanIndex
 	dayZhiExact := lunar.dayZhiIndex
 
-	// 晚子时（夜子/子夜）应算作第二天
+	lunar.dayGanIndexExact2 = dayGanExact
+	lunar.dayZhiIndexExact2 = dayZhiExact
+
 	hm := padding(lunar.hour) + ":" + padding(lunar.minute)
 	if strings.Compare(hm, "23:00") >= 0 && strings.Compare(hm, "23:59") <= 0 {
 		dayGanExact++
@@ -644,6 +648,10 @@ func (lunar *Lunar) GetDayGanExact() string {
 	return LunarUtil.GAN[lunar.dayGanIndexExact+1]
 }
 
+func (lunar *Lunar) GetDayGanExact2() string {
+	return LunarUtil.GAN[lunar.dayGanIndexExact2+1]
+}
+
 func (lunar *Lunar) GetDayZhi() string {
 	return LunarUtil.ZHI[lunar.dayZhiIndex+1]
 }
@@ -652,12 +660,20 @@ func (lunar *Lunar) GetDayZhiExact() string {
 	return LunarUtil.ZHI[lunar.dayZhiIndexExact+1]
 }
 
+func (lunar *Lunar) GetDayZhiExact2() string {
+	return LunarUtil.ZHI[lunar.dayZhiIndexExact2+1]
+}
+
 func (lunar *Lunar) GetDayInGanZhi() string {
 	return lunar.GetDayGan() + lunar.GetDayZhi()
 }
 
 func (lunar *Lunar) GetDayInGanZhiExact() string {
 	return lunar.GetDayGanExact() + lunar.GetDayZhiExact()
+}
+
+func (lunar *Lunar) GetDayInGanZhiExact2() string {
+	return lunar.GetDayGanExact2() + lunar.GetDayZhiExact2()
 }
 
 func (lunar *Lunar) GetTimeGan() string {
@@ -1618,8 +1634,16 @@ func (lunar *Lunar) GetDayGanIndexExact() int {
 	return lunar.dayGanIndexExact
 }
 
+func (lunar *Lunar) GetDayGanIndexExact2() int {
+	return lunar.dayGanIndexExact2
+}
+
 func (lunar *Lunar) GetDayZhiIndexExact() int {
 	return lunar.dayZhiIndexExact
+}
+
+func (lunar *Lunar) GetDayZhiIndexExact2() int {
+	return lunar.dayZhiIndexExact2
 }
 
 func (lunar *Lunar) GetMonthGanIndexExact() int {
@@ -1754,9 +1778,14 @@ func (lunar *Lunar) GetDayXun() string {
 	return LunarUtil.GetXun(lunar.GetDayInGanZhi())
 }
 
-// 获取日所在旬（晚子时算第二天）
+// 获取日所在旬（晚子时日柱算明天）
 func (lunar *Lunar) GetDayXunExact() string {
 	return LunarUtil.GetXun(lunar.GetDayInGanZhiExact())
+}
+
+// 获取日所在旬（晚子时日柱算当天）
+func (lunar *Lunar) GetDayXunExact2() string {
+	return LunarUtil.GetXun(lunar.GetDayInGanZhiExact2())
 }
 
 // 获取值日空亡
@@ -1764,9 +1793,14 @@ func (lunar *Lunar) GetDayXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetDayInGanZhi())
 }
 
-// 获取值日空亡（晚子时算第二天）
+// 获取值日空亡（晚子时日柱算明天）
 func (lunar *Lunar) GetDayXunKongExact() string {
 	return LunarUtil.GetXunKong(lunar.GetDayInGanZhiExact())
+}
+
+// 获取值日空亡（晚子时日柱算当天）
+func (lunar *Lunar) GetDayXunKongExact2() string {
+	return LunarUtil.GetXunKong(lunar.GetDayInGanZhiExact2())
 }
 
 // 获取时辰所在旬
