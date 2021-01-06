@@ -1630,12 +1630,20 @@ func (lunar *Lunar) GetTimeZhiIndex() int {
 	return lunar.timeZhiIndex
 }
 
+func (lunar *Lunar) GetDayGanIndex() int {
+	return lunar.dayGanIndex
+}
+
 func (lunar *Lunar) GetDayGanIndexExact() int {
 	return lunar.dayGanIndexExact
 }
 
 func (lunar *Lunar) GetDayGanIndexExact2() int {
 	return lunar.dayGanIndexExact2
+}
+
+func (lunar *Lunar) GetDayZhiIndex() int {
+	return lunar.dayZhiIndex
 }
 
 func (lunar *Lunar) GetDayZhiIndexExact() int {
@@ -1646,16 +1654,40 @@ func (lunar *Lunar) GetDayZhiIndexExact2() int {
 	return lunar.dayZhiIndexExact2
 }
 
+func (lunar *Lunar) GetMonthGanIndex() int {
+	return lunar.monthGanIndex
+}
+
 func (lunar *Lunar) GetMonthGanIndexExact() int {
 	return lunar.monthGanIndexExact
+}
+
+func (lunar *Lunar) GetMonthZhiIndex() int {
+	return lunar.monthZhiIndex
 }
 
 func (lunar *Lunar) GetMonthZhiIndexExact() int {
 	return lunar.monthZhiIndexExact
 }
 
+func (lunar *Lunar) GetYearGanIndex() int {
+	return lunar.yearGanIndex
+}
+
+func (lunar *Lunar) GetYearGanIndexByLiChun() int {
+	return lunar.yearGanIndexByLiChun
+}
+
 func (lunar *Lunar) GetYearGanIndexExact() int {
 	return lunar.yearGanIndexExact
+}
+
+func (lunar *Lunar) GetYearZhiIndex() int {
+	return lunar.yearZhiIndex
+}
+
+func (lunar *Lunar) GetYearZhiIndexByLiChun() int {
+	return lunar.yearZhiIndexByLiChun
 }
 
 func (lunar *Lunar) GetYearZhiIndexExact() int {
@@ -1811,4 +1843,79 @@ func (lunar *Lunar) GetTimeXun() string {
 // 获取值时空亡
 func (lunar *Lunar) GetTimeXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetTimeInGanZhi())
+}
+
+// 获取数九，如果不是数九天，返回nil
+func (lunar *Lunar) GetShuJiu() *ShuJiu {
+	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	start := lunar.jieQi[JIE_QI_APPEND]
+	startCalendar := time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
+	if currentCalendar.Before(startCalendar) {
+		start = lunar.jieQi[JIE_QI_FIRST]
+		startCalendar = time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
+	}
+	endCalendar := startCalendar.AddDate(0, 0, 81)
+	if currentCalendar.Before(startCalendar) || !currentCalendar.Before(endCalendar) {
+		return nil
+	}
+	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	return NewShuJiu(LunarUtil.NUMBER[days/9+1]+"九", days%9+1)
+}
+
+// 获取三伏，如果不是三伏天，返回nil
+func (lunar *Lunar) GetFu() *Fu {
+	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	xiaZhi := lunar.jieQi["夏至"]
+	liQiu := lunar.jieQi["立秋"]
+	startCalendar := time.Date(xiaZhi.GetYear(), time.Month(xiaZhi.GetMonth()), xiaZhi.GetDay(), 0, 0, 0, 0, time.Local)
+	// 第1个庚日
+	add := 6 - xiaZhi.GetLunar().GetDayGanIndex()
+	if add < 0 {
+		add += 10
+	}
+	// 第3个庚日，即初伏第1天
+	add += 20
+	startCalendar = startCalendar.AddDate(0, 0, add)
+
+	// 初伏以前
+	if currentCalendar.Before(startCalendar) {
+		return nil
+	}
+
+	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	if days < 10 {
+		return NewFu("初伏", days+1)
+	}
+
+	// 第4个庚日，中伏第1天
+	startCalendar = startCalendar.AddDate(0, 0, 10)
+	days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	if days < 10 {
+		return NewFu("中伏", days+1)
+	}
+
+	// 第5个庚日，中伏第11天或末伏第1天
+	startCalendar = startCalendar.AddDate(0, 0, 10)
+	days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+
+	liQiuCalendar := time.Date(liQiu.GetYear(), time.Month(liQiu.GetMonth()), liQiu.GetDay(), 0, 0, 0, 0, time.Local)
+
+	// 末伏
+	if !liQiuCalendar.After(startCalendar) {
+		if days < 10 {
+			return NewFu("末伏", days+1)
+		}
+	} else {
+		// 中伏
+		if days < 10 {
+			return NewFu("中伏", days+11)
+		}
+		// 末伏第1天
+		startCalendar = startCalendar.AddDate(0, 0, 10)
+		days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+		if days < 10 {
+			return NewFu("末伏", days+1)
+		}
+	}
+	return nil
 }

@@ -457,6 +457,30 @@ func test6() {
 	fmt.Println(eightChar.GetDayXunKong())
 }
 
+func test7() {
+	// 数九
+	lunar := calendar.NewLunarFromDate(time.Now())
+	fmt.Println(lunar.GetShuJiu())
+
+	// 一九第1天
+	solar := calendar.NewSolarFromYmd(2020, 12, 21)
+	lunar = solar.GetLunar()
+	fmt.Println(lunar.GetShuJiu().ToFullString())
+}
+
+func test8() {
+	// 三伏
+	// 末伏第9天
+	solar := calendar.NewSolarFromYmd(2020, 8, 23)
+	lunar := solar.GetLunar()
+	fmt.Println(lunar.GetFu().ToFullString())
+
+	// 中伏第20天
+	solar = calendar.NewSolarFromYmd(2011, 8, 12)
+	lunar = solar.GetLunar()
+	fmt.Println(lunar.GetFu().ToFullString())
+}
+
 func main() {
 	test()
 	test1()
@@ -465,4 +489,6 @@ func main() {
 	test4()
 	test5()
 	test6()
+	test7()
+	test8()
 }
