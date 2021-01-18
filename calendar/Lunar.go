@@ -1919,3 +1919,31 @@ func (lunar *Lunar) GetFu() *Fu {
 	}
 	return nil
 }
+
+// 获取六曜
+func (lunar *Lunar) GetLiuYao() string {
+	month := lunar.month
+	if month < 0 {
+		month = 0 - month
+	}
+	return LunarUtil.LIU_YAO[(month+lunar.day-2)%6]
+}
+
+// 获取物候
+func (lunar *Lunar) GetWuHou() string {
+	jq := lunar.GetPrevJieQi()
+	name := jq.GetName()
+	offset := 0
+	j := len(jieQi)
+	for i := 0; i < j; i++ {
+		if name == jieQi[i] {
+			offset = i
+			break
+		}
+	}
+	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	startSolar := jq.GetSolar()
+	startCalendar := time.Date(startSolar.GetYear(), time.Month(startSolar.GetMonth()), startSolar.GetDay(), 0, 0, 0, 0, time.Local)
+	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	return LunarUtil.WU_HOU[offset*3+int(days/5)]
+}

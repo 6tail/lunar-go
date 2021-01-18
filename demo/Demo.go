@@ -481,6 +481,14 @@ func test8() {
 	fmt.Println(lunar.GetFu().ToFullString())
 }
 
+func test9() {
+	lunar := calendar.NewLunarFromDate(time.Now())
+	// 六曜
+	fmt.Println(lunar.GetLiuYao())
+	// 物候
+	fmt.Println(lunar.GetWuHou())
+}
+
 func main() {
 	test()
 	test1()
@@ -491,4 +499,5 @@ func main() {
 	test6()
 	test7()
 	test8()
+	test9()
 }
