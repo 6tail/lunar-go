@@ -104,7 +104,7 @@ func GetDaysOfMonth(year int, month int) int {
 	m := month - 1
 	d := DAYS_OF_MONTH[m]
 	//公历闰年2月多一天
-	if m == 2 && IsLeapYear(year) {
+	if month == 2 && IsLeapYear(year) {
 		d++
 	}
 	return d
