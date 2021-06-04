@@ -632,3 +632,67 @@ func TestGanZhi20(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestGanZhi21(t *testing.T) {
+	solar := calendar.NewSolar(2019, 2, 8, 13, 22, 0)
+	lunar := solar.GetLunar()
+	excepted := "己亥"
+	got := lunar.GetYearInGanZhi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	got = lunar.GetYearInGanZhiByLiChun()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	got = lunar.GetYearInGanZhiExact()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "丙寅"
+	got = lunar.GetMonthInGanZhi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	got = lunar.GetMonthInGanZhiExact()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestGanZhi22(t *testing.T) {
+	solar := calendar.NewSolar(2020, 2, 4, 13, 22, 0)
+	lunar := solar.GetLunar()
+	excepted := "庚子"
+	got := lunar.GetYearInGanZhi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	got = lunar.GetYearInGanZhiByLiChun()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "己亥"
+	got = lunar.GetYearInGanZhiExact()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "戊寅"
+	got = lunar.GetMonthInGanZhi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "丁丑"
+	got = lunar.GetMonthInGanZhiExact()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

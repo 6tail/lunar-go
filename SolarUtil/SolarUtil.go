@@ -1,5 +1,5 @@
 // @Title SolarUtil
-// @Description 阳历工具，基准日期为1901年1月1日，对应农历1900年十一月十一
+// @Description 阳历工具
 // @Author 6tail
 package SolarUtil
 
@@ -7,10 +7,6 @@ import (
 	"math"
 	"time"
 )
-
-const BASE_YEAR = 1901
-const BASE_MONTH = 1
-const BASE_DAY = 1
 
 var WEEK = []string{"日", "一", "二", "三", "四", "五", "六"}
 var DAYS_OF_MONTH = []int{31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31}
@@ -50,7 +46,6 @@ var OTHER_FESTIVAL = map[string][]string{
 	"5-5":   {"马克思诞辰纪念日"},
 	"5-8":   {"世界红十字日"},
 	"5-11":  {"世界肥胖日"},
-	"5-23":  {"世界读书日"},
 	"5-27":  {"上海解放日"},
 	"5-31":  {"世界无烟日"},
 	"6-5":   {"世界环境日"},
@@ -87,17 +82,7 @@ var OTHER_FESTIVAL = map[string][]string{
 }
 
 func IsLeapYear(year int) bool {
-	leap := false
-	if year%4 == 0 {
-		leap = true
-	}
-	if year%100 == 0 {
-		leap = false
-	}
-	if year%400 == 0 {
-		leap = true
-	}
-	return leap
+	return (year%4 == 0 && year%100 != 0) || (year%400 == 0)
 }
 
 func GetDaysOfMonth(year int, month int) int {

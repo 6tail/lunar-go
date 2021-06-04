@@ -43,7 +43,16 @@ func (yun *Yun) computeStart() {
 	if yun.forward {
 		end = next.GetSolar()
 	}
-	hourDiff := LunarUtil.GetTimeZhiIndex(end.ToYmdHms()[11:16]) - LunarUtil.GetTimeZhiIndex(start.ToYmdHms()[11:16])
+	endTimeZhiIndex := 11
+	if end.GetHour() != 23 {
+		endTimeZhiIndex = LunarUtil.GetTimeZhiIndex(end.ToYmdHms()[11:16])
+	}
+	startTimeZhiIndex := 11
+	if start.GetHour() != 23 {
+		startTimeZhiIndex = LunarUtil.GetTimeZhiIndex(start.ToYmdHms()[11:16])
+	}
+	// 时辰差
+	hourDiff := endTimeZhiIndex - startTimeZhiIndex
 	endCalendar := time.Date(end.GetYear(), time.Month(end.GetMonth()), end.GetDay(), 0, 0, 0, 0, time.Local)
 	startCalendar := time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
 	dayDiff := (int)((endCalendar.Unix() - startCalendar.Unix()) / 86400)

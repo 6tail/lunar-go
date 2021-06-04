@@ -23,6 +23,11 @@ type Solar struct {
 }
 
 func NewSolar(year int, month int, day int, hour int, minute int, second int) *Solar {
+	if year == 1582 && month == 10 {
+		if day >= 15 {
+			day -= 10
+		}
+	}
 	solar := new(Solar)
 	solar.year = year
 	solar.month = month
@@ -81,6 +86,10 @@ func ListSolarFromBaZi(yearGanZhi string, monthGanZhi string, dayGanZhi string, 
 }
 
 func ListSolarFromBaZiBySect(yearGanZhi string, monthGanZhi string, dayGanZhi string, timeGanZhi string, sect int) *list.List {
+	return ListSolarFromBaZiBySectAndBaseYear(yearGanZhi, monthGanZhi, dayGanZhi, timeGanZhi, sect, 1900)
+}
+
+func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, dayGanZhi string, timeGanZhi string, sect int, baseYear int) *list.List {
 	if sect != 1 {
 		sect = 2
 	}
@@ -102,7 +111,7 @@ func ListSolarFromBaZiBySect(yearGanZhi string, monthGanZhi string, dayGanZhi st
 		}
 	}
 	for {
-		if startYear < SolarUtil.BASE_YEAR-1 {
+		if startYear < baseYear {
 			break
 		}
 		year := startYear - 1
@@ -113,11 +122,8 @@ func ListSolarFromBaZiBySect(yearGanZhi string, monthGanZhi string, dayGanZhi st
 			if counter >= 15 {
 				break
 			}
-			if year >= SolarUtil.BASE_YEAR {
+			if year >= baseYear {
 				day := 1
-				if year == SolarUtil.BASE_YEAR && month == SolarUtil.BASE_MONTH {
-					day = SolarUtil.BASE_DAY
-				}
 				solar := NewSolar(year, month, day, hour, 0, 0)
 				lunar = solar.GetLunar()
 				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 {
@@ -140,9 +146,6 @@ func ListSolarFromBaZiBySect(yearGanZhi string, monthGanZhi string, dayGanZhi st
 				year--
 			}
 			day := 1
-			if year == SolarUtil.BASE_YEAR && month == SolarUtil.BASE_MONTH {
-				day = SolarUtil.BASE_DAY
-			}
 			solar := NewSolar(year, month, day, hour, 0, 0)
 			for {
 				if counter >= 61 {
@@ -296,7 +299,13 @@ func (solar *Solar) GetJulianDay() float64 {
 }
 
 func (solar *Solar) ToYmd() string {
-	return strconv.Itoa(solar.year) + "-" + padding(solar.month) + "-" + padding(solar.day)
+	d := solar.day
+	if solar.year == 1582 && solar.month == 10 {
+		if d >= 5 {
+			d += 10
+		}
+	}
+	return strconv.Itoa(solar.year) + "-" + padding(solar.month) + "-" + padding(d)
 }
 
 func (solar *Solar) ToYmdHms() string {

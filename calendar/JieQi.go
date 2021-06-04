@@ -1,7 +1,6 @@
 package calendar
 
 import (
-	"github.com/6tail/lunar-go/LunarUtil"
 	"strings"
 )
 
@@ -31,19 +30,15 @@ func (jieQi *JieQi) GetName() string {
 // 设置名称
 func (jieQi *JieQi) SetName(name string) {
 	jieQi.name = name
-	j := len(LunarUtil.JIE)
+	j := len(JIE_QI)
 	for i := 0; i < j; i++ {
-		key := LunarUtil.JIE[i]
+		key := JIE_QI[i]
 		if strings.Compare(key, name) == 0 {
-			jieQi.jie = true
-			return
-		}
-	}
-	j = len(LunarUtil.QI)
-	for i := 0; i < j; i++ {
-		key := LunarUtil.QI[i]
-		if strings.Compare(key, jieQi.name) == 0 {
-			jieQi.qi = true
+			if i%2 == 0 {
+				jieQi.qi = true
+			} else {
+				jieQi.jie = true
+			}
 			return
 		}
 	}

@@ -55,3 +55,136 @@ func TestLunar3(t *testing.T) {
 		}
 	}
 }
+
+func TestLunar4(t *testing.T) {
+	lunar := calendar.NewLunarFromYmd(2021, 12, 29)
+	excepted := "除夕"
+	got := lunar.GetFestivals().Front().Value.(string)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar5(t *testing.T) {
+	lunar := calendar.NewLunarFromYmd(2020, 12, 30)
+	excepted := "除夕"
+	got := lunar.GetFestivals().Front().Value.(string)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar6(t *testing.T) {
+	lunar := calendar.NewLunarFromYmd(2020, 12, 29)
+	excepted := 0
+	got := lunar.GetFestivals().Len()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar7(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 1, 31)
+	lunar := solar.GetLunar()
+	excepted := "除夕"
+	got := lunar.GetFestivals().Front().Value.(string)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar8(t *testing.T) {
+	lunar := calendar.NewLunar(2020, 12, 10, 13, 0, 0)
+	excepted := "二〇二〇年腊月初十"
+	got := lunar.String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "2021-01-22"
+	got = lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar9(t *testing.T) {
+	lunar := calendar.NewLunar(1500, 1, 1, 12, 0, 0)
+	excepted := "1500-01-31"
+	got := lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar10(t *testing.T) {
+	lunar := calendar.NewLunar(1500, 12, 29, 12, 0, 0)
+	excepted := "1501-01-18"
+	got := lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar11(t *testing.T) {
+	solar := calendar.NewSolar(1500, 1, 1, 12, 0, 0)
+	excepted := "一四九九年腊月初一"
+	got := solar.GetLunar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar12(t *testing.T) {
+	solar := calendar.NewSolar(1500, 12, 31, 12, 0, 0)
+	excepted := "一五〇〇年腊月十一"
+	got := solar.GetLunar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar13(t *testing.T) {
+	solar := calendar.NewSolar(1582, 10, 4, 12, 0, 0)
+	excepted := "一五八二年九月十八"
+	got := solar.GetLunar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar14(t *testing.T) {
+	solar := calendar.NewSolar(1582, 10, 15, 12, 0, 0)
+	excepted := "一五八二年九月十九"
+	got := solar.GetLunar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar15(t *testing.T) {
+	lunar := calendar.NewLunar(1582, 9, 18, 12, 0, 0)
+	excepted := "1582-10-04"
+	got := lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar16(t *testing.T) {
+	lunar := calendar.NewLunar(1582, 9, 19, 12, 0, 0)
+	excepted := "1582-10-15"
+	got := lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar17(t *testing.T) {
+	lunar := calendar.NewLunar(2019, 12, 12, 11, 22, 0)
+	excepted := "2020-01-06"
+	got := lunar.GetSolar().String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
