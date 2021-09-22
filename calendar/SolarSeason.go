@@ -2,13 +2,14 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"math"
-	"strconv"
 	"time"
 )
 
 const MONTH_IN_SEASON = 3
 
+// 阳历季度
 type SolarSeason struct {
 	year  int
 	month int
@@ -51,18 +52,18 @@ func (solarSeason *SolarSeason) GetMonths() *list.List {
 }
 
 func (solarSeason *SolarSeason) String() string {
-	return strconv.Itoa(solarSeason.year) + "." + strconv.Itoa(solarSeason.GetIndex())
+	return fmt.Sprintf("%d.%d", solarSeason.year, solarSeason.GetIndex())
 }
 
 func (solarSeason *SolarSeason) ToFullString() string {
-	return strconv.Itoa(solarSeason.year) + "年" + strconv.Itoa(solarSeason.GetIndex()) + "季度"
+	return fmt.Sprintf("%d年%d季度", solarSeason.year, solarSeason.GetIndex())
 }
 
-func (solarSeason *SolarSeason) Next(seassons int) *SolarSeason {
-	if 0 == seassons {
+func (solarSeason *SolarSeason) Next(seasons int) *SolarSeason {
+	if 0 == seasons {
 		return NewSolarSeasonFromYm(solarSeason.year, solarSeason.month)
 	}
-	c := time.Date(solarSeason.year, time.Month(solarSeason.month), 1, 0, 0, 0, 0, time.Local)
-	c.AddDate(0, MONTH_IN_SEASON*seassons, 0)
+	c := NewExactDateFromYmd(solarSeason.year, solarSeason.month, 1)
+	c.AddDate(0, MONTH_IN_SEASON*seasons, 0)
 	return NewSolarSeasonFromDate(c)
 }

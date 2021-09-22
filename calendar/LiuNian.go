@@ -2,6 +2,7 @@ package calendar
 
 import "github.com/6tail/lunar-go/LunarUtil"
 
+// 流年
 type LiuNian struct {
 	// 序数，0-9
 	index int

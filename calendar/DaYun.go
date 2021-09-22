@@ -96,9 +96,13 @@ func (daYun *DaYun) GetXunKong() string {
 	return LunarUtil.GetXunKong(daYun.GetGanZhi())
 }
 
-// 获取流年
+// 获取10轮流年
 func (daYun *DaYun) GetLiuNian() []*LiuNian {
-	n := 10
+	return daYun.GetLiuNianBy(10)
+}
+
+// 获取流年
+func (daYun *DaYun) GetLiuNianBy(n int) []*LiuNian {
 	if daYun.index < 1 {
 		n = daYun.endYear - daYun.startYear + 1
 	}
@@ -109,9 +113,13 @@ func (daYun *DaYun) GetLiuNian() []*LiuNian {
 	return l
 }
 
-// 获取小运
+// 获取10轮小运
 func (daYun *DaYun) GetXiaoYun() []*XiaoYun {
-	n := 10
+	return daYun.GetXiaoYunBy(10)
+}
+
+// 获取小运
+func (daYun *DaYun) GetXiaoYunBy(n int) []*XiaoYun {
 	if daYun.index < 1 {
 		n = daYun.endYear - daYun.startYear + 1
 	}

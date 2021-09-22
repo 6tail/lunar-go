@@ -297,7 +297,7 @@ func test2() {
 
 // 工作日推移
 func NextWorkday(solar *calendar.Solar, days int) *calendar.Solar {
-	c := time.Date(solar.GetYear(), time.Month(solar.GetMonth()), solar.GetDay(), solar.GetHour(), solar.GetMinute(), solar.GetSecond(), 0, time.Local)
+	c := calendar.NewExactDateFromYmdHms(solar.GetYear(), solar.GetMonth(), solar.GetDay(), solar.GetHour(), solar.GetMinute(), solar.GetSecond())
 	if 0 != days {
 		rest := days
 		if rest < 0 {

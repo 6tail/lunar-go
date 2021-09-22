@@ -1,7 +1,10 @@
 package calendar
 
-import "strconv"
+import (
+	"fmt"
+)
 
+// 数九
 type ShuJiu struct {
 	// 名称，如一九、二九
 	name string
@@ -39,7 +42,7 @@ func (shuJiu *ShuJiu) ToString() string {
 }
 
 func (shuJiu *ShuJiu) ToFullString() string {
-	return shuJiu.name + "第" + strconv.Itoa(shuJiu.index) + "天"
+	return fmt.Sprintf("%v第%d天", shuJiu.name, shuJiu.index)
 }
 
 func (shuJiu *ShuJiu) String() string {

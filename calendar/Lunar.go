@@ -2,16 +2,17 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/6tail/lunar-go/LunarUtil"
 	"github.com/6tail/lunar-go/SolarUtil"
-	"strconv"
 	"strings"
 	"time"
 )
 
 var JIE_QI = []string{"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪"}
-var JIE_QI_IN_USE = []string{"DA_XUE", "冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "DONG_ZHI", "XIAO_HAN", "DA_HAN", "LI_CHUN"}
+var JIE_QI_IN_USE = []string{"DA_XUE", "冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "DONG_ZHI", "XIAO_HAN", "DA_HAN", "LI_CHUN", "YU_SHUI", "JING_ZHE"}
 
+// 阴历
 type Lunar struct {
 	year                 int
 	month                int
@@ -48,14 +49,14 @@ func NewLunar(lunarYear int, lunarMonth int, lunarDay int, hour int, minute int,
 	y := NewLunarYear(lunarYear)
 	m := y.GetMonth(lunarMonth)
 	if m == nil {
-		panic("wrong lunar year " + strconv.Itoa(lunarYear) + " month " + strconv.Itoa(lunarMonth))
+		panic(fmt.Sprintf("wrong lunar year %v month %v", lunarYear, lunarMonth))
 	}
 	if lunarDay < 1 {
 		panic("lunar day must bigger than 0")
 	}
 	days := m.GetDayCount()
 	if lunarDay > days {
-		panic("only " + strconv.Itoa(days) + " days in lunar year " + strconv.Itoa(lunarYear) + " month " + strconv.Itoa(lunarMonth))
+		panic(fmt.Sprintf("only %v days in lunar year %v month %v", days, lunarYear, lunarMonth))
 	}
 
 	lunar := new(Lunar)
@@ -80,7 +81,7 @@ func NewLunarFromDate(date time.Time) *Lunar {
 	lunarMonth := 0
 	lunarDay := 0
 	solar := NewSolarFromDate(date)
-	c := time.Date(solar.year, time.Month(solar.month), solar.day, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solar.year, solar.month, solar.day)
 	ly := NewLunarYear(solar.year)
 	for i := ly.months.Front(); i != nil; i = i.Next() {
 		m := i.Value.(*LunarMonth)
@@ -116,6 +117,14 @@ func computeYear(lunar *Lunar) {
 	offset := lunar.year - 4
 	lunar.yearGanIndex = offset % 10
 	lunar.yearZhiIndex = offset % 12
+
+	if lunar.yearGanIndex < 0 {
+		lunar.yearGanIndex += 10
+	}
+
+	if lunar.yearZhiIndex < 0 {
+		lunar.yearZhiIndex += 12
+	}
 
 	//以立春作为新一年的开始的干支纪年
 	g := lunar.yearGanIndex
@@ -265,7 +274,7 @@ func computeDay(lunar *Lunar) {
 	lunar.dayGanIndexExact2 = dayGanExact
 	lunar.dayZhiIndexExact2 = dayZhiExact
 
-	hm := padding(lunar.hour) + ":" + padding(lunar.minute)
+	hm := fmt.Sprintf("%02d:%02d", lunar.hour, lunar.minute)
 	if strings.Compare(hm, "23:00") >= 0 && strings.Compare(hm, "23:59") <= 0 {
 		dayGanExact++
 		if dayGanExact >= 10 {
@@ -282,8 +291,7 @@ func computeDay(lunar *Lunar) {
 }
 
 func computeTime(lunar *Lunar) {
-	hm := padding(lunar.hour) + ":" + padding(lunar.minute)
-	lunar.timeZhiIndex = LunarUtil.GetTimeZhiIndex(hm)
+	lunar.timeZhiIndex = LunarUtil.GetTimeZhiIndex(fmt.Sprintf("%02d:%02d", lunar.hour, lunar.minute))
 	lunar.timeGanIndex = (lunar.dayGanIndexExact%5*2 + lunar.timeZhiIndex) % 10
 }
 
@@ -448,7 +456,7 @@ func (lunar *Lunar) GetTimeShengXiao() string {
 }
 
 func (lunar *Lunar) GetYearInChinese() string {
-	y := strconv.Itoa(lunar.year)
+	y := fmt.Sprintf("%d", lunar.year)
 	s := ""
 	j := len(y)
 	for i := 0; i < j; i++ {
@@ -492,6 +500,10 @@ func convertJieQi(name string) string {
 		jq = "立春"
 	} else if strings.Compare("DA_XUE", jq) == 0 {
 		jq = "大雪"
+	} else if strings.Compare("YU_SHUI", jq) == 0 {
+		jq = "雨水"
+	} else if strings.Compare("JING_ZHE", jq) == 0 {
+		jq = "惊蛰"
 	}
 	return jq
 }
@@ -533,7 +545,7 @@ func (lunar *Lunar) GetWeekInChinese() string {
 }
 
 func (lunar *Lunar) GetXiu() string {
-	return LunarUtil.XIU[lunar.GetDayZhi()+strconv.Itoa(lunar.GetWeek())]
+	return LunarUtil.XIU[fmt.Sprintf("%s%d", lunar.GetDayZhi(), lunar.GetWeek())]
 }
 
 func (lunar *Lunar) GetXiuLuck() string {
@@ -562,7 +574,7 @@ func (lunar *Lunar) GetShou() string {
 
 func (lunar *Lunar) GetFestivals() *list.List {
 	l := list.New()
-	if f, ok := LunarUtil.FESTIVAL[strconv.Itoa(lunar.month)+"-"+strconv.Itoa(lunar.day)]; ok {
+	if f, ok := LunarUtil.FESTIVAL[fmt.Sprintf("%d-%d", lunar.month, lunar.day)]; ok {
 		l.PushBack(f)
 	}
 	m := lunar.month
@@ -577,7 +589,7 @@ func (lunar *Lunar) GetFestivals() *list.List {
 
 func (lunar *Lunar) GetOtherFestivals() *list.List {
 	l := list.New()
-	if f, ok := LunarUtil.OTHER_FESTIVAL[strconv.Itoa(lunar.month)+"-"+strconv.Itoa(lunar.day)]; ok {
+	if f, ok := LunarUtil.OTHER_FESTIVAL[fmt.Sprintf("%d-%d", lunar.month, lunar.day)]; ok {
 		for i := 0; i < len(f); i++ {
 			l.PushBack(f[i])
 		}
@@ -1536,12 +1548,12 @@ func (lunar *Lunar) GetTimeXunKong() string {
 
 // 获取数九，如果不是数九天，返回nil
 func (lunar *Lunar) GetShuJiu() *ShuJiu {
-	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	start := lunar.jieQi["DONG_ZHI"]
-	startCalendar := time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
+	startCalendar := NewExactDateFromYmd(start.GetYear(), start.GetMonth(), start.GetDay())
 	if currentCalendar.Before(startCalendar) {
 		start = lunar.jieQi["冬至"]
-		startCalendar = time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
+		startCalendar = NewExactDateFromYmd(start.GetYear(), start.GetMonth(), start.GetDay())
 	}
 	endCalendar := startCalendar.AddDate(0, 0, 81)
 	if currentCalendar.Before(startCalendar) || !currentCalendar.Before(endCalendar) {
@@ -1553,10 +1565,10 @@ func (lunar *Lunar) GetShuJiu() *ShuJiu {
 
 // 获取三伏，如果不是三伏天，返回nil
 func (lunar *Lunar) GetFu() *Fu {
-	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	xiaZhi := lunar.jieQi["夏至"]
 	liQiu := lunar.jieQi["立秋"]
-	startCalendar := time.Date(xiaZhi.GetYear(), time.Month(xiaZhi.GetMonth()), xiaZhi.GetDay(), 0, 0, 0, 0, time.Local)
+	startCalendar := NewExactDateFromYmd(xiaZhi.GetYear(), xiaZhi.GetMonth(), xiaZhi.GetDay())
 	// 第1个庚日
 	add := 6 - xiaZhi.GetLunar().GetDayGanIndex()
 	if add < 0 {
@@ -1587,7 +1599,7 @@ func (lunar *Lunar) GetFu() *Fu {
 	startCalendar = startCalendar.AddDate(0, 0, 10)
 	days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
 
-	liQiuCalendar := time.Date(liQiu.GetYear(), time.Month(liQiu.GetMonth()), liQiu.GetDay(), 0, 0, 0, 0, time.Local)
+	liQiuCalendar := NewExactDateFromYmd(liQiu.GetYear(), liQiu.GetMonth(), liQiu.GetDay())
 
 	// 末伏
 	if !liQiuCalendar.After(startCalendar) {
@@ -1630,9 +1642,9 @@ func (lunar *Lunar) GetWuHou() string {
 			break
 		}
 	}
-	currentCalendar := time.Date(lunar.solar.GetYear(), time.Month(lunar.solar.GetMonth()), lunar.solar.GetDay(), 0, 0, 0, 0, time.Local)
+	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	startSolar := jq.GetSolar()
-	startCalendar := time.Date(startSolar.GetYear(), time.Month(startSolar.GetMonth()), startSolar.GetDay(), 0, 0, 0, 0, time.Local)
+	startCalendar := NewExactDateFromYmd(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay())
 	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
-	return LunarUtil.WU_HOU[offset*3+int(days/5)]
+	return LunarUtil.WU_HOU[(offset*3+int(days/5))%len(LunarUtil.WU_HOU)]
 }

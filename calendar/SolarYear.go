@@ -2,12 +2,13 @@ package calendar
 
 import (
 	"container/list"
-	"strconv"
+	"fmt"
 	"time"
 )
 
 const MONTH_IN_YEAR = 12
 
+// 阳历年
 type SolarYear struct {
 	year int
 }
@@ -41,15 +42,15 @@ func (solarYear *SolarYear) GetMonths() *list.List {
 }
 
 func (solarYear *SolarYear) String() string {
-	return strconv.Itoa(solarYear.year)
+	return fmt.Sprintf("%d", solarYear.year)
 }
 
 func (solarYear *SolarYear) ToFullString() string {
-	return strconv.Itoa(solarYear.year) + "年"
+	return fmt.Sprintf("%d年", solarYear.year)
 }
 
 func (solarYear *SolarYear) Next(years int) *SolarYear {
-	c := time.Date(solarYear.year, 1, 1, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solarYear.year, 1, 1)
 	c.AddDate(years, 0, 0)
 	return NewSolarYearFromDate(c)
 }

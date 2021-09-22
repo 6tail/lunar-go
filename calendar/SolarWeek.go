@@ -2,12 +2,13 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/6tail/lunar-go/SolarUtil"
 	"math"
-	"strconv"
 	"time"
 )
 
+// 阳历周
 type SolarWeek struct {
 	year  int
 	month int
@@ -45,7 +46,7 @@ func (solarWeek *SolarWeek) GetDay() int {
 }
 
 func (solarWeek *SolarWeek) GetIndex() int {
-	c := time.Date(solarWeek.year, time.Month(solarWeek.month), 1, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, 1)
 	week := int(c.Weekday())
 	if week == 0 {
 		week = 7
@@ -54,7 +55,7 @@ func (solarWeek *SolarWeek) GetIndex() int {
 }
 
 func (solarWeek *SolarWeek) GetFirstDay() *Solar {
-	c := time.Date(solarWeek.year, time.Month(solarWeek.month), solarWeek.day, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, solarWeek.day)
 	week := int(c.Weekday())
 	prev := week - solarWeek.start
 	if prev < 0 {
@@ -98,11 +99,11 @@ func (solarWeek *SolarWeek) GetDaysInMonth() *list.List {
 }
 
 func (solarWeek *SolarWeek) String() string {
-	return strconv.Itoa(solarWeek.year) + "." + strconv.Itoa(solarWeek.month) + "." + strconv.Itoa(solarWeek.GetIndex())
+	return fmt.Sprintf("%d.%d.%d", solarWeek.year, solarWeek.month, solarWeek.GetIndex())
 }
 
 func (solarWeek *SolarWeek) ToFullString() string {
-	return strconv.Itoa(solarWeek.year) + "年" + strconv.Itoa(solarWeek.month) + "月第" + strconv.Itoa(solarWeek.GetIndex()) + "周"
+	return fmt.Sprintf("%d年%d月第%d周", solarWeek.year, solarWeek.month, solarWeek.GetIndex())
 }
 
 func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
@@ -111,7 +112,7 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 	}
 	if separateMonth {
 		n := weeks
-		c := time.Date(solarWeek.year, time.Month(solarWeek.month), solarWeek.day, 0, 0, 0, 0, time.Local)
+		c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, solarWeek.day)
 		week := NewSolarWeekFromDate(c, solarWeek.start)
 		month := solarWeek.month
 		plus := false
@@ -137,7 +138,7 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 						week = NewSolarWeekFromYmd(firstDay.year, firstDay.month, firstDay.day, solarWeek.start)
 						weekMonth = week.month
 					} else {
-						c = time.Date(week.year, time.Month(week.month), 1, 0, 0, 0, 0, time.Local)
+						c = NewExactDateFromYmd(week.year, week.month, 1)
 						week = NewSolarWeekFromDate(c, solarWeek.start)
 					}
 				} else {
@@ -148,7 +149,7 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 						week = NewSolarWeekFromYmd(lastDay.year, lastDay.month, lastDay.day, solarWeek.start)
 						weekMonth = week.month
 					} else {
-						c = time.Date(week.year, time.Month(week.month), SolarUtil.GetDaysOfMonth(week.year, week.month), 0, 0, 0, 0, time.Local)
+						c = NewExactDateFromYmd(week.year, week.month, SolarUtil.GetDaysOfMonth(week.year, week.month))
 						week = NewSolarWeekFromDate(c, solarWeek.start)
 					}
 				}
@@ -162,7 +163,7 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 		}
 		return week
 	} else {
-		c := time.Date(solarWeek.year, time.Month(solarWeek.month), solarWeek.day, 0, 0, 0, 0, time.Local)
+		c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, solarWeek.day)
 		c.AddDate(0, 0, weeks*7)
 		return NewSolarWeekFromDate(c, solarWeek.start)
 	}

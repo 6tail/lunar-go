@@ -2,13 +2,14 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"math"
-	"strconv"
 	"time"
 )
 
 const MONTH_IN_HALF_YEAR = 6
 
+// 阳历半年
 type SolarHalfYear struct {
 	year  int
 	month int
@@ -51,7 +52,7 @@ func (solarHalfYear *SolarHalfYear) GetMonths() *list.List {
 }
 
 func (solarHalfYear *SolarHalfYear) String() string {
-	return strconv.Itoa(solarHalfYear.year) + "." + strconv.Itoa(solarHalfYear.GetIndex())
+	return fmt.Sprintf("%d.%d", solarHalfYear.year, solarHalfYear.GetIndex())
 }
 
 func (solarHalfYear *SolarHalfYear) ToFullString() string {
@@ -59,14 +60,14 @@ func (solarHalfYear *SolarHalfYear) ToFullString() string {
 	if solarHalfYear.GetIndex() == 1 {
 		index = "上"
 	}
-	return strconv.Itoa(solarHalfYear.year) + "年" + index + "半年"
+	return fmt.Sprintf("%d年%s半年", solarHalfYear.year, index)
 }
 
 func (solarHalfYear *SolarHalfYear) Next(halfYears int) *SolarHalfYear {
 	if 0 == halfYears {
 		return NewSolarHalfYearFromYm(solarHalfYear.year, solarHalfYear.month)
 	}
-	c := time.Date(solarHalfYear.year, time.Month(solarHalfYear.month), 1, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solarHalfYear.year, solarHalfYear.month, 1)
 	c.AddDate(0, MONTH_IN_HALF_YEAR, 0)
 	return NewSolarHalfYearFromDate(c)
 }

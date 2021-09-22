@@ -2,7 +2,6 @@ package calendar
 
 import (
 	"github.com/6tail/lunar-go/LunarUtil"
-	"time"
 )
 
 type Yun struct {
@@ -53,8 +52,8 @@ func (yun *Yun) computeStart() {
 	}
 	// 时辰差
 	hourDiff := endTimeZhiIndex - startTimeZhiIndex
-	endCalendar := time.Date(end.GetYear(), time.Month(end.GetMonth()), end.GetDay(), 0, 0, 0, 0, time.Local)
-	startCalendar := time.Date(start.GetYear(), time.Month(start.GetMonth()), start.GetDay(), 0, 0, 0, 0, time.Local)
+	endCalendar := NewExactDateFromYmd(end.GetYear(), end.GetMonth(), end.GetDay())
+	startCalendar := NewExactDateFromYmd(start.GetYear(), start.GetMonth(), start.GetDay())
 	dayDiff := (int)((endCalendar.Unix() - startCalendar.Unix()) / 86400)
 	if hourDiff < 0 {
 		hourDiff += 12
@@ -102,14 +101,18 @@ func (yun *Yun) GetLunar() *Lunar {
 // 获取起运的阳历日期
 func (yun *Yun) GetStartSolar() *Solar {
 	birth := yun.lunar.GetSolar()
-	c := time.Date(birth.GetYear(), time.Month(birth.GetMonth()), birth.GetDay(), 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(birth.GetYear(), birth.GetMonth(), birth.GetDay())
 	c = c.AddDate(yun.startYear, yun.startMonth, yun.startDay)
 	return NewSolarFromDate(c)
 }
 
-// 获取大运
+// 获取10轮大运
 func (yun *Yun) GetDaYun() []*DaYun {
-	n := 10
+	return yun.GetDaYunBy(10)
+}
+
+// 获取大运
+func (yun *Yun) GetDaYunBy(n int) []*DaYun {
 	l := make([]*DaYun, n)
 	for i := 0; i < n; i++ {
 		l[i] = NewDaYun(yun, i)

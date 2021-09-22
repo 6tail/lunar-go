@@ -5,8 +5,8 @@ package HolidayUtil
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/6tail/lunar-go/calendar"
-	"strconv"
 	"strings"
 )
 
@@ -18,14 +18,6 @@ var NAMES = []string{"元旦节", "春节", "清明节", "劳动节", "端午节
 
 var namesInUse = NAMES
 var dataInUse = data
-
-func padding(n int) string {
-	s := ""
-	if n < 10 {
-		s = "0"
-	}
-	return s + strconv.Itoa(n)
-}
 
 func buildHolidayForward(s string) *calendar.Holiday {
 	day := s[0:8]
@@ -132,15 +124,15 @@ func GetHoliday(ymd string) *calendar.Holiday {
 }
 
 func GetHolidayByYmd(year int, month int, day int) *calendar.Holiday {
-	return GetHoliday(strconv.Itoa(year) + padding(month) + padding(day))
+	return GetHoliday(fmt.Sprintf("%d%02d%02d", year, month, day))
 }
 
 func GetHolidaysByYm(year int, month int) *list.List {
-	return findHolidaysForward(strconv.Itoa(year) + padding(month))
+	return findHolidaysForward(fmt.Sprintf("%d%02d", year, month))
 }
 
 func GetHolidaysByYear(year int) *list.List {
-	return findHolidaysForward(strconv.Itoa(year))
+	return findHolidaysForward(fmt.Sprintf("%d", year))
 }
 
 func GetHolidays(ymd string) *list.List {
@@ -148,7 +140,7 @@ func GetHolidays(ymd string) *list.List {
 }
 
 func GetHolidaysByTargetYmd(year int, month int, day int) *list.List {
-	return findHolidaysBackward(strconv.Itoa(year) + padding(month) + padding(day))
+	return findHolidaysBackward(fmt.Sprintf("%d%02d%02d", year, month, day))
 }
 
 func GetHolidaysByTarget(ymd string) *list.List {

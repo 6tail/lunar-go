@@ -1,10 +1,11 @@
 package calendar
 
 import (
+	"fmt"
 	"github.com/6tail/lunar-go/LunarUtil"
-	"strconv"
 )
 
+// 阴历月
 type LunarMonth struct {
 	year           int
 	month          int
@@ -56,5 +57,5 @@ func (lunarMonth *LunarMonth) String() string {
 	if m < 0 {
 		m = -m
 	}
-	return strconv.Itoa(lunarMonth.year) + "年" + run + LunarUtil.MONTH[m] + "月(" + strconv.Itoa(lunarMonth.dayCount) + "天)"
+	return fmt.Sprintf("%d年%s%s月(%d)天", lunarMonth.year, run, LunarUtil.MONTH[m], lunarMonth.dayCount)
 }

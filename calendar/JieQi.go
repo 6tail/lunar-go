@@ -4,6 +4,7 @@ import (
 	"strings"
 )
 
+// 节气
 type JieQi struct {
 	// 名称
 	name string

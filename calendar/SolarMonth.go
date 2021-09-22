@@ -2,11 +2,12 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/6tail/lunar-go/SolarUtil"
-	"strconv"
 	"time"
 )
 
+// 阳历月
 type SolarMonth struct {
 	year  int
 	month int
@@ -47,15 +48,15 @@ func (solarMonth *SolarMonth) GetDays() *list.List {
 }
 
 func (solarMonth *SolarMonth) String() string {
-	return strconv.Itoa(solarMonth.year) + "-" + strconv.Itoa(solarMonth.month)
+	return fmt.Sprintf("%d-%d", solarMonth.year, solarMonth.month)
 }
 
 func (solarMonth *SolarMonth) ToFullString() string {
-	return strconv.Itoa(solarMonth.year) + "年" + strconv.Itoa(solarMonth.month) + "月"
+	return fmt.Sprintf("%d年%d月", solarMonth.year, solarMonth.month)
 }
 
 func (solarMonth *SolarMonth) Next(months int) *SolarMonth {
-	c := time.Date(solarMonth.year, time.Month(solarMonth.month), 1, 0, 0, 0, 0, time.Local)
+	c := NewExactDateFromYmd(solarMonth.year, solarMonth.month, 1)
 	c.AddDate(0, months, 0)
 	return NewSolarMonthFromDate(c)
 }

@@ -5,6 +5,7 @@ import (
 	"strings"
 )
 
+// 流月
 type LiuYue struct {
 	// 序数，0-9
 	index   int

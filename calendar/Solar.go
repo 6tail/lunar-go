@@ -2,16 +2,17 @@ package calendar
 
 import (
 	"container/list"
+	"fmt"
 	"github.com/6tail/lunar-go/LunarUtil"
 	"github.com/6tail/lunar-go/SolarUtil"
 	"math"
-	"strconv"
 	"strings"
 	"time"
 )
 
 const J2000 = 2451545
 
+// 阳历
 type Solar struct {
 	year     int
 	month    int
@@ -35,7 +36,7 @@ func NewSolar(year int, month int, day int, hour int, minute int, second int) *S
 	solar.hour = hour
 	solar.minute = minute
 	solar.second = second
-	solar.calendar = time.Date(year, time.Month(month), day, hour, minute, second, 0, time.Local)
+	solar.calendar = NewExactDateFromYmdHms(year, month, day, hour, minute, second)
 	return solar
 }
 
@@ -169,14 +170,6 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 	return l
 }
 
-func padding(n int) string {
-	s := ""
-	if n < 10 {
-		s = "0"
-	}
-	return s + strconv.Itoa(n)
-}
-
 func (solar *Solar) IsLeapYear() bool {
 	return SolarUtil.IsLeapYear(solar.year)
 }
@@ -228,13 +221,13 @@ func (solar *Solar) GetXingZuo() string {
 func (solar *Solar) GetFestivals() *list.List {
 	l := list.New()
 	//获取几月几日对应的节日
-	if f, ok := SolarUtil.FESTIVAL[strconv.Itoa(solar.month)+"-"+strconv.Itoa(solar.day)]; ok {
+	if f, ok := SolarUtil.FESTIVAL[fmt.Sprintf("%d-%d", solar.month, solar.day)]; ok {
 		l.PushBack(f)
 	}
 	//计算几月第几个星期几对应的节日
 	weeks := int(math.Ceil(float64(solar.day) / 7.0))
 	week := solar.GetWeek()
-	if f, ok := SolarUtil.WEEK_FESTIVAL[strconv.Itoa(solar.month)+"-"+strconv.Itoa(weeks)+"-"+strconv.Itoa(week)]; ok {
+	if f, ok := SolarUtil.WEEK_FESTIVAL[fmt.Sprintf("%d-%d-%d", solar.month, weeks, week)]; ok {
 		l.PushBack(f)
 	}
 	return l
@@ -242,7 +235,7 @@ func (solar *Solar) GetFestivals() *list.List {
 
 func (solar *Solar) GetOtherFestivals() *list.List {
 	l := list.New()
-	if f, ok := SolarUtil.OTHER_FESTIVAL[strconv.Itoa(solar.month)+"-"+strconv.Itoa(solar.day)]; ok {
+	if f, ok := SolarUtil.OTHER_FESTIVAL[fmt.Sprintf("%d-%d", solar.month, solar.day)]; ok {
 		for i := 0; i < len(f); i++ {
 			l.PushBack(f[i])
 		}
@@ -305,11 +298,11 @@ func (solar *Solar) ToYmd() string {
 			d += 10
 		}
 	}
-	return strconv.Itoa(solar.year) + "-" + padding(solar.month) + "-" + padding(d)
+	return fmt.Sprintf("%04d-%02d-%02d", solar.year, solar.month, d)
 }
 
 func (solar *Solar) ToYmdHms() string {
-	return solar.ToYmd() + " " + padding(solar.hour) + ":" + padding(solar.minute) + ":" + padding(solar.second)
+	return fmt.Sprintf("%v %02d:%02d:%02d", solar.ToYmd(), solar.hour, solar.minute, solar.second)
 }
 
 func (solar *Solar) String() string {

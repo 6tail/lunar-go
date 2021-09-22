@@ -1043,14 +1043,6 @@ var ZHI_HIDE_GAN = map[string][]string{
 	"亥": {"壬", "甲"},
 }
 
-func padding(n int) string {
-	s := ""
-	if n < 10 {
-		s = "0"
-	}
-	return s + strconv.Itoa(n)
-}
-
 func GetTimeZhiIndex(hm string) int {
 	if "" == hm {
 		return 0
@@ -1060,7 +1052,7 @@ func GetTimeZhiIndex(hm string) int {
 	}
 	x := 1
 	for i := 1; i < 22; i += 2 {
-		if strings.Compare(hm, padding(i)+":00") >= 0 && strings.Compare(hm, padding(i+1)+":59") <= 0 {
+		if strings.Compare(hm, fmt.Sprintf("%02d:00", i)) >= 0 && strings.Compare(hm, fmt.Sprintf("%02d:59", i+1)) <= 0 {
 			return x
 		}
 		x++

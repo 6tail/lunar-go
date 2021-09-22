@@ -1,7 +1,10 @@
 package calendar
 
-import "strconv"
+import (
+	"fmt"
+)
 
+// 伏
 type Fu struct {
 	// 名称：初伏、中伏、末伏
 	name string
@@ -39,7 +42,7 @@ func (fu *Fu) ToString() string {
 }
 
 func (fu *Fu) ToFullString() string {
-	return fu.name + "第" + strconv.Itoa(fu.index) + "天"
+	return fmt.Sprintf("%v第%d天", fu.name, fu.index)
 }
 
 func (fu *Fu) String() string {
