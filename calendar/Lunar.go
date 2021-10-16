@@ -1646,5 +1646,30 @@ func (lunar *Lunar) GetWuHou() string {
 	startSolar := jq.GetSolar()
 	startCalendar := NewExactDateFromYmd(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay())
 	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
-	return LunarUtil.WU_HOU[(offset*3+int(days/5))%len(LunarUtil.WU_HOU)]
+	return LunarUtil.WU_HOU[(offset*3+days/5)%len(LunarUtil.WU_HOU)]
+}
+
+// 获取日禄
+func (lunar *Lunar) GetDayLu() string {
+	gan := LunarUtil.LU[lunar.GetDayGan()]
+	lu := gan + "命互禄"
+	if zhi, ok := LunarUtil.LU[lunar.GetDayZhi()]; ok {
+		lu += " " + zhi + "命进禄"
+	}
+	return lu
+}
+
+// 获取时辰
+func (lunar *Lunar) GetTime() *LunarTime {
+	return NewLunarTime(lunar.year, lunar.month, lunar.day, lunar.hour, lunar.minute, lunar.second)
+}
+
+// 获取当天的时辰列表
+func (lunar *Lunar) GetTimes() []*LunarTime {
+	l := make([]*LunarTime, 13)
+	l[0] = NewLunarTime(lunar.year, lunar.month, lunar.day, 0, 0, 0)
+	for i := 0; i < 12; i++ {
+		l[i+1] = NewLunarTime(lunar.year, lunar.month, lunar.day, (i+1)*2-1, 0, 0)
+	}
+	return l
 }

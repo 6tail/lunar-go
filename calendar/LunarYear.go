@@ -3,6 +3,7 @@ package calendar
 import (
 	"container/list"
 	"fmt"
+	"github.com/6tail/lunar-go/LunarUtil"
 	"github.com/6tail/lunar-go/ShouXingUtil"
 	"math"
 )
@@ -158,4 +159,36 @@ func (lunarYear *LunarYear) String() string {
 
 func (lunarYear *LunarYear) ToFullString() string {
 	return fmt.Sprintf("%d年", lunarYear.year)
+}
+
+func (lunarYear *LunarYear) GetZhiShui() string {
+	offset := 4 - NewSolarFromJulianDay(lunarYear.GetMonth(1).GetFirstJulianDay()).GetLunar().GetDayZhiIndex()
+	if offset < 0 {
+		offset += 12
+	}
+	return LunarUtil.NUMBER[offset+1] + "龙治水"
+}
+
+func (lunarYear *LunarYear) GetFenBing() string {
+	offset := 2 - NewSolarFromJulianDay(lunarYear.GetMonth(1).GetFirstJulianDay()).GetLunar().GetDayGanIndex()
+	if offset < 0 {
+		offset += 10
+	}
+	return LunarUtil.NUMBER[offset+1] + "人分饼"
+}
+
+func (lunarYear *LunarYear) GetGengTian() string {
+	offset := 1 - NewSolarFromJulianDay(lunarYear.GetMonth(1).GetFirstJulianDay()).GetLunar().GetDayZhiIndex()
+	if offset < 0 {
+		offset += 12
+	}
+	return LunarUtil.NUMBER[offset+1] + "牛耕田"
+}
+
+func (lunarYear *LunarYear) GetDeJin() string {
+	offset := 7 - NewSolarFromJulianDay(lunarYear.GetMonth(1).GetFirstJulianDay()).GetLunar().GetDayGanIndex()
+	if offset < 0 {
+		offset += 10
+	}
+	return LunarUtil.NUMBER[offset+1] + "日得金"
 }
