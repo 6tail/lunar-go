@@ -79,6 +79,16 @@ func NewSolarFromJulianDay(julianDay float64) *Solar {
 	f -= float64(minute)
 	f *= 60
 	second := int(math.Round(f))
+
+	if second > 59 {
+		second -= 60
+		minute++
+	}
+	if minute > 59 {
+		minute -= 60
+		hour++
+	}
+
 	return NewSolar(year, month, day, hour, minute, second)
 }
 
