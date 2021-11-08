@@ -594,6 +594,9 @@ func (lunar *Lunar) GetOtherFestivals() *list.List {
 			l.PushBack(f[i])
 		}
 	}
+	if strings.Compare(lunar.solar.ToYmd(), lunar.jieQi["清明"].Next(-1).ToYmd()) == 0 {
+		l.PushBack("寒食节")
+	}
 	return l
 }
 
@@ -1672,4 +1675,9 @@ func (lunar *Lunar) GetTimes() []*LunarTime {
 		l[i+1] = NewLunarTime(lunar.year, lunar.month, lunar.day, (i+1)*2-1, 0, 0)
 	}
 	return l
+}
+
+// 获取佛历
+func (lunar *Lunar) GetFoto() *Foto {
+	return NewFotoFromLunar(lunar)
 }

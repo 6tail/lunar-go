@@ -25,7 +25,6 @@ func (fu *Fu) GetName() string {
 
 func (fu *Fu) SetName(name string) {
 	fu.name = name
-
 }
 
 func (fu *Fu) GetIndex() int {
@@ -34,7 +33,6 @@ func (fu *Fu) GetIndex() int {
 
 func (fu *Fu) SetIndex(index int) {
 	fu.index = index
-
 }
 
 func (fu *Fu) ToString() string {
