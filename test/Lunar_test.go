@@ -13,7 +13,7 @@ func TestLunar1(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 
-	excepted = "二〇一九年三月廿七 己亥(猪)年 戊辰(龙)月 戊戌(狗)日 子(鼠)时 纳音[平地木 大林木 平地木 桑柘木] 星期三 西方白虎 星宿[参水猿](吉) 彭祖百忌[戊不受田田主不祥 戌不吃犬作怪上床] 喜神方位[巽](东南) 阳贵神方位[艮](东北) 阴贵神方位[坤](西南) 福神方位[坎](正北) 财神方位[坎](正北) 冲[(壬辰)龙] 煞[北]"
+	excepted = "二〇一九年三月廿七 己亥(猪)年 戊辰(龙)月 戊戌(狗)日 子(鼠)时 纳音[平地木 大林木 平地木 桑柘木] 星期三 西方白虎 星宿[参水猿](吉) 彭祖百忌[戊不受田田主不祥 戌不吃犬作怪上床] 喜神方位[巽](东南) 阳贵神方位[艮](东北) 阴贵神方位[坤](西南) 福神方位[艮](东北) 财神方位[坎](正北) 冲[(壬辰)龙] 煞[北]"
 	got = lunar.ToFullString()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
@@ -330,6 +330,51 @@ func TestLunar37(t *testing.T) {
 	lunar := calendar.NewSolarFromYmd(2017, 2, 16).GetLunar()
 	excepted := "寅命互禄"
 	got := lunar.GetDayLu()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar48(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2021, 11, 13).GetLunar()
+	excepted := "碓磨厕 外东南"
+	got := lunar.GetDayPositionTai()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar49(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2021, 11, 12).GetLunar()
+	excepted := "占门碓 外东南"
+	got := lunar.GetDayPositionTai()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar50(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2021, 11, 13).GetLunar()
+	excepted := "西南"
+	got := lunar.GetDayPositionFuDesc()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar51(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2021, 11, 12).GetLunar()
+	excepted := "正北"
+	got := lunar.GetDayPositionFuDesc()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar52(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2011, 11, 12).GetLunar()
+	excepted := "厕灶厨 外西南"
+	got := lunar.GetDayPositionTai()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}

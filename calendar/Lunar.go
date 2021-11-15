@@ -683,11 +683,23 @@ func (lunar *Lunar) GetDayPositionYinGuiDesc() string {
 }
 
 func (lunar *Lunar) GetDayPositionFu() string {
-	return LunarUtil.POSITION_FU[lunar.dayGanIndex+1]
+	return lunar.GetDayPositionFuBySect(2)
+}
+
+func (lunar *Lunar) GetDayPositionFuBySect(sect int) string {
+	offset := lunar.dayGanIndex + 1
+	if 1 == sect {
+		return LunarUtil.POSITION_FU[offset]
+	}
+	return LunarUtil.POSITION_FU_2[offset]
 }
 
 func (lunar *Lunar) GetDayPositionFuDesc() string {
-	return LunarUtil.POSITION_DESC[lunar.GetDayPositionFu()]
+	return lunar.GetDayPositionFuDescBySect(2)
+}
+
+func (lunar *Lunar) GetDayPositionFuDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunar.GetDayPositionFuBySect(sect)]
 }
 
 func (lunar *Lunar) GetDayPositionCai() string {
@@ -934,11 +946,7 @@ func (lunar *Lunar) GetTimeTianShenLuck() string {
 }
 
 func (lunar *Lunar) GetDayPositionTai() string {
-	offset := lunar.dayGanIndex - lunar.dayZhiIndex
-	if offset < 0 {
-		offset += 12
-	}
-	return LunarUtil.POSITION_TAI_DAY[offset*5+lunar.dayGanIndex]
+	return LunarUtil.POSITION_TAI_DAY[LunarUtil.GetJiaZiIndex(lunar.GetDayInGanZhi())]
 }
 
 func (lunar *Lunar) GetMonthPositionTai() string {

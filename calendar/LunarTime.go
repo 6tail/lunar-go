@@ -63,11 +63,23 @@ func (lunarTime *LunarTime) GetPositionYinGuiDesc() string {
 }
 
 func (lunarTime *LunarTime) GetPositionFu() string {
-	return LunarUtil.POSITION_FU[lunarTime.ganIndex+1]
+	return lunarTime.GetPositionFuBySect(2)
+}
+
+func (lunarTime *LunarTime) GetPositionFuBySect(sect int) string {
+	offset := lunarTime.ganIndex + 1
+	if 1 == sect {
+		return LunarUtil.POSITION_FU[offset]
+	}
+	return LunarUtil.POSITION_FU_2[offset]
 }
 
 func (lunarTime *LunarTime) GetPositionFuDesc() string {
-	return LunarUtil.POSITION_DESC[lunarTime.GetPositionFu()]
+	return lunarTime.GetPositionFuDescBySect(2)
+}
+
+func (lunarTime *LunarTime) GetPositionFuDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunarTime.GetPositionFuBySect(sect)]
 }
 
 func (lunarTime *LunarTime) GetPositionCai() string {
