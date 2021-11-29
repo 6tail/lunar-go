@@ -126,9 +126,8 @@ func (lunarTime *LunarTime) GetChongGanTie() string {
 
 func (lunarTime *LunarTime) GetChongShengXiao() string {
 	chong := lunarTime.GetChong()
-	j := len(LunarUtil.ZHI)
-	for i := 0; i < j; i++ {
-		if LunarUtil.ZHI[i] == chong {
+	for i, v := range LunarUtil.ZHI {
+		if v == chong {
 			return LunarUtil.SHENG_XIAO[i]
 		}
 	}

@@ -55,9 +55,9 @@ func (eightChar *EightChar) SetSect(sect int) {
 
 func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
 	l := list.New()
-	hideGan := LunarUtil.ZHI_HIDE_GAN[zhi]
-	for i := 0; i < len(hideGan); i++ {
-		l.PushBack(LunarUtil.SHI_SHEN_ZHI[eightChar.GetDayGan()+zhi+hideGan[i]])
+	dayGan := eightChar.GetDayGan()
+	for _, v := range LunarUtil.ZHI_HIDE_GAN[zhi] {
+		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+v])
 	}
 	return l
 }

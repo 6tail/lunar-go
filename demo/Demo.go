@@ -133,8 +133,7 @@ func test() {
 
 	// 大运
 	daYunArr := yun.GetDaYun()
-	for i := 0; i < len(daYunArr); i++ {
-		daYun := daYunArr[i]
+	for _, daYun := range daYunArr {
 		fmt.Printf("大运[%d] = %d年 %d岁 %s\n", daYun.GetIndex(), daYun.GetStartYear(), daYun.GetStartAge(), daYun.GetGanZhi())
 	}
 
@@ -142,24 +141,21 @@ func test() {
 
 	// 第1次大运流年
 	liuNianArr := daYunArr[1].GetLiuNian()
-	for i := 0; i < len(liuNianArr); i++ {
-		liuNian := liuNianArr[i]
+	for _, liuNian := range liuNianArr {
 		fmt.Printf("流年[%d] = %d年 %d岁 %s\n", liuNian.GetIndex(), liuNian.GetYear(), liuNian.GetAge(), liuNian.GetGanZhi())
 	}
 	fmt.Println()
 
 	// 第1次大运小运
 	xiaoYunArr := daYunArr[1].GetXiaoYun()
-	for i := 0; i < len(xiaoYunArr); i++ {
-		xiaoYun := xiaoYunArr[i]
+	for _, xiaoYun := range xiaoYunArr {
 		fmt.Printf("小运[%d] = %d年 %d岁 %s\n", xiaoYun.GetIndex(), xiaoYun.GetYear(), xiaoYun.GetAge(), xiaoYun.GetGanZhi())
 	}
 	fmt.Println()
 
 	// 第1次大运首个流年的流月
 	liuYueArr := liuNianArr[0].GetLiuYue()
-	for i := 0; i < len(liuYueArr); i++ {
-		liuYue := liuYueArr[i]
+	for _, liuYue := range liuYueArr {
 		fmt.Printf("流月[%d] = %s月 %s\n", liuYue.GetIndex(), liuYue.GetMonthInChinese(), liuYue.GetGanZhi())
 	}
 	fmt.Println()
@@ -380,8 +376,8 @@ func test4() {
 
 	// 追加节假日名称和数据
 	names = make([]string, 12)
-	for i := 0; i < len(HolidayUtil.NAMES); i++ {
-		names[i] = HolidayUtil.NAMES[i]
+	for i, v := range HolidayUtil.NAMES {
+		names[i] = v
 	}
 	names[9] = "我的生日"
 	names[10] = "结婚纪念日"

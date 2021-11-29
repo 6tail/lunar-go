@@ -38,6 +38,14 @@ func (f *FotoFestival) GetRemark() string {
 }
 
 func (f *FotoFestival) ToString() string {
+	return f.name
+}
+
+func (f *FotoFestival) String() string {
+	return f.ToString()
+}
+
+func (f *FotoFestival) ToFullString() string {
 	s := f.name
 	if len(f.result) > 0 {
 		s += " " + f.result
@@ -46,8 +54,4 @@ func (f *FotoFestival) ToString() string {
 		s += " " + f.remark
 	}
 	return s
-}
-
-func (f *FotoFestival) String() string {
-	return f.ToString()
 }

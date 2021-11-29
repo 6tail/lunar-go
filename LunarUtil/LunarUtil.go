@@ -1021,9 +1021,8 @@ func hex(n int) string {
 }
 
 func GetJiaZiIndex(ganZhi string) int {
-	j := len(JIA_ZI)
-	for i := 0; i < j; i++ {
-		if JIA_ZI[i] == ganZhi {
+	for i, v := range JIA_ZI {
+		if v == ganZhi {
 			return i
 		}
 	}
@@ -1228,16 +1227,14 @@ func GetXunIndex(ganZhi string) int {
 	zhi := string(gz[1:])
 	ganIndex := 0
 	zhiIndex := 0
-	j := len(GAN)
-	for i := 0; i < j; i++ {
-		if strings.Compare(GAN[i], gan) == 0 {
+	for i, v := range GAN {
+		if strings.Compare(v, gan) == 0 {
 			ganIndex = i
 			break
 		}
 	}
-	j = len(ZHI)
-	for i := 0; i < j; i++ {
-		if strings.Compare(ZHI[i], zhi) == 0 {
+	for i, v := range ZHI {
+		if strings.Compare(v, zhi) == 0 {
 			zhiIndex = i
 			break
 		}

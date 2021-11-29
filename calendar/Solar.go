@@ -115,9 +115,8 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 	hour := 0
 	gz := []rune(timeGanZhi)
 	timeZhi := string(gz[1:])
-	j := len(LunarUtil.ZHI)
-	for i := 0; i < j; i++ {
-		if strings.Compare(LunarUtil.ZHI[i], timeZhi) == 0 {
+	for i, z := range LunarUtil.ZHI {
+		if strings.Compare(z, timeZhi) == 0 {
 			hour = (i - 1) * 2
 		}
 	}
@@ -246,8 +245,8 @@ func (solar *Solar) GetFestivals() *list.List {
 func (solar *Solar) GetOtherFestivals() *list.List {
 	l := list.New()
 	if f, ok := SolarUtil.OTHER_FESTIVAL[fmt.Sprintf("%d-%d", solar.month, solar.day)]; ok {
-		for i := 0; i < len(f); i++ {
-			l.PushBack(f[i])
+		for _, v := range f {
+			l.PushBack(v)
 		}
 	}
 	return l

@@ -22,12 +22,12 @@ func NewFotoFromLunar(lunar *Lunar) *Foto {
 	return f
 }
 
-func NewFoto(lunarYear int, lunarMonth int, lunarDay int, hour int, minute int, second int) *Foto {
-	return NewFotoFromLunar(NewLunar(lunarYear, lunarMonth, lunarDay, hour, minute, second))
+func NewFoto(year int, month int, day int, hour int, minute int, second int) *Foto {
+	return NewFotoFromLunar(NewLunar(year+DEAD_YEAR-1, month, day, hour, minute, second))
 }
 
-func NewFotoFromYmd(lunarYear int, lunarMonth int, lunarDay int) *Foto {
-	return NewFoto(lunarYear, lunarMonth, lunarDay, 0, 0, 0)
+func NewFotoFromYmd(year int, month int, day int) *Foto {
+	return NewFoto(year, month, day, 0, 0, 0)
 }
 
 func (f *Foto) GetLunar() *Lunar {
@@ -72,8 +72,7 @@ func (f *Foto) GetDayInChinese() string {
 func (f *Foto) GetFestivals() *list.List {
 	l := list.New()
 	if f, ok := FotoUtil.FESTIVAL[fmt.Sprintf("%d-%d", f.lunar.GetMonth(), f.lunar.GetDay())]; ok {
-		for i := 0; i < len(f); i++ {
-			o := f[i]
+		for _, o := range f {
 			result := ""
 			everyMonth := false
 			remark := ""
@@ -131,8 +130,8 @@ func (f *Foto) IsDayZhaiTen() bool {
 
 func (f *Foto) IsDayZhaiGuanYin() bool {
 	k := fmt.Sprintf("%d-%d", f.GetMonth(), f.GetDay())
-	for i := 0; i < len(FotoUtil.DAY_ZHAI_GUAN_YIN); i++ {
-		if strings.Compare(k, FotoUtil.DAY_ZHAI_GUAN_YIN[i]) == 0 {
+	for _, v := range FotoUtil.DAY_ZHAI_GUAN_YIN {
+		if strings.Compare(k, v) == 0 {
 			return true
 		}
 	}

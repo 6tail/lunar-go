@@ -31,10 +31,8 @@ func (jieQi *JieQi) GetName() string {
 // 设置名称
 func (jieQi *JieQi) SetName(name string) {
 	jieQi.name = name
-	j := len(JIE_QI)
-	for i := 0; i < j; i++ {
-		key := JIE_QI[i]
-		if strings.Compare(key, name) == 0 {
+	for i, v := range JIE_QI {
+		if strings.Compare(v, name) == 0 {
 			if i%2 == 0 {
 				jieQi.qi = true
 			} else {

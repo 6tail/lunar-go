@@ -590,8 +590,8 @@ func (lunar *Lunar) GetFestivals() *list.List {
 func (lunar *Lunar) GetOtherFestivals() *list.List {
 	l := list.New()
 	if f, ok := LunarUtil.OTHER_FESTIVAL[fmt.Sprintf("%d-%d", lunar.month, lunar.day)]; ok {
-		for i := 0; i < len(f); i++ {
-			l.PushBack(f[i])
+		for _, v := range f {
+			l.PushBack(v)
 		}
 	}
 	if strings.Compare(lunar.solar.ToYmd(), lunar.jieQi["清明"].Next(-1).ToYmd()) == 0 {
@@ -784,9 +784,8 @@ func (lunar *Lunar) GetChongShengXiao() string {
 
 func (lunar *Lunar) GetDayChongShengXiao() string {
 	chong := lunar.GetDayChong()
-	j := len(LunarUtil.ZHI)
-	for i := 0; i < j; i++ {
-		if LunarUtil.ZHI[i] == chong {
+	for i, v := range LunarUtil.ZHI {
+		if v == chong {
 			return LunarUtil.SHENG_XIAO[i]
 		}
 	}
@@ -974,9 +973,8 @@ func (lunar *Lunar) GetTimeChongGanTie() string {
 
 func (lunar *Lunar) GetTimeChongShengXiao() string {
 	chong := lunar.GetTimeChong()
-	j := len(LunarUtil.ZHI)
-	for i := 0; i < j; i++ {
-		if LunarUtil.ZHI[i] == chong {
+	for i, v := range LunarUtil.ZHI {
+		if v == chong {
 			return LunarUtil.SHENG_XIAO[i]
 		}
 	}
@@ -1187,8 +1185,8 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 	var near *Solar
 	filters := map[string]bool{}
 	if nil != conditions {
-		for i := 0; i < len(conditions); i++ {
-			filters[conditions[i]] = true
+		for _, v := range conditions {
+			filters[v] = true
 		}
 	}
 	filter := len(filters) > 0
@@ -1646,9 +1644,8 @@ func (lunar *Lunar) GetWuHou() string {
 	jq := lunar.GetPrevJieQi()
 	name := jq.GetName()
 	offset := 0
-	j := len(JIE_QI)
-	for i := 0; i < j; i++ {
-		if strings.Compare(name, JIE_QI[i]) == 0 {
+	for i, v := range JIE_QI {
+		if strings.Compare(name, v) == 0 {
 			offset = i
 			break
 		}
@@ -1688,4 +1685,9 @@ func (lunar *Lunar) GetTimes() []*LunarTime {
 // 获取佛历
 func (lunar *Lunar) GetFoto() *Foto {
 	return NewFotoFromLunar(lunar)
+}
+
+// 获取道历
+func (lunar *Lunar) GetTao() *Tao {
+	return NewTaoFromLunar(lunar)
 }

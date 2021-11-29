@@ -166,8 +166,8 @@ func Fix(nms []string, dt string) {
 			appends += segment
 		} else {
 			nameIndex := -1
-			for i := 0; i < len(namesInUse); i++ {
-				if strings.Compare(namesInUse[i], holiday.GetName()) == 0 {
+			for i, v := range namesInUse {
+				if strings.Compare(v, holiday.GetName()) == 0 {
 					nameIndex = i
 					break
 				}
