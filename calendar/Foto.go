@@ -138,6 +138,34 @@ func (f *Foto) IsDayZhaiGuanYin() bool {
 	return false
 }
 
+func (f *Foto) GetXiu() string {
+	return FotoUtil.GetXiu(f.GetMonth(), f.GetDay())
+}
+
+func (f *Foto) GetXiuLuck() string {
+	return LunarUtil.XIU_LUCK[f.GetXiu()]
+}
+
+func (f *Foto) GetXiuSong() string {
+	return LunarUtil.XIU_SONG[f.GetXiu()]
+}
+
+func (f *Foto) GetZheng() string {
+	return LunarUtil.ZHENG[f.GetXiu()]
+}
+
+func (f *Foto) GetAnimal() string {
+	return LunarUtil.ANIMAL[f.GetXiu()]
+}
+
+func (f *Foto) GetGong() string {
+	return LunarUtil.GONG[f.GetXiu()]
+}
+
+func (f *Foto) GetShou() string {
+	return LunarUtil.SHOU[f.GetGong()]
+}
+
 func (f *Foto) ToString() string {
 	return fmt.Sprintf("%s年%s月%s", f.GetYearInChinese(), f.GetMonthInChinese(), f.GetDayInChinese())
 }

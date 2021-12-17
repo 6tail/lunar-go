@@ -22,3 +22,25 @@ func TestJieQi8(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestJieQi9(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2021, 12, 21)
+	lunar := solar.GetLunar()
+	excepted := "冬至"
+	got := lunar.GetJieQi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = ""
+	got = lunar.GetJie()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "冬至"
+	got = lunar.GetQi()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

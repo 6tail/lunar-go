@@ -510,9 +510,9 @@ func convertJieQi(name string) string {
 
 func (lunar *Lunar) GetJie() string {
 	jie := ""
-	j := len(JIE_QI)
-	for i := 1; i < j; i++ {
-		key := JIE_QI[i]
+	j := len(JIE_QI_IN_USE)
+	for i := 0; i < j; i += 2 {
+		key := JIE_QI_IN_USE[i]
 		d := lunar.jieQi[key]
 		if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
 			jie = key
@@ -524,10 +524,10 @@ func (lunar *Lunar) GetJie() string {
 
 func (lunar *Lunar) GetQi() string {
 	qi := ""
-	j := len(JIE_QI)
-	for i := 0; i < j; i += 2 {
-		key := JIE_QI[i]
-		d := lunar.jieQi[qi]
+	j := len(JIE_QI_IN_USE)
+	for i := 1; i < j; i += 2 {
+		key := JIE_QI_IN_USE[i]
+		d := lunar.jieQi[key]
 		if d.year == lunar.solar.year && d.month == lunar.solar.month && d.day == lunar.solar.day {
 			qi = key
 			break
