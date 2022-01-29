@@ -67,3 +67,21 @@ func TestYear5(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestYear6(t *testing.T) {
+	year := calendar.NewLunarYear(1864)
+	excepted := "上元"
+	got := year.GetYuan()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestYear7(t *testing.T) {
+	year := calendar.NewLunarYear(1884)
+	excepted := "二运"
+	got := year.GetYun()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

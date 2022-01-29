@@ -129,6 +129,22 @@ func (t *Tao) IsDayBaHui() bool {
 	return false
 }
 
+func (t *Tao) IsDayMingWu() bool {
+	return strings.Compare("戊", t.lunar.GetDayGan()) == 0
+}
+
+func (t *Tao) IsDayAnWu() bool {
+	m := t.GetMonth()
+	if m < 0 {
+		m = -m
+	}
+	return strings.Compare(t.lunar.GetDayZhi(), TaoUtil.AN_WU[m-1]) == 0
+}
+
+func (t *Tao) IsDayWu() bool {
+	return t.IsDayMingWu() || t.IsDayAnWu()
+}
+
 func (t *Tao) ToString() string {
 	return fmt.Sprintf("%s年%s月%s", t.GetYearInChinese(), t.GetMonthInChinese(), t.GetDayInChinese())
 }

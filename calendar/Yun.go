@@ -52,9 +52,7 @@ func (yun *Yun) computeStart() {
 	}
 	// 时辰差
 	hourDiff := endTimeZhiIndex - startTimeZhiIndex
-	endCalendar := NewExactDateFromYmd(end.GetYear(), end.GetMonth(), end.GetDay())
-	startCalendar := NewExactDateFromYmd(start.GetYear(), start.GetMonth(), start.GetDay())
-	dayDiff := (int)((endCalendar.Unix() - startCalendar.Unix()) / 86400)
+	dayDiff := GetDaysBetween(start.GetYear(), start.GetMonth(), start.GetDay(), end.GetYear(), end.GetMonth(), end.GetDay())
 	if hourDiff < 0 {
 		hourDiff += 12
 		dayDiff--

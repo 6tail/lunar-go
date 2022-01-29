@@ -85,7 +85,17 @@ func IsLeapYear(year int) bool {
 	return (year%4 == 0 && year%100 != 0) || (year%400 == 0)
 }
 
+func GetDaysOfYear(year int) int {
+	if IsLeapYear(year) {
+		return 366
+	}
+	return 365
+}
+
 func GetDaysOfMonth(year int, month int) int {
+	if 1582 == year && 10 == month {
+		return 21
+	}
 	m := month - 1
 	d := DAYS_OF_MONTH[m]
 	//公历闰年2月多一天
@@ -93,6 +103,18 @@ func GetDaysOfMonth(year int, month int) int {
 		d++
 	}
 	return d
+}
+
+func GetDaysInYear(year int, month int, day int) int {
+	days := 0
+	for i := 1; i < month; i++ {
+		days += GetDaysOfMonth(year, i)
+	}
+	days += day
+	if 1582 == year && 10 == month && day >= 15 {
+		days -= 10
+	}
+	return days
 }
 
 func GetWeeksOfMonth(year int, month int, start int) int {

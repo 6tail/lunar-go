@@ -103,3 +103,25 @@ func TestWuHou9(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestWuHou10(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2021, 12, 21)
+	lunar := solar.GetLunar()
+
+	excepted := "冬至 初候"
+	got := lunar.GetHou()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestWuHou11(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 1, 5)
+	lunar := solar.GetLunar()
+
+	excepted := "小寒 初候"
+	got := lunar.GetHou()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

@@ -710,6 +710,132 @@ func (lunar *Lunar) GetDayPositionCaiDesc() string {
 	return LunarUtil.POSITION_DESC[lunar.GetDayPositionCai()]
 }
 
+func (lunar *Lunar) GetYearPositionTaiSui() string {
+	return lunar.GetYearPositionTaiSuiBySect(2)
+}
+
+func (lunar *Lunar) GetYearPositionTaiSuiBySect(sect int) string {
+	yearZhiIndex := 0
+	switch sect {
+	case 1:
+		yearZhiIndex = lunar.yearZhiIndex
+		break
+	case 3:
+		yearZhiIndex = lunar.yearZhiIndexExact
+		break
+	default:
+		yearZhiIndex = lunar.yearZhiIndexByLiChun
+	}
+	return LunarUtil.POSITION_TAI_SUI_YEAR[yearZhiIndex]
+}
+
+func (lunar *Lunar) GetYearPositionTaiSuiDesc() string {
+	return lunar.GetYearPositionTaiSuiDescBySect(2)
+}
+
+func (lunar *Lunar) GetYearPositionTaiSuiDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunar.GetYearPositionTaiSuiBySect(sect)]
+}
+
+func (lunar *Lunar) getMonthPositionTaiSui(monthZhiIndex int, monthGanIndex int) string {
+	p := ""
+	m := monthZhiIndex - LunarUtil.BASE_MONTH_ZHI_INDEX
+	if m < 0 {
+		m += 12
+	}
+	m = m % 4
+	switch m {
+	case 0:
+		p = "艮"
+		break
+	case 2:
+		p = "坤"
+		break
+	case 3:
+		p = "巽"
+		break
+	default:
+		p = LunarUtil.POSITION_GAN[monthGanIndex]
+	}
+	return p
+}
+
+func (lunar *Lunar) GetMonthPositionTaiSuiBySect(sect int) string {
+	monthZhiIndex := 0
+	monthGanIndex := 0
+	switch sect {
+	case 3:
+		monthZhiIndex = lunar.monthZhiIndexExact
+		monthGanIndex = lunar.monthGanIndexExact
+		break
+	default:
+		monthZhiIndex = lunar.monthZhiIndex
+		monthGanIndex = lunar.monthGanIndex
+	}
+	return lunar.getMonthPositionTaiSui(monthZhiIndex, monthGanIndex)
+}
+
+func (lunar *Lunar) GetMonthPositionTaiSui() string {
+	return lunar.GetMonthPositionTaiSuiBySect(2)
+}
+
+func (lunar *Lunar) GetMonthPositionTaiSuiDesc() string {
+	return lunar.GetMonthPositionTaiSuiDescBySect(2)
+}
+
+func (lunar *Lunar) GetMonthPositionTaiSuiDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunar.GetMonthPositionTaiSuiBySect(sect)]
+}
+
+func (lunar *Lunar) getDayPositionTaiSui(dayInGanZhi string, yearZhiIndex int) string {
+	p := ""
+	if strings.Contains("甲子,乙丑,丙寅,丁卯,戊辰,已巳", dayInGanZhi) {
+		p = "震"
+	} else if strings.Contains("丙子,丁丑,戊寅,已卯,庚辰,辛巳", dayInGanZhi) {
+		p = "离"
+	} else if strings.Contains("戊子,已丑,庚寅,辛卯,壬辰,癸巳", dayInGanZhi) {
+		p = "中"
+	} else if strings.Contains("庚子,辛丑,壬寅,癸卯,甲辰,乙巳", dayInGanZhi) {
+		p = "兑"
+	} else if strings.Contains("壬子,癸丑,甲寅,乙卯,丙辰,丁巳", dayInGanZhi) {
+		p = "坎"
+	} else {
+		p = LunarUtil.POSITION_TAI_SUI_YEAR[yearZhiIndex]
+	}
+	return p
+}
+
+func (lunar *Lunar) GetDayPositionTaiSuiBySect(sect int) string {
+	dayInGanZhi := ""
+	yearZhiIndex := 0
+	switch sect {
+	case 1:
+		dayInGanZhi = lunar.GetDayInGanZhi()
+		yearZhiIndex = lunar.yearZhiIndex
+		break
+	case 3:
+		dayInGanZhi = lunar.GetDayInGanZhi()
+		yearZhiIndex = lunar.yearZhiIndexExact
+		break
+	default:
+		dayInGanZhi = lunar.GetDayInGanZhiExact2()
+		yearZhiIndex = lunar.yearZhiIndexByLiChun
+	}
+	return lunar.getDayPositionTaiSui(dayInGanZhi, yearZhiIndex)
+}
+
+func (lunar *Lunar) GetDayPositionTaiSui() string {
+	return lunar.GetDayPositionTaiSuiBySect(2)
+}
+
+func (lunar *Lunar) GetDayPositionTaiSuiDesc() string {
+	return lunar.GetDayPositionTaiSuiDescBySect(2)
+}
+
+func (lunar *Lunar) GetDayPositionTaiSuiDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunar.GetDayPositionTaiSuiBySect(sect)]
+}
+
 func (lunar *Lunar) GetTimePositionXi() string {
 	return LunarUtil.POSITION_XI[lunar.timeGanIndex+1]
 }
@@ -1021,74 +1147,113 @@ func (lunar *Lunar) GetYueXiang() string {
 	return LunarUtil.YUE_XIANG[lunar.day]
 }
 
-func (lunar *Lunar) GetYearNineStar() *NineStar {
-	index := -(lunar.year - 1900) % 9
-	if index < 0 {
-		index += 9
+func (lunar *Lunar) getYearNineStar(yearInGanZhi string) *NineStar {
+	index := LunarUtil.GetJiaZiIndex(yearInGanZhi) + 1
+	yearOffset := 0
+	if index != LunarUtil.GetJiaZiIndex(lunar.GetYearInGanZhi())+1 {
+		yearOffset = -1
 	}
-	return NewNineStar(index)
+	yuan := int((lunar.year+yearOffset+2696)/60) % 3
+	offset := (62 + yuan*3 - index) % 9
+	if 0 == offset {
+		offset = 9
+	}
+	return NewNineStar(offset - 1)
+}
+
+func (lunar *Lunar) GetYearNineStarBySect(sect int) *NineStar {
+	yearInGanZhi := ""
+	switch sect {
+	case 1:
+		yearInGanZhi = lunar.GetYearInGanZhi()
+		break
+	case 3:
+		yearInGanZhi = lunar.GetYearInGanZhiExact()
+		break
+	default:
+		yearInGanZhi = lunar.GetYearInGanZhiByLiChun()
+	}
+	return lunar.getYearNineStar(yearInGanZhi)
+}
+
+func (lunar *Lunar) GetYearNineStar() *NineStar {
+	return lunar.GetYearNineStarBySect(2)
+}
+
+func (lunar *Lunar) getMonthNineStar(yearZhiIndex int, monthZhiIndex int) *NineStar {
+	index := yearZhiIndex % 3
+	n := 27 - index*3
+	if monthZhiIndex < LunarUtil.BASE_MONTH_ZHI_INDEX {
+		n -= 3
+	}
+	offset := (n - monthZhiIndex) % 9
+	return NewNineStar(offset)
+}
+
+func (lunar *Lunar) GetMonthNineStarBySect(sect int) *NineStar {
+	yearZhiIndex := 0
+	monthZhiIndex := 0
+	switch sect {
+	case 1:
+		yearZhiIndex = lunar.yearZhiIndex
+		monthZhiIndex = lunar.monthZhiIndex
+		break
+	case 3:
+		yearZhiIndex = lunar.yearZhiIndexExact
+		monthZhiIndex = lunar.monthZhiIndexExact
+		break
+	default:
+		yearZhiIndex = lunar.yearZhiIndexByLiChun
+		monthZhiIndex = lunar.monthZhiIndex
+	}
+	return lunar.getMonthNineStar(yearZhiIndex, monthZhiIndex)
 }
 
 func (lunar *Lunar) GetMonthNineStar() *NineStar {
-	start := 2
-	yearZhi := lunar.GetYearZhi()
-	if strings.Index("子午卯酉", yearZhi) > -1 {
-		start = 8
-	} else if strings.Index("辰戌丑未", yearZhi) > -1 {
-		start = 5
-	}
-	// 寅月起，所以需要-2
-	monthIndex := lunar.monthZhiIndex - 2
-	if monthIndex < 0 {
-		monthIndex += 12
-	}
-	index := start - monthIndex - 1
-	for {
-		if index >= 0 {
-			break
-		}
-		index += 9
-	}
-	return NewNineStar(index)
+	return lunar.GetMonthNineStarBySect(2)
 }
 
 func (lunar *Lunar) GetDayNineStar() *NineStar {
-	//顺逆
 	solarYmd := lunar.solar.ToYmd()
-	yuShui := lunar.jieQi["雨水"].ToYmd()
-	guYu := lunar.jieQi["谷雨"].ToYmd()
-	xiaZhi := lunar.jieQi["夏至"].ToYmd()
-	chuShu := lunar.jieQi["处暑"].ToYmd()
-	shuangJiang := lunar.jieQi["霜降"].ToYmd()
+	dongZhi := lunar.jieQi["冬至"]
+	dongZhi2 := lunar.jieQi["DONG_ZHI"]
+	xiaZhi := lunar.jieQi["夏至"]
+	dongZhiIndex := LunarUtil.GetJiaZiIndex(dongZhi.GetLunar().GetDayInGanZhi())
+	dongZhiIndex2 := LunarUtil.GetJiaZiIndex(dongZhi2.GetLunar().GetDayInGanZhi())
+	xiaZhiIndex := LunarUtil.GetJiaZiIndex(xiaZhi.GetLunar().GetDayInGanZhi())
+	solarShunBai := dongZhi
+	solarShunBai2 := dongZhi2
+	solarNiZi := xiaZhi
+	if dongZhiIndex > 29 {
+		solarShunBai = dongZhi.Next(60 - dongZhiIndex)
+	} else {
+		solarShunBai = dongZhi.Next(-dongZhiIndex)
+	}
+	solarShunBaiYmd := solarShunBai.ToYmd()
+	if dongZhiIndex2 > 29 {
+		solarShunBai2 = dongZhi2.Next(60 - dongZhiIndex2)
+	} else {
+		solarShunBai2 = dongZhi2.Next(-dongZhiIndex2)
+	}
+	solarShunBaiYmd2 := solarShunBai2.ToYmd()
+	if xiaZhiIndex > 29 {
+		solarNiZi = xiaZhi.Next(60 - xiaZhiIndex)
+	} else {
+		solarNiZi = xiaZhi.Next(-xiaZhiIndex)
+	}
+	solarNiZiYmd := solarNiZi.ToYmd()
 
-	start := 6
-	asc := false
-	if strings.Compare(solarYmd, lunar.jieQi["冬至"].ToYmd()) >= 0 && strings.Compare(solarYmd, yuShui) < 0 {
-		asc = true
-		start = 1
-	} else if strings.Compare(solarYmd, yuShui) >= 0 && strings.Compare(solarYmd, guYu) < 0 {
-		asc = true
-		start = 7
-	} else if strings.Compare(solarYmd, guYu) >= 0 && strings.Compare(solarYmd, xiaZhi) < 0 {
-		asc = true
-		start = 4
-	} else if strings.Compare(solarYmd, xiaZhi) >= 0 && strings.Compare(solarYmd, chuShu) < 0 {
-		start = 9
-	} else if strings.Compare(solarYmd, chuShu) >= 0 && strings.Compare(solarYmd, shuangJiang) < 0 {
-		start = 3
+	offset := 0
+	if strings.Compare(solarYmd, solarShunBaiYmd) >= 0 && strings.Compare(solarYmd, solarNiZiYmd) < 0 {
+		offset = GetDaysBetweenDate(solarShunBai.GetCalendar(), lunar.GetSolar().GetCalendar()) % 9
+	} else if strings.Compare(solarYmd, solarNiZiYmd) >= 0 && strings.Compare(solarYmd, solarShunBaiYmd2) < 0 {
+		offset = 8 - (GetDaysBetweenDate(solarNiZi.GetCalendar(), lunar.GetSolar().GetCalendar()) % 9)
+	} else if strings.Compare(solarYmd, solarShunBaiYmd2) >= 0 {
+		offset = GetDaysBetweenDate(solarShunBai2.GetCalendar(), lunar.GetSolar().GetCalendar()) % 9
+	} else if strings.Compare(solarYmd, solarShunBaiYmd) < 0 {
+		offset = (8 + GetDaysBetweenDate(lunar.GetSolar().GetCalendar(), solarShunBai.GetCalendar())) % 9
 	}
-	ganZhiIndex := LunarUtil.GetJiaZiIndex(lunar.GetDayInGanZhi()) % 9
-	index := start - ganZhiIndex - 1
-	if asc {
-		index = start + ganZhiIndex - 1
-	}
-	if index > 8 {
-		index -= 9
-	}
-	if index < 0 {
-		index += 9
-	}
-	return NewNineStar(index)
+	return NewNineStar(offset)
 }
 
 func (lunar *Lunar) GetTimeNineStar() *NineStar {
@@ -1097,90 +1262,110 @@ func (lunar *Lunar) GetTimeNineStar() *NineStar {
 	asc := false
 	if strings.Compare(solarYmd, lunar.jieQi["冬至"].ToYmd()) >= 0 && strings.Compare(solarYmd, lunar.jieQi["夏至"].ToYmd()) < 0 {
 		asc = true
+	} else if strings.Compare(solarYmd, lunar.jieQi["DONG_ZHI"].ToYmd()) >= 0 {
+		asc = true
 	}
-	start := 3
+	start := 2
 	if asc {
-		start = 7
+		start = 6
 	}
 	dayZhi := lunar.GetDayZhi()
-	if strings.Index("子午卯酉", dayZhi) > -1 {
+	if strings.Contains("子午卯酉", dayZhi) {
 		if asc {
-			start = 1
+			start = 0
 		} else {
-			start = 9
+			start = 8
 		}
-	} else if strings.Index("辰戌丑未", dayZhi) > -1 {
+	} else if strings.Contains("辰戌丑未", dayZhi) {
 		if asc {
-			start = 4
+			start = 3
 		} else {
-			start = 6
+			start = 5
 		}
 	}
-	index := start - lunar.timeZhiIndex - 1
+	index := start + 9 - lunar.timeZhiIndex
 	if asc {
-		index = start + lunar.timeZhiIndex - 1
+		index = start + lunar.timeZhiIndex
 	}
-	if index > 8 {
-		index -= 9
-	}
-	if index < 0 {
-		index += 9
-	}
-	return NewNineStar(index)
+	return NewNineStar(index % 9)
 }
 
 // 获取下一节（顺推的第一个节）
 func (lunar *Lunar) GetNextJie() *JieQi {
+	return lunar.GetNextJieByWholeDay(false)
+}
+
+func (lunar *Lunar) GetNextJieByWholeDay(wholeDay bool) *JieQi {
 	l := len(JIE_QI_IN_USE) / 2
 	conditions := make([]string, l)
 	for i := 0; i < l; i++ {
 		conditions[i] = JIE_QI_IN_USE[i*2]
 	}
-	return lunar.getNearJieQi(true, conditions)
+	return lunar.getNearJieQi(true, conditions, wholeDay)
 }
 
 // 获取上一节（逆推的第一个节）
 func (lunar *Lunar) GetPrevJie() *JieQi {
+	return lunar.GetPrevJieByWholeDay(false)
+}
+
+func (lunar *Lunar) GetPrevJieByWholeDay(wholeDay bool) *JieQi {
 	l := len(JIE_QI_IN_USE) / 2
 	conditions := make([]string, l)
 	for i := 0; i < l; i++ {
 		conditions[i] = JIE_QI_IN_USE[i*2]
 	}
-	return lunar.getNearJieQi(false, conditions)
+	return lunar.getNearJieQi(false, conditions, wholeDay)
 }
 
 // 获取下一气令（顺推的第一个气令）
 func (lunar *Lunar) GetNextQi() *JieQi {
+	return lunar.GetNextQiByWholeDay(false)
+}
+
+func (lunar *Lunar) GetNextQiByWholeDay(wholeDay bool) *JieQi {
 	l := len(JIE_QI_IN_USE) / 2
 	conditions := make([]string, l)
 	for i := 0; i < l; i++ {
 		conditions[i] = JIE_QI_IN_USE[i*2+1]
 	}
-	return lunar.getNearJieQi(true, conditions)
+	return lunar.getNearJieQi(true, conditions, wholeDay)
 }
 
 // 获取上一气令（逆推的第一个气令）
 func (lunar *Lunar) GetPrevQi() *JieQi {
+	return lunar.GetPrevQiByWholeDay(false)
+}
+
+func (lunar *Lunar) GetPrevQiByWholeDay(wholeDay bool) *JieQi {
 	l := len(JIE_QI_IN_USE) / 2
 	conditions := make([]string, l)
 	for i := 0; i < l; i++ {
 		conditions[i] = JIE_QI_IN_USE[i*2+1]
 	}
-	return lunar.getNearJieQi(false, conditions)
+	return lunar.getNearJieQi(false, conditions, wholeDay)
 }
 
 // 获取下一节气（顺推的第一个节气）
 func (lunar *Lunar) GetNextJieQi() *JieQi {
-	return lunar.getNearJieQi(true, nil)
+	return lunar.GetNextJieQiByWholeDay(false)
+}
+
+func (lunar *Lunar) GetNextJieQiByWholeDay(wholeDay bool) *JieQi {
+	return lunar.getNearJieQi(true, nil, wholeDay)
 }
 
 // 获取上一节气（逆推的第一个节气）
 func (lunar *Lunar) GetPrevJieQi() *JieQi {
-	return lunar.getNearJieQi(false, nil)
+	return lunar.GetPrevJieQiByWholeDay(false)
+}
+
+func (lunar *Lunar) GetPrevJieQiByWholeDay(wholeDay bool) *JieQi {
+	return lunar.getNearJieQi(false, nil, wholeDay)
 }
 
 // 获取最近的节气，如果未找到匹配的，返回null
-func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
+func (lunar *Lunar) getNearJieQi(forward bool, conditions []string, wholeDay bool) *JieQi {
 	var name string
 	var near *Solar
 	filters := map[string]bool{}
@@ -1190,7 +1375,12 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 		}
 	}
 	filter := len(filters) > 0
-	today := lunar.solar.ToYmdHms()
+	today := ""
+	if wholeDay {
+		today = lunar.solar.ToYmd()
+	} else {
+		today = lunar.solar.ToYmdHms()
+	}
 	jieQi := lunar.GetJieQiTable()
 	for i := lunar.GetJieQiList().Front(); i != nil; i = i.Next() {
 		key := i.Value.(string)
@@ -1201,22 +1391,49 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string) *JieQi {
 			}
 		}
 		solar := jieQi[key]
-		day := solar.ToYmdHms()
+		day := ""
+		if wholeDay {
+			day = solar.ToYmd()
+		} else {
+			day = solar.ToYmdHms()
+		}
 		if forward {
 			if strings.Compare(day, today) < 0 {
 				continue
 			}
-			if nil == near || strings.Compare(day, near.ToYmdHms()) < 0 {
+			if nil == near {
 				name = jq
 				near = solar
+			} else {
+				nearDay := ""
+				if wholeDay {
+					nearDay = near.ToYmd()
+				} else {
+					nearDay = near.ToYmdHms()
+				}
+				if strings.Compare(day, nearDay) < 0 {
+					name = jq
+					near = solar
+				}
 			}
 		} else {
 			if strings.Compare(day, today) > 0 {
 				continue
 			}
-			if nil == near || strings.Compare(day, near.ToYmdHms()) > 0 {
+			if nil == near {
 				name = jq
 				near = solar
+			} else {
+				nearDay := ""
+				if wholeDay {
+					nearDay = near.ToYmd()
+				} else {
+					nearDay = near.ToYmdHms()
+				}
+				if strings.Compare(day, nearDay) > 0 {
+					name = jq
+					near = solar
+				}
 			}
 		}
 	}
@@ -1568,7 +1785,7 @@ func (lunar *Lunar) GetShuJiu() *ShuJiu {
 	if currentCalendar.Before(startCalendar) || !currentCalendar.Before(endCalendar) {
 		return nil
 	}
-	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	days := GetDaysBetweenDate(startCalendar, currentCalendar)
 	return NewShuJiu(LunarUtil.NUMBER[days/9+1]+"九", days%9+1)
 }
 
@@ -1592,21 +1809,21 @@ func (lunar *Lunar) GetFu() *Fu {
 		return nil
 	}
 
-	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	days := GetDaysBetweenDate(startCalendar, currentCalendar)
 	if days < 10 {
 		return NewFu("初伏", days+1)
 	}
 
 	// 第4个庚日，中伏第1天
 	startCalendar = startCalendar.AddDate(0, 0, 10)
-	days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	days = GetDaysBetweenDate(startCalendar, currentCalendar)
 	if days < 10 {
 		return NewFu("中伏", days+1)
 	}
 
 	// 第5个庚日，中伏第11天或末伏第1天
 	startCalendar = startCalendar.AddDate(0, 0, 10)
-	days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+	days = GetDaysBetweenDate(startCalendar, currentCalendar)
 
 	liQiuCalendar := NewExactDateFromYmd(liQiu.GetYear(), liQiu.GetMonth(), liQiu.GetDay())
 
@@ -1622,7 +1839,7 @@ func (lunar *Lunar) GetFu() *Fu {
 		}
 		// 末伏第1天
 		startCalendar = startCalendar.AddDate(0, 0, 10)
-		days = int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
+		days = GetDaysBetweenDate(startCalendar, currentCalendar)
 		if days < 10 {
 			return NewFu("末伏", days+1)
 		}
@@ -1639,9 +1856,17 @@ func (lunar *Lunar) GetLiuYao() string {
 	return LunarUtil.LIU_YAO[(month+lunar.day-2)%6]
 }
 
+// 获取候
+func (lunar *Lunar) GetHou() string {
+	jq := lunar.GetPrevJieQiByWholeDay(true)
+	startSolar := jq.GetSolar()
+	days := GetDaysBetween(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay(), lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
+	return fmt.Sprintf("%s %s", jq.GetName(), LunarUtil.HOU[int(days/5)%len(LunarUtil.HOU)])
+}
+
 // 获取物候
 func (lunar *Lunar) GetWuHou() string {
-	jq := lunar.GetPrevJieQi()
+	jq := lunar.GetPrevJieQiByWholeDay(true)
 	name := jq.GetName()
 	offset := 0
 	for i, v := range JIE_QI {
@@ -1650,11 +1875,9 @@ func (lunar *Lunar) GetWuHou() string {
 			break
 		}
 	}
-	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	startSolar := jq.GetSolar()
-	startCalendar := NewExactDateFromYmd(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay())
-	days := int((currentCalendar.Unix() - startCalendar.Unix()) / 86400)
-	return LunarUtil.WU_HOU[(offset*3+days/5)%len(LunarUtil.WU_HOU)]
+	days := GetDaysBetween(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay(), lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
+	return LunarUtil.WU_HOU[(offset*3+int(days/5))%len(LunarUtil.WU_HOU)]
 }
 
 // 获取日禄

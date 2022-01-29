@@ -59,3 +59,45 @@ func (lunarMonth *LunarMonth) String() string {
 	}
 	return fmt.Sprintf("%d年%s%s月(%d)天", lunarMonth.year, run, LunarUtil.MONTH[m], lunarMonth.dayCount)
 }
+
+func (lunarMonth *LunarMonth) GetPositionTaiSui() string {
+	month := lunarMonth.month
+	if month < 0 {
+		month = -month
+	}
+	m := month % 4
+	p := ""
+	switch m {
+	case 0:
+		p = "巽"
+		break
+	case 1:
+		p = "艮"
+		break
+	case 3:
+		p = "坤"
+		break
+	default:
+		p = LunarUtil.POSITION_GAN[NewSolarFromJulianDay(lunarMonth.GetFirstJulianDay()).GetLunar().GetMonthGanIndex()]
+	}
+	return p
+}
+
+func (lunarMonth *LunarMonth) GetPositionTaiSuiDesc() string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionTaiSui()]
+}
+
+func (lunarMonth *LunarMonth) GetNineStar() *NineStar {
+	index := NewLunarYear(lunarMonth.year).GetZhiIndex() % 3
+	m := lunarMonth.month
+	if m < 0 {
+		m = -m
+	}
+	monthZhiIndex := (13 + m) % 12
+	n := 27 - index*3
+	if monthZhiIndex < LunarUtil.BASE_MONTH_ZHI_INDEX {
+		n -= 3
+	}
+	offset := (n - monthZhiIndex) % 9
+	return NewNineStar(offset)
+}
