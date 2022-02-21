@@ -101,3 +101,83 @@ func (lunarMonth *LunarMonth) GetNineStar() *NineStar {
 	offset := (n - monthZhiIndex) % 9
 	return NewNineStar(offset)
 }
+
+func (lunarMonth *LunarMonth) Next(n int) *LunarMonth {
+	if 0 == n {
+		return NewLunarMonthFromYm(lunarMonth.year, lunarMonth.month)
+	} else if n > 0 {
+		rest := n
+		ny := lunarMonth.year
+		iy := ny
+		im := lunarMonth.month
+		index := 0
+		months := NewLunarYear(ny).GetMonths()
+		for {
+			i := 0
+			size := months.Len()
+			for o := months.Front(); o != nil; o = o.Next() {
+				m := o.Value.(*LunarMonth)
+				if m.GetYear() == iy && m.GetMonth() == im {
+					index = i
+					break
+				}
+				i++
+			}
+			more := size - index - 1
+			if rest < more {
+				break
+			}
+			rest -= more
+			lastMonth := months.Back().Value.(*LunarMonth)
+			iy = lastMonth.GetYear()
+			im = lastMonth.GetMonth()
+			ny++
+			months = NewLunarYear(ny).GetMonths()
+		}
+		i := 0
+		offset := index + rest
+		for o := months.Front(); o != nil; o = o.Next() {
+			if i == offset {
+				return o.Value.(*LunarMonth)
+			}
+			i++
+		}
+		return nil
+	} else {
+		rest := -n
+		ny := lunarMonth.year
+		iy := ny
+		im := lunarMonth.month
+		index := 0
+		months := NewLunarYear(ny).GetMonths()
+		for {
+			i := 0
+			for o := months.Front(); o != nil; o = o.Next() {
+				m := o.Value.(*LunarMonth)
+				if m.GetYear() == iy && m.GetMonth() == im {
+					index = i
+					break
+				}
+				i++
+			}
+			if rest <= index {
+				break
+			}
+			rest -= index
+			firstMonth := months.Front().Value.(*LunarMonth)
+			iy = firstMonth.GetYear()
+			im = firstMonth.GetMonth()
+			ny--
+			months = NewLunarYear(ny).GetMonths()
+		}
+		i := 0
+		offset := index - rest
+		for o := months.Front(); o != nil; o = o.Next() {
+			if i == offset {
+				return o.Value.(*LunarMonth)
+			}
+			i++
+		}
+		return nil
+	}
+}

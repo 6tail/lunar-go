@@ -1861,7 +1861,12 @@ func (lunar *Lunar) GetHou() string {
 	jq := lunar.GetPrevJieQiByWholeDay(true)
 	startSolar := jq.GetSolar()
 	days := GetDaysBetween(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay(), lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
-	return fmt.Sprintf("%s %s", jq.GetName(), LunarUtil.HOU[int(days/5)%len(LunarUtil.HOU)])
+	max := len(LunarUtil.HOU) - 1
+	offset := int(days / 5)
+	if offset > max {
+		offset = max
+	}
+	return fmt.Sprintf("%s %s", jq.GetName(), LunarUtil.HOU[offset])
 }
 
 // 获取物候

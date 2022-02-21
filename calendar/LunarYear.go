@@ -350,3 +350,7 @@ func (lunarYear *LunarYear) GetPositionTaiSui() string {
 func (lunarYear *LunarYear) GetPositionTaiSuiDesc() string {
 	return LunarUtil.POSITION_DESC[lunarYear.GetPositionTaiSui()]
 }
+
+func (lunarYear *LunarYear) Next(n int) *LunarYear {
+	return NewLunarYear(lunarYear.year + n)
+}
