@@ -55,6 +55,16 @@ func (solarWeek *SolarWeek) GetIndex() int {
 	return int(math.Ceil(float64(solarWeek.day+offset) / 7))
 }
 
+func (solarWeek *SolarWeek) GetIndexInYear() int {
+	c := NewExactDateFromYmd(solarWeek.year, 1, 1)
+	firstDayWeek := int(c.Weekday())
+	offset := firstDayWeek - solarWeek.start
+	if offset < 0 {
+		offset += 7
+	}
+	return int(math.Ceil(float64(SolarUtil.GetDaysInYear(solarWeek.year, solarWeek.month, solarWeek.day)+offset) / 7))
+}
+
 func (solarWeek *SolarWeek) GetFirstDay() *Solar {
 	c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, solarWeek.day)
 	week := int(c.Weekday())

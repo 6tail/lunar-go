@@ -104,3 +104,13 @@ func TestSolarWeek10(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestSolarWeek11(t *testing.T) {
+	week := calendar.NewSolarWeekFromYmd(2022, 3, 6, 0)
+
+	excepted := 11
+	got := week.GetIndexInYear()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

@@ -236,5 +236,5 @@ func (lunarTime *LunarTime) GetMaxHm() string {
 	if hour%2 != 0 {
 		hour += 1
 	}
-	return fmt.Sprintf("%02d:00", hour)
+	return fmt.Sprintf("%02d:59", hour)
 }

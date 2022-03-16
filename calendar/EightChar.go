@@ -327,7 +327,12 @@ func (eightChar *EightChar) GetLunar() *Lunar {
 
 // 获取运
 func (eightChar *EightChar) GetYun(gender int) *Yun {
-	return NewYun(eightChar, gender)
+	return eightChar.GetYunBySect(gender, 1)
+}
+
+// 获取运
+func (eightChar *EightChar) GetYunBySect(gender int, sect int) *Yun {
+	return NewYun(eightChar, gender, sect)
 }
 
 // 获取年柱所在旬
