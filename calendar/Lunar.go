@@ -81,21 +81,35 @@ func NewLunarFromDate(date time.Time) *Lunar {
 	lunarMonth := 0
 	lunarDay := 0
 	solar := NewSolarFromDate(date)
-	c := NewExactDateFromYmd(solar.year, solar.month, solar.day)
-	ly := NewLunarYear(solar.year)
+	hour := solar.GetHour()
+	minute := solar.GetMinute()
+	second := solar.GetSecond()
+	currentYear := solar.GetYear()
+	currentMonth := solar.GetMonth()
+	currentDay := solar.GetDay()
+	ly := NewLunarYear(currentYear)
+	lunar := new(Lunar)
 	for i := ly.months.Front(); i != nil; i = i.Next() {
 		m := i.Value.(*LunarMonth)
-		day := NewSolarFromJulianDay(m.GetFirstJulianDay())
-		firstDay := NewSolar(day.year, day.month, day.day, 0, 0, 0)
-		days := int(c.Sub(firstDay.calendar).Hours() / 24)
+		firstDay := NewSolarFromJulianDay(m.GetFirstJulianDay())
+		days := GetDaysBetween(firstDay.GetYear(), firstDay.GetMonth(), firstDay.GetDay(), currentYear, currentMonth, currentDay)
 		if days < m.GetDayCount() {
 			lunarYear = m.GetYear()
 			lunarMonth = m.GetMonth()
 			lunarDay = days + 1
+			noon := NewSolarFromJulianDay(m.GetFirstJulianDay() + float64(lunarDay-1))
+			lunar.solar = NewSolar(noon.GetYear(), noon.GetMonth(), noon.GetDay(), hour, minute, second)
 			break
 		}
 	}
-	return NewLunar(lunarYear, lunarMonth, lunarDay, solar.hour, solar.minute, solar.second)
+	lunar.year = lunarYear
+	lunar.month = lunarMonth
+	lunar.day = lunarDay
+	lunar.hour = hour
+	lunar.minute = minute
+	lunar.second = second
+	compute(lunar, ly)
+	return lunar
 }
 
 func computeJieQi(lunar *Lunar, lunarYear *LunarYear) {
@@ -1120,11 +1134,27 @@ func (lunar *Lunar) GetJieQiList() *list.List {
 }
 
 func (lunar *Lunar) GetDayYi() *list.List {
-	return LunarUtil.GetDayYi(lunar.GetMonthInGanZhiExact(), lunar.GetDayInGanZhi())
+	return lunar.GetDayYiBySect(1)
+}
+
+func (lunar *Lunar) GetDayYiBySect(sect int) *list.List {
+	monthGanZhi := lunar.GetMonthInGanZhi()
+	if 2 == sect {
+		monthGanZhi = lunar.GetMonthInGanZhiExact()
+	}
+	return LunarUtil.GetDayYi(monthGanZhi, lunar.GetDayInGanZhi())
 }
 
 func (lunar *Lunar) GetDayJi() *list.List {
-	return LunarUtil.GetDayJi(lunar.GetMonthInGanZhiExact(), lunar.GetDayInGanZhi())
+	return lunar.GetDayJiBySect(1)
+}
+
+func (lunar *Lunar) GetDayJiBySect(sect int) *list.List {
+	monthGanZhi := lunar.GetMonthInGanZhi()
+	if 2 == sect {
+		monthGanZhi = lunar.GetMonthInGanZhiExact()
+	}
+	return LunarUtil.GetDayJi(monthGanZhi, lunar.GetDayInGanZhi())
 }
 
 func (lunar *Lunar) GetDayJiShen() *list.List {
