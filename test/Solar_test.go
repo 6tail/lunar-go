@@ -40,3 +40,12 @@ func TestSolar4(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestSolar5(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 3, 28)
+	excepted := "全国中小学生安全教育日"
+	got := solar.GetFestivals().Front().Value
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

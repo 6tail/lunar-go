@@ -608,8 +608,28 @@ func (lunar *Lunar) GetOtherFestivals() *list.List {
 			l.PushBack(v)
 		}
 	}
-	if strings.Compare(lunar.solar.ToYmd(), lunar.jieQi["清明"].Next(-1).ToYmd()) == 0 {
+	solarYmd := lunar.solar.ToYmd()
+	jq := lunar.jieQi["清明"]
+	if strings.Compare(solarYmd, jq.Next(-1).ToYmd()) == 0 {
 		l.PushBack("寒食节")
+	}
+
+	jq = lunar.jieQi["立春"]
+	offset := 4 - jq.GetLunar().GetDayGanIndex()
+	if offset < 0 {
+		offset += 10
+	}
+	if strings.Compare(solarYmd, jq.Next(offset+40).ToYmd()) == 0 {
+		l.PushBack("春社")
+	}
+
+	jq = lunar.jieQi["立秋"]
+	offset = 4 - jq.GetLunar().GetDayGanIndex()
+	if offset < 0 {
+		offset += 10
+	}
+	if strings.Compare(solarYmd, jq.Next(offset+40).ToYmd()) == 0 {
+		l.PushBack("秋社")
 	}
 	return l
 }

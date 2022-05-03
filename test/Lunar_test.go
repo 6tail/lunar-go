@@ -410,3 +410,21 @@ func TestLunar54(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted1, got1)
 	}
 }
+
+func TestLunar55(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(1722, 9, 25).GetLunar()
+	excepted := "秋社"
+	got := lunar.GetOtherFestivals().Front().Value
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar56(t *testing.T) {
+	lunar := calendar.NewSolarFromYmd(2022, 3, 16).GetLunar()
+	excepted := "春社"
+	got := lunar.GetOtherFestivals().Front().Value
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
