@@ -262,6 +262,20 @@ func (eightChar *EightChar) GetTaiYuanNaYin() string {
 	return LunarUtil.NAYIN[eightChar.GetTaiYuan()]
 }
 
+func (eightChar *EightChar) GetTaiXi() string {
+	ganIndex := eightChar.lunar.GetDayGanIndexExact()
+	zhiIndex := eightChar.lunar.GetDayZhiIndexExact()
+	if eightChar.sect == 2 {
+		ganIndex = eightChar.lunar.GetDayGanIndexExact2()
+		zhiIndex = eightChar.lunar.GetDayZhiIndexExact2()
+	}
+	return LunarUtil.HE_GAN_5[ganIndex] + LunarUtil.HE_ZHI_6[zhiIndex]
+}
+
+func (eightChar *EightChar) GetTaiXiNaYin() string {
+	return LunarUtil.NAYIN[eightChar.GetTaiXi()]
+}
+
 func (eightChar *EightChar) GetMingGong() string {
 	monthZhiIndex := 0
 	timeZhiIndex := 0
@@ -306,7 +320,10 @@ func (eightChar *EightChar) GetShenGong() string {
 			timeZhiIndex = i
 		}
 	}
-	zhiIndex := (2 + (monthZhiIndex + timeZhiIndex)) % 12
+	zhiIndex := 2 + monthZhiIndex + timeZhiIndex
+	if zhiIndex > 12 {
+		zhiIndex -= 12
+	}
 	jiaZiIndex := LunarUtil.GetJiaZiIndex(eightChar.lunar.GetMonthInGanZhiExact()) - (monthZhiIndex - zhiIndex)
 	if jiaZiIndex >= 60 {
 		jiaZiIndex -= 60

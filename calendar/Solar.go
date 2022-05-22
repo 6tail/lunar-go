@@ -239,7 +239,7 @@ func (solar *Solar) GetFestivals() *list.List {
 	if f, ok := SolarUtil.WEEK_FESTIVAL[fmt.Sprintf("%d-%d-%d", solar.month, weeks, week)]; ok {
 		l.PushBack(f)
 	}
-	if solar.day+7 >= SolarUtil.GetDaysOfMonth(solar.year, solar.month) {
+	if solar.day+7 > SolarUtil.GetDaysOfMonth(solar.year, solar.month) {
 		if f, ok := SolarUtil.WEEK_FESTIVAL[fmt.Sprintf("%d-0-%d", solar.month, week)]; ok {
 			l.PushBack(f)
 		}

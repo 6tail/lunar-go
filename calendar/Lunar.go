@@ -916,7 +916,7 @@ func (lunar *Lunar) GetChong() string {
 }
 
 func (lunar *Lunar) GetDayChong() string {
-	return LunarUtil.CHONG[lunar.dayZhiIndex+1]
+	return LunarUtil.CHONG[lunar.dayZhiIndex]
 }
 
 // @Deprecated: 该方法已废弃，请使用GetDayChongGan
@@ -925,7 +925,7 @@ func (lunar *Lunar) GetChongGan() string {
 }
 
 func (lunar *Lunar) GetDayChongGan() string {
-	return LunarUtil.CHONG_GAN[lunar.dayGanIndex+1]
+	return LunarUtil.CHONG_GAN[lunar.dayGanIndex]
 }
 
 // @Deprecated: 该方法已废弃，请使用GetDayChongGanTie
@@ -934,7 +934,7 @@ func (lunar *Lunar) GetChongGanTie() string {
 }
 
 func (lunar *Lunar) GetDayChongGanTie() string {
-	return LunarUtil.CHONG_GAN_TIE[lunar.dayGanIndex+1]
+	return LunarUtil.CHONG_GAN_TIE[lunar.dayGanIndex]
 }
 
 // @Deprecated: 该方法已废弃，请使用GetDayChongShengXiao
@@ -1116,7 +1116,7 @@ func (lunar *Lunar) GetMonthPositionTai() string {
 }
 
 func (lunar *Lunar) GetTimeChong() string {
-	return LunarUtil.CHONG[lunar.timeZhiIndex+1]
+	return LunarUtil.CHONG[lunar.timeZhiIndex]
 }
 
 func (lunar *Lunar) GetTimeSha() string {
@@ -1124,11 +1124,11 @@ func (lunar *Lunar) GetTimeSha() string {
 }
 
 func (lunar *Lunar) GetTimeChongGan() string {
-	return LunarUtil.CHONG_GAN[lunar.timeGanIndex+1]
+	return LunarUtil.CHONG_GAN[lunar.timeGanIndex]
 }
 
 func (lunar *Lunar) GetTimeChongGanTie() string {
-	return LunarUtil.CHONG_GAN_TIE[lunar.timeGanIndex+1]
+	return LunarUtil.CHONG_GAN_TIE[lunar.timeGanIndex]
 }
 
 func (lunar *Lunar) GetTimeChongShengXiao() string {

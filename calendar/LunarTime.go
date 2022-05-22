@@ -109,7 +109,7 @@ func (lunarTime *LunarTime) GetTianShenLuck() string {
 }
 
 func (lunarTime *LunarTime) GetChong() string {
-	return LunarUtil.CHONG[lunarTime.zhiIndex+1]
+	return LunarUtil.CHONG[lunarTime.zhiIndex]
 }
 
 func (lunarTime *LunarTime) GetSha() string {
@@ -117,11 +117,11 @@ func (lunarTime *LunarTime) GetSha() string {
 }
 
 func (lunarTime *LunarTime) GetChongGan() string {
-	return LunarUtil.CHONG_GAN[lunarTime.ganIndex+1]
+	return LunarUtil.CHONG_GAN[lunarTime.ganIndex]
 }
 
 func (lunarTime *LunarTime) GetChongGanTie() string {
-	return LunarUtil.CHONG_GAN_TIE[lunarTime.ganIndex+1]
+	return LunarUtil.CHONG_GAN_TIE[lunarTime.ganIndex]
 }
 
 func (lunarTime *LunarTime) GetChongShengXiao() string {

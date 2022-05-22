@@ -13,3 +13,18 @@ func TestHolidayUtil1(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestHolidayUtil2(t *testing.T) {
+	holiday := HolidayUtil.GetHoliday("2010-01-01")
+	excepted := "元旦节"
+	got := holiday.GetName()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	HolidayUtil.Fix(nil, "20100101~000000000000000000000000000")
+	holiday = HolidayUtil.GetHoliday("2010-01-01")
+	if holiday != nil {
+		t.Errorf("excepted: nil, got: %v", holiday)
+	}
+}
