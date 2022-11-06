@@ -10,7 +10,7 @@ import (
 
 var BIRTH_YEAR = -2697
 
-// 道历
+// Tao 道历
 type Tao struct {
 	// 阴历
 	lunar *Lunar

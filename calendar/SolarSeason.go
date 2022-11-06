@@ -9,7 +9,7 @@ import (
 
 const MONTH_IN_SEASON = 3
 
-// 阳历季度
+// SolarSeason 阳历季度
 type SolarSeason struct {
 	year  int
 	month int

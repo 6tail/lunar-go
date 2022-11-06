@@ -7,7 +7,7 @@ import (
 	"time"
 )
 
-// 阳历月
+// SolarMonth 阳历月
 type SolarMonth struct {
 	year  int
 	month int

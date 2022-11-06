@@ -10,7 +10,7 @@ import (
 
 var DEAD_YEAR = -543
 
-// 佛历
+// Foto 佛历
 type Foto struct {
 	// 阴历
 	lunar *Lunar

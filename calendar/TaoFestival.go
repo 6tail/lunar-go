@@ -2,7 +2,7 @@ package calendar
 
 import "fmt"
 
-// 道历节日
+// TaoFestival 道历节日
 type TaoFestival struct {
 	// 名称
 	name string

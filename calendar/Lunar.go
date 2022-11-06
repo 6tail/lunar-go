@@ -12,7 +12,7 @@ import (
 var JIE_QI = []string{"冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪"}
 var JIE_QI_IN_USE = []string{"DA_XUE", "冬至", "小寒", "大寒", "立春", "雨水", "惊蛰", "春分", "清明", "谷雨", "立夏", "小满", "芒种", "夏至", "小暑", "大暑", "立秋", "处暑", "白露", "秋分", "寒露", "霜降", "立冬", "小雪", "大雪", "DONG_ZHI", "XIAO_HAN", "DA_HAN", "LI_CHUN", "YU_SHUI", "JING_ZHE"}
 
-// 阴历
+// Lunar 阴历
 type Lunar struct {
 	year                 int
 	month                int
@@ -68,6 +68,9 @@ func NewLunar(lunarYear int, lunarMonth int, lunarDay int, hour int, minute int,
 	lunar.second = second
 	noon := NewSolarFromJulianDay(m.GetFirstJulianDay() + float64(lunarDay-1))
 	lunar.solar = NewSolar(noon.GetYear(), noon.GetMonth(), noon.GetDay(), hour, minute, second)
+	if noon.GetYear() != lunarYear {
+		y = NewLunarYear(noon.GetYear())
+	}
 	compute(lunar, y)
 	return lunar
 }
@@ -322,7 +325,7 @@ func compute(lunar *Lunar, lunarYear *LunarYear) {
 	computeWeek(lunar)
 }
 
-// @Deprecated: 该方法已废弃，请使用GetYearGan
+// GetGan @Deprecated: 该方法已废弃，请使用GetYearGan
 func (lunar *Lunar) GetGan() string {
 	return lunar.GetYearGan()
 }
@@ -339,7 +342,7 @@ func (lunar *Lunar) GetYearGanExact() string {
 	return LunarUtil.GAN[lunar.yearGanIndexExact+1]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetYearZhi
+// GetZhi @Deprecated: 该方法已废弃，请使用GetYearZhi
 func (lunar *Lunar) GetZhi() string {
 	return lunar.GetYearZhi()
 }
@@ -440,7 +443,7 @@ func (lunar *Lunar) GetTimeInGanZhi() string {
 	return lunar.GetTimeGan() + lunar.GetTimeZhi()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetYearShengXiao
+// GetShengxiao @Deprecated: 该方法已废弃，请使用GetYearShengXiao
 func (lunar *Lunar) GetShengxiao() string {
 	return lunar.GetYearShengXiao()
 }
@@ -642,52 +645,52 @@ func (lunar *Lunar) GetPengZuZhi() string {
 	return LunarUtil.PENGZU_ZHI[lunar.dayZhiIndex+1]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionXi
+// GetPositionXi @Deprecated: 该方法已废弃，请使用GetDayPositionXi
 func (lunar *Lunar) GetPositionXi() string {
 	return lunar.GetDayPositionXi()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionXiDesc
+// GetPositionXiDesc @Deprecated: 该方法已废弃，请使用GetDayPositionXiDesc
 func (lunar *Lunar) GetPositionXiDesc() string {
 	return lunar.GetDayPositionXiDesc()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionYangGui
+// GetPositionYangGui @Deprecated: 该方法已废弃，请使用GetDayPositionYangGui
 func (lunar *Lunar) GetPositionYangGui() string {
 	return lunar.GetDayPositionYangGui()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionYangGuiDesc
+// GetPositionYangGuiDesc @Deprecated: 该方法已废弃，请使用GetDayPositionYangGuiDesc
 func (lunar *Lunar) GetPositionYangGuiDesc() string {
 	return lunar.GetDayPositionYangGuiDesc()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionYinGui
+// GetPositionYinGui @Deprecated: 该方法已废弃，请使用GetDayPositionYinGui
 func (lunar *Lunar) GetPositionYinGui() string {
 	return lunar.GetDayPositionYinGui()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionYinGuiDesc
+// GetPositionYinGuiDesc @Deprecated: 该方法已废弃，请使用GetDayPositionYinGuiDesc
 func (lunar *Lunar) GetPositionYinGuiDesc() string {
 	return lunar.GetDayPositionYinGuiDesc()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionFu
+// GetPositionFu @Deprecated: 该方法已废弃，请使用GetDayPositionFu
 func (lunar *Lunar) GetPositionFu() string {
 	return lunar.GetDayPositionFu()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionFuDesc
+// GetPositionFuDesc @Deprecated: 该方法已废弃，请使用GetDayPositionFuDesc
 func (lunar *Lunar) GetPositionFuDesc() string {
 	return lunar.GetDayPositionFuDesc()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionCai
+// GetPositionCai @Deprecated: 该方法已废弃，请使用GetDayPositionCai
 func (lunar *Lunar) GetPositionCai() string {
 	return lunar.GetDayPositionCai()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayPositionCaiDesc
+// GetPositionCaiDesc @Deprecated: 该方法已废弃，请使用GetDayPositionCaiDesc
 func (lunar *Lunar) GetPositionCaiDesc() string {
 	return lunar.GetDayPositionCaiDesc()
 }
@@ -910,7 +913,7 @@ func (lunar *Lunar) GetTimePositionCaiDesc() string {
 	return LunarUtil.POSITION_DESC[lunar.GetTimePositionCai()]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayChong
+// GetChong @Deprecated: 该方法已废弃，请使用GetDayChong
 func (lunar *Lunar) GetChong() string {
 	return lunar.GetDayChong()
 }
@@ -919,7 +922,7 @@ func (lunar *Lunar) GetDayChong() string {
 	return LunarUtil.CHONG[lunar.dayZhiIndex]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayChongGan
+// GetChongGan @Deprecated: 该方法已废弃，请使用GetDayChongGan
 func (lunar *Lunar) GetChongGan() string {
 	return lunar.GetDayChongGan()
 }
@@ -928,7 +931,7 @@ func (lunar *Lunar) GetDayChongGan() string {
 	return LunarUtil.CHONG_GAN[lunar.dayGanIndex]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayChongGanTie
+// GetChongGanTie @Deprecated: 该方法已废弃，请使用GetDayChongGanTie
 func (lunar *Lunar) GetChongGanTie() string {
 	return lunar.GetDayChongGanTie()
 }
@@ -937,7 +940,7 @@ func (lunar *Lunar) GetDayChongGanTie() string {
 	return LunarUtil.CHONG_GAN_TIE[lunar.dayGanIndex]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayChongShengXiao
+// GetChongShengXiao @Deprecated: 该方法已废弃，请使用GetDayChongShengXiao
 func (lunar *Lunar) GetChongShengXiao() string {
 	return lunar.GetDayChongShengXiao()
 }
@@ -952,7 +955,7 @@ func (lunar *Lunar) GetDayChongShengXiao() string {
 	return ""
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDayChongDesc
+// GetChongDesc @Deprecated: 该方法已废弃，请使用GetDayChongDesc
 func (lunar *Lunar) GetChongDesc() string {
 	return lunar.GetDayChongDesc()
 }
@@ -961,7 +964,7 @@ func (lunar *Lunar) GetDayChongDesc() string {
 	return "(" + lunar.GetDayChongGan() + lunar.GetDayChong() + ")" + lunar.GetDayChongShengXiao()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetDaySha
+// GetSha @Deprecated: 该方法已废弃，请使用GetDaySha
 func (lunar *Lunar) GetSha() string {
 	return lunar.GetDaySha()
 }
@@ -993,7 +996,7 @@ func (lunar *Lunar) GetEightChar() *EightChar {
 	return lunar.eightChar
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZi() [4]string {
 	baZi := lunar.GetEightChar()
 	l := [4]string{}
@@ -1004,7 +1007,7 @@ func (lunar *Lunar) GetBaZi() [4]string {
 	return l
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiWuXing @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiWuXing() [4]string {
 	baZi := lunar.GetEightChar()
 	l := [4]string{}
@@ -1015,7 +1018,7 @@ func (lunar *Lunar) GetBaZiWuXing() [4]string {
 	return l
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiNaYin @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiNaYin() [4]string {
 	baZi := lunar.GetEightChar()
 	l := [4]string{}
@@ -1026,7 +1029,7 @@ func (lunar *Lunar) GetBaZiNaYin() [4]string {
 	return l
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenGan @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenGan() [4]string {
 	baZi := lunar.GetEightChar()
 	l := [4]string{}
@@ -1037,7 +1040,7 @@ func (lunar *Lunar) GetBaZiShiShenGan() [4]string {
 	return l
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenZhi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
 	baZi := lunar.GetEightChar()
 	l := [4]string{}
@@ -1048,22 +1051,22 @@ func (lunar *Lunar) GetBaZiShiShenZhi() [4]string {
 	return l
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenYearZhi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenYearZhi() *list.List {
 	return lunar.GetEightChar().GetYearShiShenZhi()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenMonthZhi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenMonthZhi() *list.List {
 	return lunar.GetEightChar().GetMonthShiShenZhi()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenDayZhi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenDayZhi() *list.List {
 	return lunar.GetEightChar().GetDayShiShenZhi()
 }
 
-// @Deprecated: 该方法已废弃，请使用GetEightChar
+// GetBaZiShiShenTimeZhi @Deprecated: 该方法已废弃，请使用GetEightChar
 func (lunar *Lunar) GetBaZiShiShenTimeZhi() *list.List {
 	return lunar.GetEightChar().GetTimeShiShenZhi()
 }
@@ -1340,7 +1343,7 @@ func (lunar *Lunar) GetTimeNineStar() *NineStar {
 	return NewNineStar(index % 9)
 }
 
-// 获取下一节（顺推的第一个节）
+// GetNextJie 获取下一节令（顺推的第一个节令）
 func (lunar *Lunar) GetNextJie() *JieQi {
 	return lunar.GetNextJieByWholeDay(false)
 }
@@ -1354,7 +1357,7 @@ func (lunar *Lunar) GetNextJieByWholeDay(wholeDay bool) *JieQi {
 	return lunar.getNearJieQi(true, conditions, wholeDay)
 }
 
-// 获取上一节（逆推的第一个节）
+// GetPrevJie 获取上一节令（逆推的第一个节令）
 func (lunar *Lunar) GetPrevJie() *JieQi {
 	return lunar.GetPrevJieByWholeDay(false)
 }
@@ -1368,7 +1371,7 @@ func (lunar *Lunar) GetPrevJieByWholeDay(wholeDay bool) *JieQi {
 	return lunar.getNearJieQi(false, conditions, wholeDay)
 }
 
-// 获取下一气令（顺推的第一个气令）
+// GetNextQi 获取下一气令（顺推的第一个气令）
 func (lunar *Lunar) GetNextQi() *JieQi {
 	return lunar.GetNextQiByWholeDay(false)
 }
@@ -1382,7 +1385,7 @@ func (lunar *Lunar) GetNextQiByWholeDay(wholeDay bool) *JieQi {
 	return lunar.getNearJieQi(true, conditions, wholeDay)
 }
 
-// 获取上一气令（逆推的第一个气令）
+// GetPrevQi 获取上一气令（逆推的第一个气令）
 func (lunar *Lunar) GetPrevQi() *JieQi {
 	return lunar.GetPrevQiByWholeDay(false)
 }
@@ -1396,7 +1399,7 @@ func (lunar *Lunar) GetPrevQiByWholeDay(wholeDay bool) *JieQi {
 	return lunar.getNearJieQi(false, conditions, wholeDay)
 }
 
-// 获取下一节气（顺推的第一个节气）
+// GetNextJieQi 获取下一节气（顺推的第一个节气）
 func (lunar *Lunar) GetNextJieQi() *JieQi {
 	return lunar.GetNextJieQiByWholeDay(false)
 }
@@ -1405,7 +1408,7 @@ func (lunar *Lunar) GetNextJieQiByWholeDay(wholeDay bool) *JieQi {
 	return lunar.getNearJieQi(true, nil, wholeDay)
 }
 
-// 获取上一节气（逆推的第一个节气）
+// GetPrevJieQi 获取上一节气（逆推的第一个节气）
 func (lunar *Lunar) GetPrevJieQi() *JieQi {
 	return lunar.GetPrevJieQiByWholeDay(false)
 }
@@ -1493,7 +1496,7 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string, wholeDay boo
 	return NewJieQi(name, near)
 }
 
-// 获取节气名称，如果无节气，返回空字符串
+// GetJieQi 获取节气名称，如果无节气，返回空字符串
 func (lunar *Lunar) GetJieQi() string {
 	name := ""
 	jieQi := lunar.GetJieQiTable()
@@ -1508,7 +1511,7 @@ func (lunar *Lunar) GetJieQi() string {
 	return convertJieQi(name)
 }
 
-// 获取当天节气对象，如果无节气，返回nil
+// GetCurrentJieQi 获取当天节气对象，如果无节气，返回nil
 func (lunar *Lunar) GetCurrentJieQi() *JieQi {
 	name := lunar.GetJieQi()
 	if len(name) > 0 {
@@ -1517,7 +1520,7 @@ func (lunar *Lunar) GetCurrentJieQi() *JieQi {
 	return nil
 }
 
-// 获取当天节令对象，如果无节令，返回nil
+// GetCurrentJie 获取当天节令对象，如果无节令，返回nil
 func (lunar *Lunar) GetCurrentJie() *JieQi {
 	name := lunar.GetJie()
 	if len(name) > 0 {
@@ -1526,7 +1529,7 @@ func (lunar *Lunar) GetCurrentJie() *JieQi {
 	return nil
 }
 
-// 获取当天气令对象，如果无气令，返回nil
+// GetCurrentQi 获取当天气令对象，如果无气令，返回nil
 func (lunar *Lunar) GetCurrentQi() *JieQi {
 	name := lunar.GetQi()
 	if len(name) > 0 {
@@ -1727,102 +1730,102 @@ func (lunar *Lunar) GetSolar() *Solar {
 	return lunar.solar
 }
 
-// 获取往后推几天的农历日期，如果要往前推，则天数用负数
+// Next 获取往后推几天的农历日期，如果要往前推，则天数用负数
 func (lunar *Lunar) Next(days int) *Lunar {
 	return lunar.solar.Next(days).GetLunar()
 }
 
-// 获取年所在旬（以正月初一作为新年的开始）
+// GetYearXun 获取年所在旬（以正月初一作为新年的开始）
 func (lunar *Lunar) GetYearXun() string {
 	return LunarUtil.GetXun(lunar.GetYearInGanZhi())
 }
 
-// 获取年所在旬（以立春当天作为新年的开始）
+// GetYearXunByLiChun 获取年所在旬（以立春当天作为新年的开始）
 func (lunar *Lunar) GetYearXunByLiChun() string {
 	return LunarUtil.GetXun(lunar.GetYearInGanZhiByLiChun())
 }
 
-// 获取年所在旬（以立春交接时刻作为新年的开始）
+// GetYearXunExact 获取年所在旬（以立春交接时刻作为新年的开始）
 func (lunar *Lunar) GetYearXunExact() string {
 	return LunarUtil.GetXun(lunar.GetYearInGanZhiExact())
 }
 
-// 获取值年空亡（以正月初一作为新年的开始）
+// GetYearXunKong 获取值年空亡（以正月初一作为新年的开始）
 func (lunar *Lunar) GetYearXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetYearInGanZhi())
 }
 
-// 获取值年空亡（以立春当天作为新年的开始）
+// GetYearXunKongByLiChun 获取值年空亡（以立春当天作为新年的开始）
 func (lunar *Lunar) GetYearXunKongByLiChun() string {
 	return LunarUtil.GetXunKong(lunar.GetYearInGanZhiByLiChun())
 }
 
-// 获取值年空亡（以立春交接时刻作为新年的开始）
+// GetYearXunKongExact 获取值年空亡（以立春交接时刻作为新年的开始）
 func (lunar *Lunar) GetYearXunKongExact() string {
 	return LunarUtil.GetXunKong(lunar.GetYearInGanZhiExact())
 }
 
-// 获取月所在旬（以节交接当天起算）
+// GetMonthXun 获取月所在旬（以节交接当天起算）
 func (lunar *Lunar) GetMonthXun() string {
 	return LunarUtil.GetXun(lunar.GetMonthInGanZhi())
 }
 
-// 获取月所在旬（以节交接时刻起算）
+// GetMonthXunExact 获取月所在旬（以节交接时刻起算）
 func (lunar *Lunar) GetMonthXunExact() string {
 	return LunarUtil.GetXun(lunar.GetMonthInGanZhiExact())
 }
 
-// 获取值月空亡（以节交接当天起算）
+// GetMonthXunKong 获取值月空亡（以节交接当天起算）
 func (lunar *Lunar) GetMonthXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetMonthInGanZhi())
 }
 
-// 获取值月空亡（以节交接时刻起算）
+// GetMonthXunKongExact 获取值月空亡（以节交接时刻起算）
 func (lunar *Lunar) GetMonthXunKongExact() string {
 	return LunarUtil.GetXunKong(lunar.GetMonthInGanZhiExact())
 }
 
-// 获取日所在旬（以节交接当天起算）
+// GetDayXun 获取日所在旬（以节交接当天起算）
 func (lunar *Lunar) GetDayXun() string {
 	return LunarUtil.GetXun(lunar.GetDayInGanZhi())
 }
 
-// 获取日所在旬（晚子时日柱算明天）
+// GetDayXunExact 获取日所在旬（晚子时日柱算明天）
 func (lunar *Lunar) GetDayXunExact() string {
 	return LunarUtil.GetXun(lunar.GetDayInGanZhiExact())
 }
 
-// 获取日所在旬（晚子时日柱算当天）
+// GetDayXunExact2 获取日所在旬（晚子时日柱算当天）
 func (lunar *Lunar) GetDayXunExact2() string {
 	return LunarUtil.GetXun(lunar.GetDayInGanZhiExact2())
 }
 
-// 获取值日空亡
+// GetDayXunKong 获取值日空亡
 func (lunar *Lunar) GetDayXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetDayInGanZhi())
 }
 
-// 获取值日空亡（晚子时日柱算明天）
+// GetDayXunKongExact 获取值日空亡（晚子时日柱算明天）
 func (lunar *Lunar) GetDayXunKongExact() string {
 	return LunarUtil.GetXunKong(lunar.GetDayInGanZhiExact())
 }
 
-// 获取值日空亡（晚子时日柱算当天）
+// GetDayXunKongExact2 获取值日空亡（晚子时日柱算当天）
 func (lunar *Lunar) GetDayXunKongExact2() string {
 	return LunarUtil.GetXunKong(lunar.GetDayInGanZhiExact2())
 }
 
-// 获取时辰所在旬
+// GetTimeXun 获取时辰所在旬
 func (lunar *Lunar) GetTimeXun() string {
 	return LunarUtil.GetXun(lunar.GetTimeInGanZhi())
 }
 
-// 获取值时空亡
+// GetTimeXunKong 获取值时空亡
 func (lunar *Lunar) GetTimeXunKong() string {
 	return LunarUtil.GetXunKong(lunar.GetTimeInGanZhi())
 }
 
-// 获取数九，如果不是数九天，返回nil
+// GetShuJiu 获取数九，如果不是数九天，返回nil
 func (lunar *Lunar) GetShuJiu() *ShuJiu {
 	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	start := lunar.jieQi["DONG_ZHI"]
@@ -1839,7 +1842,7 @@ func (lunar *Lunar) GetShuJiu() *ShuJiu {
 	return NewShuJiu(LunarUtil.NUMBER[days/9+1]+"九", days%9+1)
 }
 
-// 获取三伏，如果不是三伏天，返回nil
+// GetFu 获取三伏，如果不是三伏天，返回nil
 func (lunar *Lunar) GetFu() *Fu {
 	currentCalendar := NewExactDateFromYmd(lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	xiaZhi := lunar.jieQi["夏至"]
@@ -1897,7 +1900,7 @@ func (lunar *Lunar) GetFu() *Fu {
 	return nil
 }
 
-// 获取六曜
+// GetLiuYao 获取六曜
 func (lunar *Lunar) GetLiuYao() string {
 	month := lunar.month
 	if month < 0 {
@@ -1906,20 +1909,20 @@ func (lunar *Lunar) GetLiuYao() string {
 	return LunarUtil.LIU_YAO[(month+lunar.day-2)%6]
 }
 
-// 获取候
+// GetHou 获取候
 func (lunar *Lunar) GetHou() string {
 	jq := lunar.GetPrevJieQiByWholeDay(true)
 	startSolar := jq.GetSolar()
 	days := GetDaysBetween(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay(), lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
 	max := len(LunarUtil.HOU) - 1
-	offset := int(days / 5)
+	offset := days / 5
 	if offset > max {
 		offset = max
 	}
 	return fmt.Sprintf("%s %s", jq.GetName(), LunarUtil.HOU[offset])
 }
 
-// 获取物候
+// GetWuHou 获取物候
 func (lunar *Lunar) GetWuHou() string {
 	jq := lunar.GetPrevJieQiByWholeDay(true)
 	name := jq.GetName()
@@ -1932,10 +1935,14 @@ func (lunar *Lunar) GetWuHou() string {
 	}
 	startSolar := jq.GetSolar()
 	days := GetDaysBetween(startSolar.GetYear(), startSolar.GetMonth(), startSolar.GetDay(), lunar.solar.GetYear(), lunar.solar.GetMonth(), lunar.solar.GetDay())
-	return LunarUtil.WU_HOU[(offset*3+int(days/5))%len(LunarUtil.WU_HOU)]
+	index := days / 5
+	if index > 2 {
+		index = 2
+	}
+	return LunarUtil.WU_HOU[(offset*3+index)%len(LunarUtil.WU_HOU)]
 }
 
-// 获取日禄
+// GetDayLu 获取日禄
 func (lunar *Lunar) GetDayLu() string {
 	gan := LunarUtil.LU[lunar.GetDayGan()]
 	lu := gan + "命互禄"
@@ -1945,12 +1952,12 @@ func (lunar *Lunar) GetDayLu() string {
 	return lu
 }
 
-// 获取时辰
+// GetTime 获取时辰
 func (lunar *Lunar) GetTime() *LunarTime {
 	return NewLunarTime(lunar.year, lunar.month, lunar.day, lunar.hour, lunar.minute, lunar.second)
 }
 
-// 获取当天的时辰列表
+// GetTimes 获取当天的时辰列表
 func (lunar *Lunar) GetTimes() []*LunarTime {
 	l := make([]*LunarTime, 13)
 	l[0] = NewLunarTime(lunar.year, lunar.month, lunar.day, 0, 0, 0)
@@ -1960,12 +1967,12 @@ func (lunar *Lunar) GetTimes() []*LunarTime {
 	return l
 }
 
-// 获取佛历
+// GetFoto 获取佛历
 func (lunar *Lunar) GetFoto() *Foto {
 	return NewFotoFromLunar(lunar)
 }
 
-// 获取道历
+// GetTao 获取道历
 func (lunar *Lunar) GetTao() *Tao {
 	return NewTaoFromLunar(lunar)
 }

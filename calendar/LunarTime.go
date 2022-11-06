@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// 时辰
+// LunarTime 时辰
 type LunarTime struct {
 	ganIndex int
 	zhiIndex int
@@ -201,17 +201,17 @@ func (lunarTime *LunarTime) GetZhiIndex() int {
 	return lunarTime.zhiIndex
 }
 
-// 获取时辰所在旬
+// GetXun 获取时辰所在旬
 func (lunarTime *LunarTime) GetXun() string {
 	return LunarUtil.GetXun(lunarTime.GetGanZhi())
 }
 
-// 获取值时空亡
+// GetXunKong 获取值时空亡
 func (lunarTime *LunarTime) GetXunKong() string {
 	return LunarUtil.GetXunKong(lunarTime.GetGanZhi())
 }
 
-// 获取当前时辰的最早时分
+// GetMinHm 获取当前时辰的最早时分
 func (lunarTime *LunarTime) GetMinHm() string {
 	hour := lunarTime.lunar.GetHour()
 	if hour < 1 {
@@ -225,7 +225,7 @@ func (lunarTime *LunarTime) GetMinHm() string {
 	return fmt.Sprintf("%02d:00", hour)
 }
 
-// 获取当前时辰的最晚时分
+// GetMaxHm 获取当前时辰的最晚时分
 func (lunarTime *LunarTime) GetMaxHm() string {
 	hour := lunarTime.lunar.GetHour()
 	if hour < 1 {

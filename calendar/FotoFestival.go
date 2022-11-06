@@ -1,6 +1,6 @@
 package calendar
 
-// 佛历因果犯忌
+// FotoFestival 佛历因果犯忌
 type FotoFestival struct {
 	// 是日何日，如：雷斋日
 	name string

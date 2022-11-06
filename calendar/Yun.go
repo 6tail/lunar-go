@@ -87,32 +87,32 @@ func (yun *Yun) computeStart(sect int) {
 	yun.startHour = hour
 }
 
-// 获取性别
+// GetGender 获取性别
 func (yun *Yun) GetGender() int {
 	return yun.gender
 }
 
-// 获取起运年数
+// GetStartYear 获取起运年数
 func (yun *Yun) GetStartYear() int {
 	return yun.startYear
 }
 
-// 获取起运月数
+// GetStartMonth 获取起运月数
 func (yun *Yun) GetStartMonth() int {
 	return yun.startMonth
 }
 
-// 获取起运天数
+// GetStartDay 获取起运天数
 func (yun *Yun) GetStartDay() int {
 	return yun.startDay
 }
 
-// 获取起运小时数
+// GetStartHour 获取起运小时数
 func (yun *Yun) GetStartHour() int {
 	return yun.startHour
 }
 
-// 是否顺推
+// IsForward 是否顺推
 func (yun *Yun) IsForward() bool {
 	return yun.forward
 }
@@ -121,7 +121,7 @@ func (yun *Yun) GetLunar() *Lunar {
 	return yun.lunar
 }
 
-// 获取起运的阳历日期
+// GetStartSolar 获取起运的阳历日期
 func (yun *Yun) GetStartSolar() *Solar {
 	birth := yun.lunar.GetSolar()
 	c := NewExactDateFromYmdHms(birth.GetYear(), birth.GetMonth(), birth.GetDay(), birth.GetHour(), birth.GetMinute(), birth.GetSecond())
@@ -131,12 +131,12 @@ func (yun *Yun) GetStartSolar() *Solar {
 	return NewSolarFromDate(c)
 }
 
-// 获取10轮大运
+// GetDaYun 获取10轮大运
 func (yun *Yun) GetDaYun() []*DaYun {
 	return yun.GetDaYunBy(10)
 }
 
-// 获取大运
+// GetDaYunBy 获取大运
 func (yun *Yun) GetDaYunBy(n int) []*DaYun {
 	l := make([]*DaYun, n)
 	for i := 0; i < n; i++ {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// 伏
+// Fu 伏
 type Fu struct {
 	// 名称：初伏、中伏、末伏
 	name string

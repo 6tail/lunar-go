@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-// 数九
+// ShuJiu 数九
 type ShuJiu struct {
 	// 名称，如一九、二九
 	name string

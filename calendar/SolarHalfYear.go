@@ -9,7 +9,7 @@ import (
 
 const MONTH_IN_HALF_YEAR = 6
 
-// 阳历半年
+// SolarHalfYear 阳历半年
 type SolarHalfYear struct {
 	year  int
 	month int

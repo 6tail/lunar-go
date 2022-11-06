@@ -2,7 +2,7 @@ package calendar
 
 import "github.com/6tail/lunar-go/LunarUtil"
 
-// 小运
+// XiaoYun 小运
 type XiaoYun struct {
 	// 序数，0-9
 	index int
@@ -40,7 +40,7 @@ func (xiaoYun *XiaoYun) GetAge() int {
 	return xiaoYun.age
 }
 
-// 获取干支
+// GetGanZhi 获取干支
 func (xiaoYun *XiaoYun) GetGanZhi() string {
 	offset := LunarUtil.GetJiaZiIndex(xiaoYun.lunar.GetTimeInGanZhi())
 	add := xiaoYun.index + 1
@@ -64,12 +64,12 @@ func (xiaoYun *XiaoYun) GetGanZhi() string {
 	return LunarUtil.JIA_ZI[offset]
 }
 
-// 获取所在旬
+// GetXun 获取所在旬
 func (xiaoYun *XiaoYun) GetXun() string {
 	return LunarUtil.GetXun(xiaoYun.GetGanZhi())
 }
 
-// 获取旬空(空亡)
+// GetXunKong 获取旬空(空亡)
 func (xiaoYun *XiaoYun) GetXunKong() string {
 	return LunarUtil.GetXunKong(xiaoYun.GetGanZhi())
 }

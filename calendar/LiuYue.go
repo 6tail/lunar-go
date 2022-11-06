@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-// 流月
+// LiuYue 流月
 type LiuYue struct {
 	// 序数，0-9
 	index   int
@@ -23,12 +23,12 @@ func (liuYue *LiuYue) GetIndex() int {
 	return liuYue.index
 }
 
-// 获取中文的月
+// GetMonthInChinese 获取中文的月
 func (liuYue *LiuYue) GetMonthInChinese() string {
 	return LunarUtil.MONTH[liuYue.index+1]
 }
 
-// 获取干支
+// GetGanZhi 获取干支
 // <p>
 // 《五虎遁》
 // 甲己之年丙作首，
@@ -50,12 +50,12 @@ func (liuYue *LiuYue) GetGanZhi() string {
 	return gan + zhi
 }
 
-// 获取所在旬
+// GetXun 获取所在旬
 func (liuYue *LiuYue) GetXun() string {
 	return LunarUtil.GetXun(liuYue.GetGanZhi())
 }
 
-// 获取旬空(空亡)
+// GetXunKong 获取旬空(空亡)
 func (liuYue *LiuYue) GetXunKong() string {
 	return LunarUtil.GetXunKong(liuYue.GetGanZhi())
 }

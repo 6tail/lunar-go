@@ -8,7 +8,7 @@ import (
 
 const MONTH_IN_YEAR = 12
 
-// 阳历年
+// SolarYear 阳历年
 type SolarYear struct {
 	year int
 }

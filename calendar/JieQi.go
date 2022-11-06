@@ -4,7 +4,7 @@ import (
 	"strings"
 )
 
-// 节气
+// JieQi 节气
 type JieQi struct {
 	// 名称
 	name string
@@ -23,12 +23,12 @@ func NewJieQi(name string, solar *Solar) *JieQi {
 	return jieQi
 }
 
-// 获取名称
+// GetName 获取名称
 func (jieQi *JieQi) GetName() string {
 	return jieQi.name
 }
 
-// 设置名称
+// SetName 设置名称
 func (jieQi *JieQi) SetName(name string) {
 	jieQi.name = name
 	for i, v := range JIE_QI {
@@ -43,22 +43,22 @@ func (jieQi *JieQi) SetName(name string) {
 	}
 }
 
-// 获取阳历日期
+// GetSolar 获取阳历日期
 func (jieQi *JieQi) GetSolar() *Solar {
 	return jieQi.solar
 }
 
-// 设置阳历日期
+// SetSolar 设置阳历日期
 func (jieQi *JieQi) SetSolar(solar *Solar) {
 	jieQi.solar = solar
 }
 
-// 是否节令
+// IsJie 是否节令
 func (jieQi *JieQi) IsJie() bool {
 	return jieQi.jie
 }
 
-// 是否气令
+// IsQi 是否气令
 func (jieQi *JieQi) IsQi() bool {
 	return jieQi.qi
 }

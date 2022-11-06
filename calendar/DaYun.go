@@ -64,7 +64,7 @@ func (daYun *DaYun) GetLunar() *Lunar {
 	return daYun.lunar
 }
 
-// 获取干支
+// GetGanZhi 获取干支
 func (daYun *DaYun) GetGanZhi() string {
 	if daYun.index < 1 {
 		return ""
@@ -86,22 +86,22 @@ func (daYun *DaYun) GetGanZhi() string {
 	return LunarUtil.JIA_ZI[offset]
 }
 
-// 获取所在旬
+// GetXun 获取所在旬
 func (daYun *DaYun) GetXun() string {
 	return LunarUtil.GetXun(daYun.GetGanZhi())
 }
 
-// 获取旬空(空亡)
+// GetXunKong 获取旬空(空亡)
 func (daYun *DaYun) GetXunKong() string {
 	return LunarUtil.GetXunKong(daYun.GetGanZhi())
 }
 
-// 获取10轮流年
+// GetLiuNian 获取10轮流年
 func (daYun *DaYun) GetLiuNian() []*LiuNian {
 	return daYun.GetLiuNianBy(10)
 }
 
-// 获取流年
+// GetLiuNianBy 获取流年
 func (daYun *DaYun) GetLiuNianBy(n int) []*LiuNian {
 	if daYun.index < 1 {
 		n = daYun.endYear - daYun.startYear + 1
@@ -113,12 +113,12 @@ func (daYun *DaYun) GetLiuNianBy(n int) []*LiuNian {
 	return l
 }
 
-// 获取10轮小运
+// GetXiaoYun 获取10轮小运
 func (daYun *DaYun) GetXiaoYun() []*XiaoYun {
 	return daYun.GetXiaoYunBy(10)
 }
 
-// 获取小运
+// GetXiaoYunBy 获取小运
 func (daYun *DaYun) GetXiaoYunBy(n int) []*XiaoYun {
 	if daYun.index < 1 {
 		n = daYun.endYear - daYun.startYear + 1

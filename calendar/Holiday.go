@@ -1,11 +1,11 @@
-// @Title calendar
+// Package calendar @Title calendar
 // @Description 基础包
 // @Author 6tail
 package calendar
 
 import "strings"
 
-// 节假日
+// Holiday 节假日
 type Holiday struct {
 	// 日期，YYYY-MM-DD格式
 	day string

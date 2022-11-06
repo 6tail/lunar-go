@@ -77,3 +77,61 @@ func TestShenGong3(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestEightChar10(t *testing.T) {
+	lunar := calendar.NewSolar(1988, 2, 15, 23, 30, 0).GetLunar()
+	eightChar := lunar.GetEightChar()
+
+	excepted := "戊辰"
+	got := eightChar.GetYear()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "甲寅"
+	got = eightChar.GetMonth()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "庚子"
+	got = eightChar.GetDay()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "戊子"
+	got = eightChar.GetTime()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestEightChar11(t *testing.T) {
+	lunar := calendar.NewLunar(1987, 12, 28, 23, 30, 0)
+	eightChar := lunar.GetEightChar()
+
+	excepted := "戊辰"
+	got := eightChar.GetYear()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "甲寅"
+	got = eightChar.GetMonth()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "庚子"
+	got = eightChar.GetDay()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+	excepted = "戊子"
+	got = eightChar.GetTime()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

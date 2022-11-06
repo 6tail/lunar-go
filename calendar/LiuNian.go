@@ -2,7 +2,7 @@ package calendar
 
 import "github.com/6tail/lunar-go/LunarUtil"
 
-// 流年
+// LiuNian 流年
 type LiuNian struct {
 	// 序数，0-9
 	index int
@@ -37,7 +37,7 @@ func (liuNian *LiuNian) GetAge() int {
 	return liuNian.age
 }
 
-// 获取干支
+// GetGanZhi 获取干支
 func (liuNian *LiuNian) GetGanZhi() string {
 	jieQi := liuNian.lunar.GetJieQiTable()
 	offset := LunarUtil.GetJiaZiIndex(jieQi["立春"].GetLunar().GetYearInGanZhiExact()) + liuNian.index
@@ -48,12 +48,12 @@ func (liuNian *LiuNian) GetGanZhi() string {
 	return LunarUtil.JIA_ZI[offset]
 }
 
-// 获取所在旬
+// GetXun 获取所在旬
 func (liuNian *LiuNian) GetXun() string {
 	return LunarUtil.GetXun(liuNian.GetGanZhi())
 }
 
-// 获取旬空(空亡)
+// GetXunKong 获取旬空(空亡)
 func (liuNian *LiuNian) GetXunKong() string {
 	return LunarUtil.GetXunKong(liuNian.GetGanZhi())
 }

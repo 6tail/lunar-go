@@ -12,7 +12,7 @@ import (
 
 const J2000 = 2451545
 
-// 阳历
+// Solar 阳历
 type Solar struct {
 	year     int
 	month    int
@@ -191,7 +191,7 @@ func (solar *Solar) GetWeekInChinese() string {
 	return SolarUtil.WEEK[solar.GetWeek()]
 }
 
-// @Deprecated: 该方法已废弃，请使用GetXingZuo
+// GetXingzuo @Deprecated: 该方法已废弃，请使用GetXingZuo
 func (solar *Solar) GetXingzuo() string {
 	return solar.GetXingZuo()
 }

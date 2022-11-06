@@ -1,21 +1,21 @@
-// @Title TaoUtil
+// Package TaoUtil @Title TaoUtil
 // @Description 道历工具
 // @Author 6tail
 package TaoUtil
 
-// 三会日
+// SAN_HUI 三会日
 var SAN_HUI = []string{"1-7", "7-7", "10-15"}
 
-// 三元日
+// SAN_YUAN 三元日
 var SAN_YUAN = []string{"1-15", "7-15", "10-15"}
 
-// 五腊日
+// WU_LA 五腊日
 var WU_LA = []string{"1-1", "5-5", "7-7", "10-1", "12-8"}
 
-// 暗戊
+// AN_WU 暗戊
 var AN_WU = []string{"未", "戌", "辰", "寅", "午", "子", "酉", "申", "巳", "亥", "卯", "丑"}
 
-// 八会日
+// BA_HUI 八会日
 var BA_HUI = map[string]string{
 	"丙午": "天会",
 	"壬午": "地会",
@@ -27,7 +27,7 @@ var BA_HUI = map[string]string{
 	"甲戌": "四时会",
 }
 
-// 八节日
+// BA_JIE 八节日
 var BA_JIE = map[string]string{
 	"立春": "东北方度仙上圣天尊同梵炁始青天君下降",
 	"春分": "东方玉宝星上天尊同青帝九炁天君下降",
@@ -39,7 +39,7 @@ var BA_JIE = map[string]string{
 	"冬至": "北方玄上玉宸天尊同黑帝五炁天君下降",
 }
 
-// 节日
+// FESTIVAL 节日
 var FESTIVAL = map[string][][]string{
 	"1-1":   {{"天腊之辰", "天腊，此日五帝会于东方九炁青天"}},
 	"1-3":   {{"郝真人圣诞"}, {"孙真人圣诞"}},

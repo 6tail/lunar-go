@@ -1,4 +1,4 @@
-// @Title ShouXingUtil
+// Package ShouXingUtil @Title ShouXingUtil
 // @Description 寿星天文历工具
 // @Author 6tail
 package ShouXingUtil

@@ -5,7 +5,7 @@ import (
 	"github.com/6tail/lunar-go/LunarUtil"
 )
 
-// 阴历月
+// LunarMonth 阴历月
 type LunarMonth struct {
 	year           int
 	month          int

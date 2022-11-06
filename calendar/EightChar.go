@@ -6,10 +6,10 @@ import (
 	"strings"
 )
 
-// 月支，按正月起寅排列
+// MONTH_ZHI 月支，按正月起寅排列
 var MONTH_ZHI = []string{"", "寅", "卯", "辰", "巳", "午", "未", "申", "酉", "戌", "亥", "子", "丑"}
 
-// 长生十二神
+// CHANG_SHENG 长生十二神
 var CHANG_SHENG = []string{"长生", "沐浴", "冠带", "临官", "帝旺", "衰", "病", "死", "墓", "绝", "胎", "养"}
 
 // 长生十二神日干偏移值，五阳干顺推，五阴干逆推
@@ -26,7 +26,7 @@ var changShengOffset = map[string]int{
 	"癸": 3,
 }
 
-// 八字
+// EightChar 八字
 type EightChar struct {
 	sect  int
 	lunar *Lunar
@@ -34,6 +34,7 @@ type EightChar struct {
 
 func NewEightChar(lunar *Lunar) *EightChar {
 	eightChar := new(EightChar)
+	eightChar.sect = 2
 	eightChar.lunar = lunar
 	return eightChar
 }
@@ -342,37 +343,37 @@ func (eightChar *EightChar) GetLunar() *Lunar {
 	return eightChar.lunar
 }
 
-// 获取运
+// GetYun 获取运
 func (eightChar *EightChar) GetYun(gender int) *Yun {
 	return eightChar.GetYunBySect(gender, 1)
 }
 
-// 获取运
+// GetYunBySect 获取运
 func (eightChar *EightChar) GetYunBySect(gender int, sect int) *Yun {
 	return NewYun(eightChar, gender, sect)
 }
 
-// 获取年柱所在旬
+// GetYearXun 获取年柱所在旬
 func (eightChar *EightChar) GetYearXun() string {
 	return eightChar.lunar.GetYearXunExact()
 }
 
-// 获取年柱旬空(空亡)
+// GetYearXunKong 获取年柱旬空(空亡)
 func (eightChar *EightChar) GetYearXunKong() string {
 	return eightChar.lunar.GetYearXunKongExact()
 }
 
-// 获取月柱所在旬
+// GetMonthXun 获取月柱所在旬
 func (eightChar *EightChar) GetMonthXun() string {
 	return eightChar.lunar.GetMonthXunExact()
 }
 
-// 获取月柱旬空(空亡)
+// GetMonthXunKong 获取月柱旬空(空亡)
 func (eightChar *EightChar) GetMonthXunKong() string {
 	return eightChar.lunar.GetMonthXunKongExact()
 }
 
-// 获取日柱所在旬
+// GetDayXun 获取日柱所在旬
 func (eightChar *EightChar) GetDayXun() string {
 	if eightChar.sect == 2 {
 		return eightChar.lunar.GetDayXunExact2()
@@ -380,7 +381,7 @@ func (eightChar *EightChar) GetDayXun() string {
 	return eightChar.lunar.GetDayXunExact()
 }
 
-// 获取日柱旬空(空亡)
+// GetDayXunKong 获取日柱旬空(空亡)
 func (eightChar *EightChar) GetDayXunKong() string {
 	if eightChar.sect == 2 {
 		return eightChar.lunar.GetDayXunKongExact2()
@@ -388,12 +389,12 @@ func (eightChar *EightChar) GetDayXunKong() string {
 	return eightChar.lunar.GetDayXunKongExact()
 }
 
-// 获取时柱所在旬
+// GetTimeXun 获取时柱所在旬
 func (eightChar *EightChar) GetTimeXun() string {
 	return eightChar.lunar.GetTimeXun()
 }
 
-// 获取时柱旬空(空亡)
+// GetTimeXunKong 获取时柱旬空(空亡)
 func (eightChar *EightChar) GetTimeXunKong() string {
 	return eightChar.lunar.GetTimeXunKong()
 }

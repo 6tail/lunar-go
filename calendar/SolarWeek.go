@@ -8,7 +8,7 @@ import (
 	"time"
 )
 
-// 阳历周
+// SolarWeek 阳历周
 type SolarWeek struct {
 	year  int
 	month int
