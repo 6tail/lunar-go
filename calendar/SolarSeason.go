@@ -64,6 +64,6 @@ func (solarSeason *SolarSeason) Next(seasons int) *SolarSeason {
 		return NewSolarSeasonFromYm(solarSeason.year, solarSeason.month)
 	}
 	c := NewExactDateFromYmd(solarSeason.year, solarSeason.month, 1)
-	c.AddDate(0, MONTH_IN_SEASON*seasons, 0)
+	c = c.AddDate(0, MONTH_IN_SEASON*seasons, 0)
 	return NewSolarSeasonFromDate(c)
 }

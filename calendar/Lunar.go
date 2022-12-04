@@ -1201,13 +1201,16 @@ func (lunar *Lunar) GetYueXiang() string {
 }
 
 func (lunar *Lunar) getYearNineStar(yearInGanZhi string) *NineStar {
-	index := LunarUtil.GetJiaZiIndex(yearInGanZhi) + 1
-	yearOffset := 0
-	if index != LunarUtil.GetJiaZiIndex(lunar.GetYearInGanZhi())+1 {
-		yearOffset = -1
+	indexExact := LunarUtil.GetJiaZiIndex(yearInGanZhi) + 1
+	index := LunarUtil.GetJiaZiIndex(lunar.GetYearInGanZhi()) + 1
+	yearOffset := indexExact - index
+	if yearOffset > 1 {
+		yearOffset -= 60
+	} else if yearOffset < -1 {
+		yearOffset += 60
 	}
 	yuan := int((lunar.year+yearOffset+2696)/60) % 3
-	offset := (62 + yuan*3 - index) % 9
+	offset := (62 + yuan*3 - indexExact) % 9
 	if 0 == offset {
 		offset = 9
 	}

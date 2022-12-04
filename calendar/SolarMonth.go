@@ -47,6 +47,20 @@ func (solarMonth *SolarMonth) GetDays() *list.List {
 	return l
 }
 
+func (solarMonth *SolarMonth) GetWeeks(start int) *list.List {
+	l := list.New()
+	week := NewSolarWeekFromYmd(solarMonth.year, solarMonth.month, 1, start)
+	for {
+		l.PushBack(week)
+		week = week.Next(1, false)
+		firstDay := week.GetFirstDay()
+		if firstDay.GetYear() > solarMonth.year || firstDay.GetMonth() > solarMonth.month {
+			break
+		}
+	}
+	return l
+}
+
 func (solarMonth *SolarMonth) String() string {
 	return fmt.Sprintf("%d-%d", solarMonth.year, solarMonth.month)
 }
@@ -57,6 +71,6 @@ func (solarMonth *SolarMonth) ToFullString() string {
 
 func (solarMonth *SolarMonth) Next(months int) *SolarMonth {
 	c := NewExactDateFromYmd(solarMonth.year, solarMonth.month, 1)
-	c.AddDate(0, months, 0)
+	c = c.AddDate(0, months, 0)
 	return NewSolarMonthFromDate(c)
 }

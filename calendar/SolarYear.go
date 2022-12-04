@@ -51,6 +51,6 @@ func (solarYear *SolarYear) ToFullString() string {
 
 func (solarYear *SolarYear) Next(years int) *SolarYear {
 	c := NewExactDateFromYmd(solarYear.year, 1, 1)
-	c.AddDate(years, 0, 0)
+	c = c.AddDate(years, 0, 0)
 	return NewSolarYearFromDate(c)
 }

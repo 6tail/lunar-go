@@ -235,24 +235,6 @@ func TestLunar22(t *testing.T) {
 	}
 }
 
-func TestLunar23(t *testing.T) {
-	lunar := calendar.NewLunarFromYmd(2022, 1, 1)
-	excepted := "六白金开阳"
-	got := lunar.GetYearNineStar().String()
-	if excepted != got {
-		t.Errorf("excepted: %v, got: %v", excepted, got)
-	}
-}
-
-func TestLunar24(t *testing.T) {
-	lunar := calendar.NewLunarFromYmd(2033, 1, 1)
-	excepted := "四绿木天权"
-	got := lunar.GetYearNineStar().String()
-	if excepted != got {
-		t.Errorf("excepted: %v, got: %v", excepted, got)
-	}
-}
-
 func TestLunar25(t *testing.T) {
 	solar := calendar.NewSolar(2021, 6, 7, 21, 18, 0)
 	lunar := solar.GetLunar()

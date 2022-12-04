@@ -72,7 +72,7 @@ func (solarWeek *SolarWeek) GetFirstDay() *Solar {
 	if prev < 0 {
 		prev += 7
 	}
-	c.AddDate(0, 0, -prev)
+	c = c.AddDate(0, 0, -prev)
 	return NewSolarFromDate(c)
 }
 
@@ -175,7 +175,7 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 		return week
 	} else {
 		c := NewExactDateFromYmd(solarWeek.year, solarWeek.month, solarWeek.day)
-		c.AddDate(0, 0, weeks*7)
+		c = c.AddDate(0, 0, weeks*7)
 		return NewSolarWeekFromDate(c, solarWeek.start)
 	}
 }

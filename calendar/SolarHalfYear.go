@@ -68,6 +68,6 @@ func (solarHalfYear *SolarHalfYear) Next(halfYears int) *SolarHalfYear {
 		return NewSolarHalfYearFromYm(solarHalfYear.year, solarHalfYear.month)
 	}
 	c := NewExactDateFromYmd(solarHalfYear.year, solarHalfYear.month, 1)
-	c.AddDate(0, MONTH_IN_HALF_YEAR, 0)
+	c = c.AddDate(0, MONTH_IN_HALF_YEAR, 0)
 	return NewSolarHalfYearFromDate(c)
 }
