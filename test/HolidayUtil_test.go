@@ -28,3 +28,12 @@ func TestHolidayUtil2(t *testing.T) {
 		t.Errorf("excepted: nil, got: %v", holiday)
 	}
 }
+
+func TestHolidayUtil3(t *testing.T) {
+	holiday := HolidayUtil.GetHoliday("2022-12-31")
+	excepted := "2023-01-01"
+	got := holiday.GetTarget()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
