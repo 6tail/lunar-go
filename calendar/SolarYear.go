@@ -14,7 +14,7 @@ type SolarYear struct {
 }
 
 func NewSolarYear() *SolarYear {
-	return NewSolarYearFromDate(time.Now())
+	return NewSolarYearFromDate(time.Now().Local())
 }
 
 func NewSolarYearFromYear(year int) *SolarYear {
@@ -50,7 +50,5 @@ func (solarYear *SolarYear) ToFullString() string {
 }
 
 func (solarYear *SolarYear) Next(years int) *SolarYear {
-	c := NewExactDateFromYmd(solarYear.year, 1, 1)
-	c = c.AddDate(years, 0, 0)
-	return NewSolarYearFromDate(c)
+	return NewSolarYearFromYear(solarYear.year + years)
 }

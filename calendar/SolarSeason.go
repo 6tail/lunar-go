@@ -16,7 +16,7 @@ type SolarSeason struct {
 }
 
 func NewSolarSeason() *SolarSeason {
-	return NewSolarSeasonFromDate(time.Now())
+	return NewSolarSeasonFromDate(time.Now().Local())
 }
 
 func NewSolarSeasonFromYm(year int, month int) *SolarSeason {
@@ -60,10 +60,6 @@ func (solarSeason *SolarSeason) ToFullString() string {
 }
 
 func (solarSeason *SolarSeason) Next(seasons int) *SolarSeason {
-	if 0 == seasons {
-		return NewSolarSeasonFromYm(solarSeason.year, solarSeason.month)
-	}
-	c := NewExactDateFromYmd(solarSeason.year, solarSeason.month, 1)
-	c = c.AddDate(0, MONTH_IN_SEASON*seasons, 0)
-	return NewSolarSeasonFromDate(c)
+	m := NewSolarMonthFromYm(solarSeason.year, solarSeason.month).Next(MONTH_IN_SEASON * seasons)
+	return NewSolarSeasonFromYm(m.GetYear(), m.GetMonth())
 }

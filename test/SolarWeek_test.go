@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/6tail/lunar-go/SolarUtil"
 	"github.com/6tail/lunar-go/calendar"
 	"testing"
 )
@@ -120,6 +121,24 @@ func TestSolarWeek12(t *testing.T) {
 
 	excepted := 5
 	got := month.GetWeeks(0).Len()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek13(t *testing.T) {
+	got := SolarUtil.GetWeek(1582, 10, 15)
+
+	excepted := 5
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek14(t *testing.T) {
+	got := SolarUtil.GetWeek(1582, 10, 1)
+
+	excepted := 1
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}

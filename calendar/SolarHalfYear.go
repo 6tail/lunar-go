@@ -16,7 +16,7 @@ type SolarHalfYear struct {
 }
 
 func NewSolarHalfYear() *SolarHalfYear {
-	return NewSolarHalfYearFromDate(time.Now())
+	return NewSolarHalfYearFromDate(time.Now().Local())
 }
 
 func NewSolarHalfYearFromYm(year int, month int) *SolarHalfYear {
@@ -64,10 +64,6 @@ func (solarHalfYear *SolarHalfYear) ToFullString() string {
 }
 
 func (solarHalfYear *SolarHalfYear) Next(halfYears int) *SolarHalfYear {
-	if 0 == halfYears {
-		return NewSolarHalfYearFromYm(solarHalfYear.year, solarHalfYear.month)
-	}
-	c := NewExactDateFromYmd(solarHalfYear.year, solarHalfYear.month, 1)
-	c = c.AddDate(0, MONTH_IN_HALF_YEAR, 0)
-	return NewSolarHalfYearFromDate(c)
+	m := NewSolarMonthFromYm(solarHalfYear.year, solarHalfYear.month).Next(MONTH_IN_HALF_YEAR * halfYears)
+	return NewSolarHalfYearFromYm(m.GetYear(), m.GetMonth())
 }

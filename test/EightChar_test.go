@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/6tail/lunar-go/calendar"
+	"strings"
 	"testing"
 )
 
@@ -134,4 +135,90 @@ func TestEightChar11(t *testing.T) {
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
+}
+
+func TestEightChar12(t *testing.T) {
+	solarList := calendar.ListSolarFromBaZi("丙辰", "丁酉", "丙子", "甲午")
+
+	excepted := []string{"1976-09-21 12:00:00", "1916-10-06 12:00:00"}
+
+	got := []string{"", ""}
+	solar := solarList.Front()
+	got[0] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	solar = solar.Next()
+	got[1] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	if strings.Join(excepted, ",") != strings.Join(got, ",") {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+}
+
+func TestEightChar13(t *testing.T) {
+	solarList := calendar.ListSolarFromBaZi("壬寅", "庚戌", "己未", "乙亥")
+
+	excepted := "2022-11-02 22:00:00"
+
+	solar := solarList.Front()
+	got := solar.Value.(*calendar.Solar).ToYmdHms()
+
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+}
+
+func TestEightChar14(t *testing.T) {
+	solarList := calendar.ListSolarFromBaZi("己卯", "辛未", "甲戌", "壬申")
+
+	excepted := []string{"1999-07-21 16:00:00", "1939-08-05 16:00:00"}
+
+	got := []string{"", ""}
+	solar := solarList.Front()
+	got[0] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	solar = solar.Next()
+	got[1] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	if strings.Join(excepted, ",") != strings.Join(got, ",") {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+}
+
+func TestEightChar15(t *testing.T) {
+	solarList := calendar.ListSolarFromBaZi("庚子", "戊子", "己卯", "庚午")
+
+	excepted := []string{"1960-12-17 12:00:00", "1901-01-01 12:00:00"}
+
+	got := []string{"", ""}
+	solar := solarList.Front()
+	got[0] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	solar = solar.Next()
+	got[1] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	if strings.Join(excepted, ",") != strings.Join(got, ",") {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+}
+
+func TestEightChar16(t *testing.T) {
+	solarList := calendar.ListSolarFromBaZi("庚子", "癸未", "乙丑", "丁亥")
+
+	excepted := []string{"2020-07-21 22:00:00", "1960-08-05 22:00:00"}
+
+	got := []string{"", ""}
+	solar := solarList.Front()
+	got[0] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	solar = solar.Next()
+	got[1] = solar.Value.(*calendar.Solar).ToYmdHms()
+
+	if strings.Join(excepted, ",") != strings.Join(got, ",") {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
 }

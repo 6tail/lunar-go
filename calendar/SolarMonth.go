@@ -14,7 +14,7 @@ type SolarMonth struct {
 }
 
 func NewSolarMonth() *SolarMonth {
-	return NewSolarMonthFromDate(time.Now())
+	return NewSolarMonthFromDate(time.Now().Local())
 }
 
 func NewSolarMonthFromYm(year int, month int) *SolarMonth {
@@ -42,7 +42,7 @@ func (solarMonth *SolarMonth) GetDays() *list.List {
 	l.PushBack(firstDay)
 	days := SolarUtil.GetDaysOfMonth(solarMonth.year, solarMonth.month)
 	for i := 1; i < days; i++ {
-		l.PushBack(firstDay.Next(i))
+		l.PushBack(firstDay.NextDay(i))
 	}
 	return l
 }
@@ -70,7 +70,20 @@ func (solarMonth *SolarMonth) ToFullString() string {
 }
 
 func (solarMonth *SolarMonth) Next(months int) *SolarMonth {
-	c := NewExactDateFromYmd(solarMonth.year, solarMonth.month, 1)
-	c = c.AddDate(0, months, 0)
-	return NewSolarMonthFromDate(c)
+	n := 1
+	m := months
+	if months < 0 {
+		n = -1
+		m = -months
+	}
+	y := solarMonth.year + m/12*n
+	m = solarMonth.month + m%12*n
+	if m > 12 {
+		m -= 12
+		y++
+	} else if m < 1 {
+		m += 12
+		y--
+	}
+	return NewSolarMonthFromYm(y, m)
 }

@@ -17,7 +17,7 @@ func test() {
 	fmt.Println(holiday)
 
 	// 阳历
-	solar := calendar.NewSolarFromDate(time.Now())
+	solar := calendar.NewSolarFromDate(time.Now().Local())
 	fmt.Println(solar.ToFullString())
 
 	// 儒略日
@@ -44,7 +44,7 @@ func test() {
 	fmt.Println(lunar.GetNextQi())
 
 	// 阳历往后推一天
-	solar = solar.Next(1)
+	solar = solar.NextDay(1)
 	fmt.Println(solar.ToFullString())
 
 	// 法定假日
@@ -161,7 +161,7 @@ func test() {
 	fmt.Println()
 
 	// 日宜
-	lunar = calendar.NewLunarFromDate(time.Now())
+	lunar = calendar.NewLunarFromDate(time.Now().Local())
 	for i := lunar.GetDayYi().Front(); i != nil; i = i.Next() {
 		fmt.Print(i.Value.(string))
 		fmt.Print(" ")
@@ -291,61 +291,26 @@ func test2() {
 	fmt.Println()
 }
 
-// 工作日推移
-func NextWorkday(solar *calendar.Solar, days int) *calendar.Solar {
-	c := calendar.NewExactDateFromYmdHms(solar.GetYear(), solar.GetMonth(), solar.GetDay(), solar.GetHour(), solar.GetMinute(), solar.GetSecond())
-	if 0 != days {
-		rest := days
-		if rest < 0 {
-			rest = -days
-		}
-		add := 1
-		if days < 0 {
-			add = -1
-		}
-		for {
-			if rest <= 0 {
-				break
-			}
-			c = c.AddDate(0, 0, add)
-			work := true
-			holiday := HolidayUtil.GetHolidayByYmd(c.Year(), int(c.Month()), c.Day())
-			if nil == holiday {
-				week := int(c.Weekday())
-				if 0 == week || 6 == week {
-					work = false
-				}
-			} else {
-				work = holiday.IsWork()
-			}
-			if work {
-				rest--
-			}
-		}
-	}
-	return calendar.NewSolar(c.Year(), int(c.Month()), c.Day(), c.Hour(), c.Minute(), c.Second())
-}
-
 func test3() {
 	date := calendar.NewSolarFromYmd(2020, 1, 23)
-	fmt.Print(strings.Compare("2020-01-24", date.Next(1).ToYmd()))
+	fmt.Print(strings.Compare("2020-01-24", date.NextDay(1).ToYmd()))
 	// 仅工作日，跨越春节假期
-	fmt.Print(strings.Compare("2020-02-03", NextWorkday(date, 1).ToYmd()))
+	fmt.Print(strings.Compare("2020-02-03", date.Next(1, true).ToYmd()))
 
 	date = calendar.NewSolarFromYmd(2020, 2, 3)
-	fmt.Print(strings.Compare("2020-01-31", date.Next(-3).ToYmd()))
+	fmt.Print(strings.Compare("2020-01-31", date.NextDay(-3).ToYmd()))
 	// 仅工作日，跨越春节假期
-	fmt.Print(strings.Compare("2020-01-21", NextWorkday(date, -3).ToYmd()))
+	fmt.Print(strings.Compare("2020-01-21", date.Next(-3, true).ToYmd()))
 
 	date = calendar.NewSolarFromYmd(2020, 2, 9)
-	fmt.Print(strings.Compare("2020-02-15", date.Next(6).ToYmd()))
+	fmt.Print(strings.Compare("2020-02-15", date.NextDay(6).ToYmd()))
 	// 仅工作日，跨越周末
-	fmt.Print(strings.Compare("2020-02-17", NextWorkday(date, 6).ToYmd()))
+	fmt.Print(strings.Compare("2020-02-17", date.Next(6, true).ToYmd()))
 
 	date = calendar.NewSolarFromYmd(2020, 1, 17)
-	fmt.Print(strings.Compare("2020-01-18", date.Next(1).ToYmd()))
+	fmt.Print(strings.Compare("2020-01-18", date.NextDay(1).ToYmd()))
 	// 仅工作日，周日调休按上班算
-	fmt.Print(strings.Compare("2020-01-19", NextWorkday(date, 1).ToYmd()))
+	fmt.Print(strings.Compare("2020-01-19", date.Next(1, true).ToYmd()))
 	fmt.Println()
 }
 
@@ -455,7 +420,7 @@ func test6() {
 
 func test7() {
 	// 数九
-	lunar := calendar.NewLunarFromDate(time.Now())
+	lunar := calendar.NewLunarFromDate(time.Now().Local())
 	fmt.Println(lunar.GetShuJiu())
 
 	// 一九第1天
@@ -478,7 +443,7 @@ func test8() {
 }
 
 func test9() {
-	lunar := calendar.NewLunarFromDate(time.Now())
+	lunar := calendar.NewLunarFromDate(time.Now().Local())
 	// 六曜
 	fmt.Println(lunar.GetLiuYao())
 	// 物候

@@ -1,9 +1,7 @@
 package calendar
 
 import (
-	"fmt"
 	"github.com/6tail/lunar-go/LunarUtil"
-	"time"
 )
 
 type Yun struct {
@@ -51,7 +49,7 @@ func (yun *Yun) computeStart(sect int) {
 	day := 0
 	hour := 0
 	if 2 == sect {
-		minutes := int((end.GetCalendar().Unix() - start.GetCalendar().Unix()) / 60)
+		minutes := end.SubtractMinute(start)
 		year = minutes / 4320
 		minutes -= year * 4320
 		month = minutes / 360
@@ -70,7 +68,7 @@ func (yun *Yun) computeStart(sect int) {
 		}
 		// 时辰差
 		hourDiff := endTimeZhiIndex - startTimeZhiIndex
-		dayDiff := GetDaysBetween(start.GetYear(), start.GetMonth(), start.GetDay(), end.GetYear(), end.GetMonth(), end.GetDay())
+		dayDiff := end.Subtract(start)
 		if hourDiff < 0 {
 			hourDiff += 12
 			dayDiff--
@@ -123,12 +121,11 @@ func (yun *Yun) GetLunar() *Lunar {
 
 // GetStartSolar 获取起运的阳历日期
 func (yun *Yun) GetStartSolar() *Solar {
-	birth := yun.lunar.GetSolar()
-	c := NewExactDateFromYmdHms(birth.GetYear(), birth.GetMonth(), birth.GetDay(), birth.GetHour(), birth.GetMinute(), birth.GetSecond())
-	c = c.AddDate(yun.startYear, yun.startMonth, yun.startDay)
-	hour, _ := time.ParseDuration(fmt.Sprintf("%dh", yun.startHour))
-	c = c.Add(hour)
-	return NewSolarFromDate(c)
+	solar := yun.lunar.GetSolar()
+	solar = solar.NextYear(yun.startYear)
+	solar = solar.NextMonth(yun.startMonth)
+	solar = solar.NextDay(yun.startDay)
+	return solar.NextHour(yun.startHour)
 }
 
 // GetDaYun 获取10轮大运

@@ -1,6 +1,7 @@
 package test
 
 import (
+	"github.com/6tail/lunar-go/SolarUtil"
 	"github.com/6tail/lunar-go/calendar"
 	"testing"
 )
@@ -45,6 +46,120 @@ func TestSolar5(t *testing.T) {
 	solar := calendar.NewSolarFromYmd(2022, 3, 28)
 	excepted := "全国中小学生安全教育日"
 	got := solar.GetFestivals().Front().Value
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar6(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 1, 1)
+	excepted := "2022-01-02"
+	got := solar.NextDay(1).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar7(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 1, 31)
+	excepted := "2022-02-01"
+	got := solar.NextDay(1).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar8(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2022, 1, 1)
+	excepted := "2023-01-01"
+	got := solar.NextDay(365).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar9(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2023, 1, 1)
+	excepted := "2022-01-01"
+	got := solar.NextDay(-365).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar10(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 10, 4)
+	excepted := "1582-10-15"
+	got := solar.NextDay(1).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar11(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 10, 15)
+	excepted := "1582-10-04"
+	got := solar.NextDay(-1).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar12(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 10, 4)
+	excepted := "1582-11-01"
+	got := solar.NextDay(18).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar13(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 11, 1)
+	excepted := "1582-10-04"
+	got := solar.NextDay(-18).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar14(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 11, 1)
+	excepted := "1582-10-15"
+	got := solar.NextDay(-17).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar15(t *testing.T) {
+	excepted := 355
+	got := SolarUtil.GetDaysBetween(1582, 1, 1, 1583, 1, 1)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar16(t *testing.T) {
+	excepted := 18
+	got := SolarUtil.GetDaysBetween(1582, 10, 4, 1582, 11, 1)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar17(t *testing.T) {
+	excepted := 1
+	got := SolarUtil.GetDaysBetween(1582, 10, 4, 1582, 10, 15)
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar18(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(1582, 10, 15)
+	excepted := "1582-09-30"
+	got := solar.NextDay(-5).ToYmd()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}

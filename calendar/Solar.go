@@ -14,20 +14,34 @@ const J2000 = 2451545
 
 // Solar 阳历
 type Solar struct {
-	year     int
-	month    int
-	day      int
-	hour     int
-	minute   int
-	second   int
-	calendar time.Time
+	year   int
+	month  int
+	day    int
+	hour   int
+	minute int
+	second int
 }
 
 func NewSolar(year int, month int, day int, hour int, minute int, second int) *Solar {
-	if year == 1582 && month == 10 {
-		if day >= 15 {
-			day -= 10
+	if 1582 == year && 10 == month {
+		if day > 4 && day < 15 {
+			panic(fmt.Sprintf("wrong solar year %v month %v day %v", year, month, day))
 		}
+	}
+	if month < 1 || month > 12 {
+		panic(fmt.Sprintf("wrong month %v", month))
+	}
+	if day < 1 || day > 31 {
+		panic(fmt.Sprintf("wrong day %v", day))
+	}
+	if hour < 0 || hour > 23 {
+		panic(fmt.Sprintf("wrong hour %v", hour))
+	}
+	if minute < 0 || minute > 59 {
+		panic(fmt.Sprintf("wrong minute %v", minute))
+	}
+	if second < 0 || second > 59 {
+		panic(fmt.Sprintf("wrong second %v", second))
 	}
 	solar := new(Solar)
 	solar.year = year
@@ -36,7 +50,6 @@ func NewSolar(year int, month int, day int, hour int, minute int, second int) *S
 	solar.hour = hour
 	solar.minute = minute
 	solar.second = second
-	solar.calendar = NewExactDateFromYmdHms(year, month, day, hour, minute, second)
 	return solar
 }
 
@@ -105,13 +118,21 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 		sect = 2
 	}
 	l := list.New()
-	today := NewSolarFromDate(time.Now())
-	lunar := today.GetLunar()
-	offsetYear := LunarUtil.GetJiaZiIndex(lunar.GetYearInGanZhiExact()) - LunarUtil.GetJiaZiIndex(yearGanZhi)
+	years := list.New()
+	today := NewSolarFromDate(time.Now().Local())
+	offsetYear := LunarUtil.GetJiaZiIndex(today.GetLunar().GetYearInGanZhiExact()) - LunarUtil.GetJiaZiIndex(yearGanZhi)
 	if offsetYear < 0 {
 		offsetYear = offsetYear + 60
 	}
-	startYear := lunar.GetYear() - offsetYear
+	startYear := today.GetYear() - offsetYear - 1
+	for {
+		years.PushBack(startYear)
+		startYear -= 60
+		if startYear < baseYear {
+			years.PushBack(baseYear)
+			break
+		}
+	}
 	hour := 0
 	gz := []rune(timeGanZhi)
 	timeZhi := string(gz[1:])
@@ -120,61 +141,26 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 			hour = (i - 1) * 2
 		}
 	}
-	for {
-		if startYear < baseYear {
-			break
-		}
-		year := startYear - 1
-		counter := 0
-		month := 12
-		found := false
-		for {
-			if counter >= 15 {
-				break
-			}
-			if year >= baseYear {
-				day := 1
-				solar := NewSolar(year, month, day, hour, 0, 0)
-				lunar = solar.GetLunar()
-				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 {
-					found = true
-					break
-				}
-			}
-			month++
-			if month > 12 {
-				month = 1
-				year++
-			}
-			counter++
-		}
-		if found {
-			counter = 0
-			month--
-			if month < 1 {
-				month = 12
-				year--
-			}
-			day := 1
-			solar := NewSolar(year, month, day, hour, 0, 0)
-			for {
-				if counter >= 61 {
-					break
-				}
-				lunar = solar.GetLunar()
+	for i := years.Front(); i != nil; i = i.Next() {
+		y := i.Value.(int)
+		for x := 0; x < 3; x++ {
+			year := y + x
+			o := NewSolar(year, 1, 1, hour, 0, 0)
+			for o.GetYear() == year {
+				lunar := o.GetLunar()
 				dgz := lunar.GetDayInGanZhiExact2()
 				if sect == 1 {
 					dgz = lunar.GetDayInGanZhiExact()
 				}
 				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(dgz, dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
-					l.PushBack(solar)
+					l.PushBack(o)
+					x = 3
 					break
+				} else {
+					o = o.NextDay(1)
 				}
-				solar = solar.Next(1)
-				counter++
 			}
 		}
-		startYear -= 60
 	}
 	return l
 }
@@ -184,7 +170,7 @@ func (solar *Solar) IsLeapYear() bool {
 }
 
 func (solar *Solar) GetWeek() int {
-	return int(solar.calendar.Weekday())
+	return SolarUtil.GetWeek(solar.year, solar.month, solar.day)
 }
 
 func (solar *Solar) GetWeekInChinese() string {
@@ -281,10 +267,6 @@ func (solar *Solar) GetSecond() int {
 	return solar.second
 }
 
-func (solar *Solar) GetCalendar() time.Time {
-	return solar.calendar
-}
-
 func (solar *Solar) GetJulianDay() float64 {
 	y := solar.year
 	m := solar.month
@@ -306,13 +288,7 @@ func (solar *Solar) GetJulianDay() float64 {
 }
 
 func (solar *Solar) ToYmd() string {
-	d := solar.day
-	if solar.year == 1582 && solar.month == 10 {
-		if d >= 5 {
-			d += 10
-		}
-	}
-	return fmt.Sprintf("%04d-%02d-%02d", solar.year, solar.month, d)
+	return fmt.Sprintf("%04d-%02d-%02d", solar.year, solar.month, solar.day)
 }
 
 func (solar *Solar) ToYmdHms() string {
@@ -346,11 +322,194 @@ func (solar *Solar) ToFullString() string {
 	return s
 }
 
-func (solar *Solar) Next(days int) *Solar {
-	c := solar.calendar.AddDate(0, 0, days)
-	return NewSolar(c.Year(), int(c.Month()), c.Day(), c.Hour(), c.Minute(), c.Second())
+func (solar *Solar) Subtract(other *Solar) int {
+	return SolarUtil.GetDaysBetween(other.GetYear(), other.GetMonth(), other.GetDay(), solar.GetYear(), solar.GetMonth(), solar.GetDay())
+}
+
+func (solar *Solar) SubtractMinute(other *Solar) int {
+	days := solar.Subtract(other)
+	cm := solar.GetHour()*60 + solar.GetMinute()
+	sm := other.GetHour()*60 + other.GetMinute()
+	m := cm - sm
+	if m < 0 {
+		m += 1440
+		days--
+	}
+	m += days * 1440
+	return m
+}
+
+func (solar *Solar) IsAfter(other *Solar) bool {
+	if solar.GetYear() > other.GetYear() {
+		return true
+	}
+	if solar.GetYear() < other.GetYear() {
+		return false
+	}
+	if solar.GetMonth() > other.GetMonth() {
+		return true
+	}
+	if solar.GetMonth() < other.GetMonth() {
+		return false
+	}
+	if solar.GetDay() > other.GetDay() {
+		return true
+	}
+	if solar.GetDay() < other.GetDay() {
+		return false
+	}
+	if solar.GetHour() > other.GetHour() {
+		return true
+	}
+	if solar.GetHour() < other.GetHour() {
+		return false
+	}
+	if solar.GetMinute() > other.GetMinute() {
+		return true
+	}
+	if solar.GetMinute() < other.GetMinute() {
+		return false
+	}
+	return solar.GetSecond() > other.GetSecond()
+}
+
+func (solar *Solar) IsBefore(other *Solar) bool {
+	return SolarUtil.IsBefore(solar.year, solar.month, solar.day, solar.hour, solar.minute, solar.second, other.GetYear(), other.GetMonth(), other.GetDay(), other.GetHour(), other.GetMinute(), other.GetSecond())
+}
+
+func (solar *Solar) NextYear(years int) *Solar {
+	y := solar.GetYear() + years
+	m := solar.GetMonth()
+	d := solar.GetDay()
+	// 2月处理
+	if 2 == m {
+		if d > 28 {
+			if !SolarUtil.IsLeapYear(y) {
+				d = 28
+			}
+		}
+	}
+	if 1582 == y && 10 == m {
+		if d > 4 && d < 15 {
+			d += 10
+		}
+	}
+	return NewSolar(y, m, d, solar.GetHour(), solar.GetMinute(), solar.GetSecond())
+}
+
+func (solar *Solar) NextMonth(months int) *Solar {
+	month := NewSolarMonthFromYm(solar.GetYear(), solar.GetMonth())
+	month = month.Next(months)
+	y := month.GetYear()
+	m := month.GetMonth()
+	d := solar.GetDay()
+	// 2月处理
+	if 2 == m {
+		if d > 28 {
+			if !SolarUtil.IsLeapYear(y) {
+				d = 28
+			}
+		}
+	}
+	if 1582 == y && 10 == m {
+		if d > 4 && d < 15 {
+			d += 10
+		}
+	}
+	return NewSolar(y, m, d, solar.GetHour(), solar.GetMinute(), solar.GetSecond())
+}
+
+func (solar *Solar) NextDay(days int) *Solar {
+	y := solar.GetYear()
+	m := solar.GetMonth()
+	d := solar.GetDay()
+	if 1582 == y && 10 == m {
+		if d > 4 {
+			d -= 10
+		}
+	}
+	if days > 0 {
+		d += days
+		daysInMonth := SolarUtil.GetDaysOfMonth(y, m)
+		for d > daysInMonth {
+			d -= daysInMonth
+			m++
+			if m > 12 {
+				m = 1
+				y++
+			}
+			daysInMonth = SolarUtil.GetDaysOfMonth(y, m)
+		}
+	} else if days < 0 {
+		for d+days <= 0 {
+			m--
+			if m < 1 {
+				m = 12
+				y--
+			}
+			d += SolarUtil.GetDaysOfMonth(y, m)
+		}
+		d += days
+	}
+	if 1582 == y && 10 == m {
+		if d > 4 {
+			d += 10
+		}
+	}
+	return NewSolar(y, m, d, solar.GetHour(), solar.GetMinute(), solar.GetSecond())
+}
+
+func (solar *Solar) Next(days int, onlyWorkday bool) *Solar {
+	if !onlyWorkday {
+		return solar.NextDay(days)
+	}
+	o := NewSolar(solar.GetYear(), solar.GetMonth(), solar.GetDay(), solar.GetHour(), solar.GetMinute(), solar.GetSecond())
+	if days != 0 {
+		rest := days
+		add := 1
+		if days < 0 {
+			rest = -days
+			add = -1
+		}
+		for rest > 0 {
+			o = solar.NextDay(add)
+			work := true
+			holiday := NewHoliday("", "", false, "")
+			//holiday := HolidayUtil.GetHolidayByYmd(o.GetYear(), o.GetMonth(), o.GetDay())
+			if nil == holiday {
+				week := o.GetWeek()
+				if 0 == week || 6 == week {
+					work = false
+				}
+			} else {
+				work = holiday.IsWork()
+			}
+			if work {
+				rest -= 1
+			}
+		}
+	}
+	return solar
+}
+
+func (solar *Solar) NextHour(hours int) *Solar {
+	h := solar.GetHour() + hours
+	n := 1
+	hour := h
+	if h < 0 {
+		n = -1
+		hour = -h
+	}
+	days := hour / 24 * n
+	hour = (hour % 24) * n
+	if hour < 0 {
+		hour += 24
+		days--
+	}
+	o := solar.NextDay(days)
+	return NewSolar(o.GetYear(), o.GetMonth(), o.GetDay(), hour, o.GetMinute(), o.GetSecond())
 }
 
 func (solar *Solar) GetLunar() *Lunar {
-	return NewLunarFromDate(solar.calendar)
+	return NewLunarFromSolar(solar)
 }

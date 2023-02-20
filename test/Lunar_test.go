@@ -47,7 +47,7 @@ func TestLunar3(t *testing.T) {
 	solar := calendar.NewSolar(2020, 1, 10, 12, 0, 0)
 	lunar := solar.GetLunar()
 	for i := -500; i <= 500; i++ {
-		solarDay := solar.Next(i)
+		solarDay := solar.NextDay(i)
 		excepted := solarDay.GetLunar().ToFullString()
 		got := lunar.Next(i).ToFullString()
 		if excepted != got {

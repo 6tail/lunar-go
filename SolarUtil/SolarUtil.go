@@ -4,8 +4,8 @@
 package SolarUtil
 
 import (
+	"fmt"
 	"math"
-	"time"
 )
 
 var WEEK = []string{"日", "一", "二", "三", "四", "五", "六"}
@@ -87,6 +87,9 @@ func IsLeapYear(year int) bool {
 }
 
 func GetDaysOfYear(year int) int {
+	if 1582 == year {
+		return 355
+	}
 	if IsLeapYear(year) {
 		return 366
 	}
@@ -111,15 +114,95 @@ func GetDaysInYear(year int, month int, day int) int {
 	for i := 1; i < month; i++ {
 		days += GetDaysOfMonth(year, i)
 	}
-	days += day
-	if 1582 == year && 10 == month && day >= 15 {
-		days -= 10
+	d := day
+	if 1582 == year && 10 == month {
+		if day >= 15 {
+			d -= 10
+		} else if day > 4 {
+			panic(fmt.Sprintf("wrong solar year %v month %v day %v", year, month, day))
+		}
 	}
+	days += d
 	return days
 }
 
 func GetWeeksOfMonth(year int, month int, start int) int {
-	days := GetDaysOfMonth(year, month)
-	week := int(time.Date(year, time.Month(month), 1, 0, 0, 0, 0, time.Local).Weekday())
-	return int(math.Ceil(float64(days+week-start) / 7))
+	return int(math.Ceil(float64(GetDaysOfMonth(year, month)+GetWeek(year, month, 1)-start) / 7))
+}
+
+func GetWeek(year int, month int, day int) int {
+	y := year
+	m := month
+	d := day
+	// 蔡勒公式
+	if m < 3 {
+		m += 12
+		y--
+	}
+	c := y / 100
+	y = y - c*100
+	x := y + y/4 + c/4 - 2*c
+	w := 0
+	if IsBefore(year, month, day, 0, 0, 0, 1582, 10, 15, 0, 0, 0) {
+		w = (x + 13*(m+1)/5 + d + 2) % 7
+	} else {
+		w = (x + 26*(m+1)/10 + d - 1) % 7
+	}
+	return (w + 7) % 7
+}
+
+func IsBefore(ay int, am int, ad int, ah int, ai int, as int, by int, bm int, bd int, bh int, bi int, bs int) bool {
+	if ay > by {
+		return false
+	}
+	if ay < by {
+		return true
+	}
+	if am > bm {
+		return false
+	}
+	if am < bm {
+		return true
+	}
+	if ad > bd {
+		return false
+	}
+	if ad < bd {
+		return true
+	}
+	if ah > bh {
+		return false
+	}
+	if ah < bh {
+		return true
+	}
+	if ai > bi {
+		return false
+	}
+	if ai < bi {
+		return true
+	}
+	return as < bs
+}
+
+func GetDaysBetween(ay int, am int, ad int, by int, bm int, bd int) int {
+	n := 0
+	if ay == by {
+		n = GetDaysInYear(by, bm, bd) - GetDaysInYear(ay, am, ad)
+	} else if ay > by {
+		days := GetDaysOfYear(by) - GetDaysInYear(by, bm, bd)
+		for i := by + 1; i < ay; i++ {
+			days += GetDaysOfYear(i)
+		}
+		days += GetDaysInYear(ay, am, ad)
+		n = -days
+	} else {
+		days := GetDaysOfYear(ay) - GetDaysInYear(ay, am, ad)
+		for i := ay + 1; i < by; i++ {
+			days += GetDaysOfYear(i)
+		}
+		days += GetDaysInYear(by, bm, bd)
+		n = days
+	}
+	return n
 }
