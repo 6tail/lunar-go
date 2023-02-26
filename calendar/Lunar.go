@@ -83,9 +83,6 @@ func NewLunarFromSolar(solar *Solar) *Lunar {
 	lunarYear := 0
 	lunarMonth := 0
 	lunarDay := 0
-	hour := solar.GetHour()
-	minute := solar.GetMinute()
-	second := solar.GetSecond()
 	ly := NewLunarYear(solar.GetYear())
 	lunar := new(Lunar)
 	for i := ly.months.Front(); i != nil; i = i.Next() {
@@ -102,9 +99,9 @@ func NewLunarFromSolar(solar *Solar) *Lunar {
 	lunar.year = lunarYear
 	lunar.month = lunarMonth
 	lunar.day = lunarDay
-	lunar.hour = hour
-	lunar.minute = minute
-	lunar.second = second
+	lunar.hour = solar.GetHour()
+	lunar.minute = solar.GetMinute()
+	lunar.second = solar.GetSecond()
 	lunar.solar = solar
 	compute(lunar, ly)
 	return lunar

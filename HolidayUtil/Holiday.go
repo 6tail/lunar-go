@@ -1,7 +1,4 @@
-// Package calendar @Title calendar
-// @Description 基础包
-// @Author 6tail
-package calendar
+package HolidayUtil
 
 import "strings"
 

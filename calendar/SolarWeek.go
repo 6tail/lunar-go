@@ -144,10 +144,8 @@ func (solarWeek *SolarWeek) Next(weeks int, separateMonth bool) *SolarWeek {
 						week = NewSolarWeekFromYmd(c.GetYear(), c.GetMonth(), c.GetDay(), solarWeek.start)
 					}
 				} else {
-					size := SolarUtil.GetWeeksOfMonth(week.year, week.month, solarWeek.start)
-					if size == index {
-						firstDay := week.GetFirstDay()
-						lastDay := firstDay.NextDay(6)
+					if SolarUtil.GetWeeksOfMonth(week.year, week.month, solarWeek.start) == index {
+						lastDay := week.GetFirstDay().NextDay(6)
 						week = NewSolarWeekFromYmd(lastDay.year, lastDay.month, lastDay.day, solarWeek.start)
 						weekMonth = week.month
 					} else {

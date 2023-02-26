@@ -23,8 +23,6 @@ func NewLunarMonth(lunarYear int, lunarMonth int, dayCount int, firstJulianDay f
 }
 
 func NewLunarMonthFromYm(lunarYear int, lunarMonth int) *LunarMonth {
-	year := new(LunarYear)
-	year.year = lunarYear
 	return NewLunarYear(lunarYear).GetMonth(lunarMonth)
 }
 

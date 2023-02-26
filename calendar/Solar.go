@@ -3,6 +3,7 @@ package calendar
 import (
 	"container/list"
 	"fmt"
+	"github.com/6tail/lunar-go/HolidayUtil"
 	"github.com/6tail/lunar-go/LunarUtil"
 	"github.com/6tail/lunar-go/SolarUtil"
 	"math"
@@ -472,10 +473,9 @@ func (solar *Solar) Next(days int, onlyWorkday bool) *Solar {
 			add = -1
 		}
 		for rest > 0 {
-			o = solar.NextDay(add)
+			o = o.NextDay(add)
 			work := true
-			holiday := NewHoliday("", "", false, "")
-			//holiday := HolidayUtil.GetHolidayByYmd(o.GetYear(), o.GetMonth(), o.GetDay())
+			holiday := HolidayUtil.GetHolidayByYmd(o.GetYear(), o.GetMonth(), o.GetDay())
 			if nil == holiday {
 				week := o.GetWeek()
 				if 0 == week || 6 == week {
@@ -489,7 +489,7 @@ func (solar *Solar) Next(days int, onlyWorkday bool) *Solar {
 			}
 		}
 	}
-	return solar
+	return o
 }
 
 func (solar *Solar) NextHour(hours int) *Solar {

@@ -6,7 +6,6 @@ package HolidayUtil
 import (
 	"container/list"
 	"fmt"
-	"github.com/6tail/lunar-go/calendar"
 	"strings"
 )
 
@@ -20,21 +19,21 @@ var NAMES = []string{"元旦节", "春节", "清明节", "劳动节", "端午节
 var namesInUse = NAMES
 var dataInUse = data
 
-func buildHolidayForward(s string) *calendar.Holiday {
+func buildHolidayForward(s string) *Holiday {
 	day := s[0:8]
 	name := namesInUse[[]rune(s[8:9])[0]-zero]
 	work := []rune(s[9:10])[0] == zero
 	target := s[10:size]
-	return calendar.NewHoliday(day, name, work, target)
+	return NewHoliday(day, name, work, target)
 }
 
-func buildHolidayBackward(s string) *calendar.Holiday {
+func buildHolidayBackward(s string) *Holiday {
 	length := len(s)
 	day := s[length-18 : length-10]
 	name := namesInUse[[]rune(s[length-10 : length-9])[0]-zero]
 	work := []rune(s[length-9 : length-8])[0] == zero
 	target := s[length-8:]
-	return calendar.NewHoliday(day, name, work, target)
+	return NewHoliday(day, name, work, target)
 }
 
 func findForward(key string) string {
@@ -116,15 +115,15 @@ func findHolidaysBackward(key string) *list.List {
 	return l
 }
 
-func GetHoliday(ymd string) *calendar.Holiday {
+func GetHoliday(ymd string) *Holiday {
 	l := findHolidaysForward(strings.Replace(ymd, "-", "", -1))
 	if l.Len() < 1 {
 		return nil
 	}
-	return l.Front().Value.(*calendar.Holiday)
+	return l.Front().Value.(*Holiday)
 }
 
-func GetHolidayByYmd(year int, month int, day int) *calendar.Holiday {
+func GetHolidayByYmd(year int, month int, day int) *Holiday {
 	return GetHoliday(fmt.Sprintf("%d%02d%02d", year, month, day))
 }
 

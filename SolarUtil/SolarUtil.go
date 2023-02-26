@@ -133,7 +133,6 @@ func GetWeeksOfMonth(year int, month int, start int) int {
 func GetWeek(year int, month int, day int) int {
 	y := year
 	m := month
-	d := day
 	// 蔡勒公式
 	if m < 3 {
 		m += 12
@@ -144,9 +143,9 @@ func GetWeek(year int, month int, day int) int {
 	x := y + y/4 + c/4 - 2*c
 	w := 0
 	if IsBefore(year, month, day, 0, 0, 0, 1582, 10, 15, 0, 0, 0) {
-		w = (x + 13*(m+1)/5 + d + 2) % 7
+		w = (x + 13*(m+1)/5 + day + 2) % 7
 	} else {
-		w = (x + 26*(m+1)/10 + d - 1) % 7
+		w = (x + 26*(m+1)/10 + day - 1) % 7
 	}
 	return (w + 7) % 7
 }
