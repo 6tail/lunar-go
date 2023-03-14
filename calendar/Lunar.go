@@ -87,8 +87,7 @@ func NewLunarFromSolar(solar *Solar) *Lunar {
 	lunar := new(Lunar)
 	for i := ly.months.Front(); i != nil; i = i.Next() {
 		m := i.Value.(*LunarMonth)
-		firstDay := NewSolarFromJulianDay(m.GetFirstJulianDay())
-		days := solar.Subtract(firstDay)
+		days := solar.Subtract(NewSolarFromJulianDay(m.GetFirstJulianDay()))
 		if days < m.GetDayCount() {
 			lunarYear = m.GetYear()
 			lunarMonth = m.GetMonth()

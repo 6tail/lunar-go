@@ -93,7 +93,9 @@ func (lunarYear *LunarYear) compute() {
 	// 冬至前的初一
 	w := ShouXingUtil.CalcShuo(jq[0])
 	if w > jq[0] {
-		w -= 29.5306
+		if currentYear != 41 && currentYear != 193 && currentYear != 288 && currentYear != 345 && currentYear != 918 && currentYear != 1013 {
+			w -= 29.5306
+		}
 	}
 	// 递推每月初一
 	for i = 0; i < 16; i++ {
@@ -104,48 +106,46 @@ func (lunarYear *LunarYear) compute() {
 		dayCounts[i] = (int)(hs[i+1] - hs[i])
 	}
 
-	currentYearLeap, exists := LEAP[currentYear]
+	prevYear := currentYear - 1
+	leapYear := -1
+	leapIndex := -1
+
+	leap, exists := LEAP[currentYear]
 	if !exists {
-		currentYearLeap = -1
-		if hs[13] <= jq[24] {
-			i := 1
-			for {
-				if hs[i+1] <= jq[2*i] {
-					break
+		leap, exists = LEAP[prevYear]
+		if !exists {
+			if hs[13] <= jq[24] {
+				i := 1
+				for {
+					if hs[i+1] <= jq[2*i] {
+						break
+					}
+					if i >= 13 {
+						break
+					}
+					i++
 				}
-				if i >= 13 {
-					break
-				}
-				i++
+				leapYear = currentYear
+				leapIndex = i
 			}
-			currentYearLeap = i
+		} else {
+			leapYear = prevYear
+			leapIndex = leap - 12
 		}
+	} else {
+		leapYear = currentYear
+		leapIndex = leap
 	}
 
-	prevYear := currentYear - 1
-	prevYearLeap, exists := LEAP[prevYear]
-	if !exists {
-		prevYearLeap = -1
-	} else {
-		prevYearLeap -= 12
-	}
 	y := prevYear
 	m := 11
 	for i = 0; i < 15; i++ {
 		cm := m
-		isNextLeap := false
-		if y == currentYear && i == currentYearLeap {
+		if y == leapYear && i == leapIndex {
 			cm = -cm
-		} else if y == prevYear && i == prevYearLeap {
-			cm = -cm
-		}
-		if y == currentYear && i+1 == currentYearLeap {
-			isNextLeap = true
-		} else if y == prevYear && i+1 == prevYearLeap {
-			isNextLeap = true
 		}
 		lunarYear.months.PushBack(NewLunarMonth(y, cm, dayCounts[i], hs[i]+J2000))
-		if !isNextLeap {
+		if y != leapYear || i+1 != leapIndex {
 			m++
 		}
 		if m == 13 {
@@ -181,6 +181,28 @@ func (lunarYear *LunarYear) GetGanZhi() string {
 
 func (lunarYear *LunarYear) GetMonths() *list.List {
 	return lunarYear.months
+}
+
+func (lunarYear *LunarYear) GetMonthsInYear() *list.List {
+	l := list.New()
+	for i := lunarYear.months.Front(); i != nil; i = i.Next() {
+		m := i.Value.(*LunarMonth)
+		if m.GetYear() == lunarYear.year {
+			l.PushBack(m)
+		}
+	}
+	return l
+}
+
+func (lunarYear *LunarYear) GetDayCount() int {
+	n := 0
+	for i := lunarYear.months.Front(); i != nil; i = i.Next() {
+		m := i.Value.(*LunarMonth)
+		if m.GetYear() == lunarYear.year {
+			n += m.GetDayCount()
+		}
+	}
+	return n
 }
 
 func (lunarYear *LunarYear) GetJieQiJulianDays() []float64 {

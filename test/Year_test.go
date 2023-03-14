@@ -85,3 +85,30 @@ func TestYear7(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestYear8(t *testing.T) {
+	year := calendar.NewLunarYear(2023)
+	excepted := 384
+	got := year.GetDayCount()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestYear9(t *testing.T) {
+	year := calendar.NewLunarYear(2021)
+	excepted := 354
+	got := year.GetDayCount()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestYear10(t *testing.T) {
+	year := calendar.NewLunarYear(1518)
+	excepted := 355
+	got := year.GetDayCount()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

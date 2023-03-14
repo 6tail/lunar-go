@@ -50,7 +50,7 @@ func test() {
 	// 法定假日
 	holidays := HolidayUtil.GetHolidaysByTargetYmd(2019, 1, 1)
 	for i := holidays.Front(); i != nil; i = i.Next() {
-		fmt.Println(i.Value.(*calendar.Holiday))
+		fmt.Println(i.Value.(*HolidayUtil.Holiday))
 	}
 
 	// 阳历转八字

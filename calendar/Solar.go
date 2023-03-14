@@ -126,28 +126,36 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 		offsetYear = offsetYear + 60
 	}
 	startYear := today.GetYear() - offsetYear - 1
-	for {
+	minYear := baseYear - 2
+	for startYear >= minYear {
 		years.PushBack(startYear)
 		startYear -= 60
-		if startYear < baseYear {
-			years.PushBack(baseYear)
-			break
-		}
 	}
-	hour := 0
+	hours := list.New()
 	gz := []rune(timeGanZhi)
 	timeZhi := string(gz[1:])
 	for i, z := range LunarUtil.ZHI {
 		if strings.Compare(z, timeZhi) == 0 {
-			hour = (i - 1) * 2
+			hours.PushBack((i - 1) * 2)
+			break
 		}
 	}
-	for i := years.Front(); i != nil; i = i.Next() {
-		y := i.Value.(int)
-		for x := 0; x < 3; x++ {
-			year := y + x
-			o := NewSolar(year, 1, 1, hour, 0, 0)
-			for o.GetYear() == year {
+	if strings.Compare("子", timeZhi) == 0 {
+		hours.PushBack(23)
+	}
+	for m := hours.Front(); m != nil; m = m.Next() {
+		hour := m.Value.(int)
+		for i := years.Front(); i != nil; i = i.Next() {
+			y := i.Value.(int)
+			maxYear := y + 3
+			year := y
+			month := 11
+			if year < baseYear {
+				year = baseYear
+				month = 1
+			}
+			o := NewSolar(year, month, 1, hour, 0, 0)
+			for o.GetYear() <= maxYear {
 				lunar := o.GetLunar()
 				dgz := lunar.GetDayInGanZhiExact2()
 				if sect == 1 {
@@ -155,11 +163,9 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 				}
 				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(dgz, dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
 					l.PushBack(o)
-					x = 3
 					break
-				} else {
-					o = o.NextDay(1)
 				}
+				o = o.NextDay(1)
 			}
 		}
 	}
@@ -399,8 +405,7 @@ func (solar *Solar) NextYear(years int) *Solar {
 }
 
 func (solar *Solar) NextMonth(months int) *Solar {
-	month := NewSolarMonthFromYm(solar.GetYear(), solar.GetMonth())
-	month = month.Next(months)
+	month := NewSolarMonthFromYm(solar.GetYear(), solar.GetMonth()).Next(months)
 	y := month.GetYear()
 	m := month.GetMonth()
 	d := solar.GetDay()
