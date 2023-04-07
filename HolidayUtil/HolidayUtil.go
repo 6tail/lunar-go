@@ -124,15 +124,15 @@ func GetHoliday(ymd string) *Holiday {
 }
 
 func GetHolidayByYmd(year int, month int, day int) *Holiday {
-	return GetHoliday(fmt.Sprintf("%d%02d%02d", year, month, day))
+	return GetHoliday(fmt.Sprintf("%04d%02d%02d", year, month, day))
 }
 
 func GetHolidaysByYm(year int, month int) *list.List {
-	return findHolidaysForward(fmt.Sprintf("%d%02d", year, month))
+	return findHolidaysForward(fmt.Sprintf("%04d%02d", year, month))
 }
 
 func GetHolidaysByYear(year int) *list.List {
-	return findHolidaysForward(fmt.Sprintf("%d", year))
+	return findHolidaysForward(fmt.Sprintf("%04d", year))
 }
 
 func GetHolidays(ymd string) *list.List {
@@ -140,7 +140,7 @@ func GetHolidays(ymd string) *list.List {
 }
 
 func GetHolidaysByTargetYmd(year int, month int, day int) *list.List {
-	return findHolidaysBackward(fmt.Sprintf("%d%02d%02d", year, month, day))
+	return findHolidaysBackward(fmt.Sprintf("%04d%02d%02d", year, month, day))
 }
 
 func GetHolidaysByTarget(ymd string) *list.List {

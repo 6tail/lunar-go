@@ -66,7 +66,7 @@ func (t *Tao) GetDayInChinese() string {
 
 func (t *Tao) GetFestivals() *list.List {
 	l := list.New()
-	if f, ok := TaoUtil.FESTIVAL[fmt.Sprintf("%d-%d", t.lunar.GetMonth(), t.lunar.GetDay())]; ok {
+	if f, ok := TaoUtil.FESTIVAL[fmt.Sprintf("%d-%d", t.GetMonth(), t.GetDay())]; ok {
 		for _, o := range f {
 			remark := ""
 			size := len(o)

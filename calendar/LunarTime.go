@@ -95,9 +95,7 @@ func (lunarTime *LunarTime) GetNaYin() string {
 }
 
 func (lunarTime *LunarTime) GetTianShen() string {
-	dayZhi := lunarTime.lunar.GetDayZhiExact()
-	offset := LunarUtil.ZHI_TIAN_SHEN_OFFSET[dayZhi]
-	return LunarUtil.TIAN_SHEN[(lunarTime.zhiIndex+offset)%12+1]
+	return LunarUtil.TIAN_SHEN[(lunarTime.zhiIndex+LunarUtil.ZHI_TIAN_SHEN_OFFSET[lunarTime.lunar.GetDayZhiExact()])%12+1]
 }
 
 func (lunarTime *LunarTime) GetTianShenType() string {

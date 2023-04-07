@@ -71,8 +71,12 @@ func (f *Foto) GetDayInChinese() string {
 
 func (f *Foto) GetFestivals() *list.List {
 	l := list.New()
-	if f, ok := FotoUtil.FESTIVAL[fmt.Sprintf("%d-%d", f.lunar.GetMonth(), f.lunar.GetDay())]; ok {
-		for _, o := range f {
+	m := f.GetMonth()
+	if m < 0 {
+		m = -m
+	}
+	if fs, ok := FotoUtil.FESTIVAL[fmt.Sprintf("%d-%d", m, f.GetDay())]; ok {
+		for _, o := range fs {
 			result := ""
 			everyMonth := false
 			remark := ""
@@ -87,6 +91,16 @@ func (f *Foto) GetFestivals() *list.List {
 				remark = o[3]
 			}
 			l.PushBack(NewFotoFestival(o[0], result, everyMonth, remark))
+		}
+	}
+	return l
+}
+
+func (f *Foto) GetOtherFestivals() *list.List {
+	l := list.New()
+	if fs, ok := FotoUtil.OTHER_FESTIVAL[fmt.Sprintf("%d-%d", f.GetMonth(), f.GetDay())]; ok {
+		for _, v := range fs {
+			l.PushBack(v)
 		}
 	}
 	return l

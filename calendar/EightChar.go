@@ -78,8 +78,7 @@ func (eightChar *EightChar) GetDayZhiIndex() int {
 }
 
 func (eightChar *EightChar) getDiShi(zhiIndex int) string {
-	offset := changShengOffset[eightChar.GetDayGan()]
-	index := offset
+	index := changShengOffset[eightChar.GetDayGan()]
 	if eightChar.GetDayGanIndex()%2 == 0 {
 		index += zhiIndex
 	} else {

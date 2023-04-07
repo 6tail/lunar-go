@@ -2,6 +2,7 @@ package test
 
 import (
 	"github.com/6tail/lunar-go/calendar"
+	"strings"
 	"testing"
 )
 
@@ -43,6 +44,16 @@ func TestFoto2(t *testing.T) {
 	excepted = "青龙"
 	got = foto.GetShou()
 	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestFoto3(t *testing.T) {
+	foto := calendar.NewFotoFromLunar(calendar.NewLunarFromYmd(2021, 3, 16))
+	excepted := []string{"准提菩萨圣诞"}
+	got := []string{""}
+	got[0] = foto.GetOtherFestivals().Front().Value.(string)
+	if strings.Join(excepted, ",") != strings.Join(got, ",") {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }

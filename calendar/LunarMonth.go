@@ -10,15 +10,19 @@ type LunarMonth struct {
 	year           int
 	month          int
 	dayCount       int
+	index          int
+	zhiIndex       int
 	firstJulianDay float64
 }
 
-func NewLunarMonth(lunarYear int, lunarMonth int, dayCount int, firstJulianDay float64) *LunarMonth {
+func NewLunarMonth(lunarYear int, lunarMonth int, dayCount int, firstJulianDay float64, index int) *LunarMonth {
 	month := new(LunarMonth)
 	month.year = lunarYear
 	month.month = lunarMonth
 	month.dayCount = dayCount
 	month.firstJulianDay = firstJulianDay
+	month.index = index
+	month.zhiIndex = (index - 1 + LunarUtil.BASE_MONTH_ZHI_INDEX) % 12
 	return month
 }
 
@@ -44,6 +48,83 @@ func (lunarMonth *LunarMonth) GetDayCount() int {
 
 func (lunarMonth *LunarMonth) GetFirstJulianDay() float64 {
 	return lunarMonth.firstJulianDay
+}
+
+func (lunarMonth *LunarMonth) GetIndex() int {
+	return lunarMonth.index
+}
+
+func (lunarMonth *LunarMonth) GetZhiIndex() int {
+	return lunarMonth.zhiIndex
+}
+
+func (lunarMonth *LunarMonth) GetGan() string {
+	return LunarUtil.GAN[lunarMonth.GetGanIndex()+1]
+}
+
+func (lunarMonth *LunarMonth) GetZhi() string {
+	return LunarUtil.ZHI[lunarMonth.zhiIndex+1]
+}
+
+func (lunarMonth *LunarMonth) GetGanZhi() string {
+	return lunarMonth.GetGan() + lunarMonth.GetZhi()
+}
+
+func (lunarMonth *LunarMonth) GetGanIndex() int {
+	offset := (NewLunarYear(lunarMonth.year).GetGanIndex() + 1) % 5 * 2
+	return (lunarMonth.index - 1 + offset) % 10
+}
+
+func (lunarMonth *LunarMonth) GetPositionXi() string {
+	return LunarUtil.POSITION_XI[lunarMonth.GetGanIndex()+1]
+}
+
+func (lunarMonth *LunarMonth) GetPositionXiDesc() string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionXi()]
+}
+
+func (lunarMonth *LunarMonth) GetPositionYangGui() string {
+	return LunarUtil.POSITION_YANG_GUI[lunarMonth.GetGanIndex()+1]
+}
+
+func (lunarMonth *LunarMonth) GetPositionYangGuiDesc() string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionYangGui()]
+}
+
+func (lunarMonth *LunarMonth) GetPositionYinGui() string {
+	return LunarUtil.POSITION_YIN_GUI[lunarMonth.GetGanIndex()+1]
+}
+
+func (lunarMonth *LunarMonth) GetPositionYinGuiDesc() string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionYinGui()]
+}
+
+func (lunarMonth *LunarMonth) GetPositionFu() string {
+	return lunarMonth.GetPositionFuBySect(2)
+}
+
+func (lunarMonth *LunarMonth) GetPositionFuBySect(sect int) string {
+	offset := lunarMonth.GetGanIndex() + 1
+	if 1 == sect {
+		return LunarUtil.POSITION_FU[offset]
+	}
+	return LunarUtil.POSITION_FU_2[offset]
+}
+
+func (lunarMonth *LunarMonth) GetPositionFuDesc() string {
+	return lunarMonth.GetPositionFuDescBySect(2)
+}
+
+func (lunarMonth *LunarMonth) GetPositionFuDescBySect(sect int) string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionFuBySect(sect)]
+}
+
+func (lunarMonth *LunarMonth) GetPositionCai() string {
+	return LunarUtil.POSITION_CAI[lunarMonth.GetGanIndex()+1]
+}
+
+func (lunarMonth *LunarMonth) GetPositionCaiDesc() string {
+	return LunarUtil.POSITION_DESC[lunarMonth.GetPositionCai()]
 }
 
 func (lunarMonth *LunarMonth) String() string {

@@ -139,17 +139,20 @@ func (lunarYear *LunarYear) compute() {
 
 	y := prevYear
 	m := 11
+	index := m
 	for i = 0; i < 15; i++ {
 		cm := m
 		if y == leapYear && i == leapIndex {
 			cm = -cm
 		}
-		lunarYear.months.PushBack(NewLunarMonth(y, cm, dayCounts[i], hs[i]+J2000))
+		lunarYear.months.PushBack(NewLunarMonth(y, cm, dayCounts[i], hs[i]+J2000, index))
 		if y != leapYear || i+1 != leapIndex {
 			m++
 		}
+		index++
 		if m == 13 {
 			m = 1
+			index = 1
 			y++
 		}
 	}

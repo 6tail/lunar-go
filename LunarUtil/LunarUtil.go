@@ -97,7 +97,7 @@ var SHENG_XIAO = []string{"", "鼠", "牛", "虎", "兔", "龙", "蛇", "马", "
 var DAY = []string{"", "初一", "初二", "初三", "初四", "初五", "初六", "初七", "初八", "初九", "初十", "十一", "十二", "十三", "十四", "十五", "十六", "十七", "十八", "十九", "二十", "廿一", "廿二", "廿三", "廿四", "廿五", "廿六", "廿七", "廿八", "廿九", "三十"}
 
 // YUE_XIANG 月相
-var YUE_XIANG = []string{"", "朔", "既朔", "蛾眉新", "蛾眉新", "蛾眉", "夕月", "上弦", "上弦", "九夜", "宵", "宵", "宵", "渐盈凸", "小望", "望", "既望", "立待", "居待", "寝待", "更待", "渐亏凸", "下弦", "下弦", "有明", "有明", "蛾眉残", "蛾眉残", "残", "晓", "晦"}
+var YUE_XIANG = []string{"", "朔", "既朔", "蛾眉新", "蛾眉新", "蛾眉", "夕", "上弦", "上弦", "九夜", "宵", "宵", "宵", "渐盈凸", "小望", "望", "既望", "立待", "居待", "寝待", "更待", "渐亏凸", "下弦", "下弦", "有明", "有明", "蛾眉残", "蛾眉残", "残", "晓", "晦"}
 
 // CHONG 地支相冲（子午相冲，丑未相冲，寅申相冲，辰戌相冲，卯酉相冲，巳亥相冲），由于地支对应十二生肖，也就对应了生肖相冲
 var CHONG = []string{"午", "未", "申", "酉", "戌", "亥", "子", "丑", "寅", "卯", "辰", "巳"}
@@ -1056,18 +1056,16 @@ func GetDayYi(monthGanZhi string, dayGanZhi string) *list.List {
 		months := left[0:strings.Index(left, ":")]
 		j := len(months)
 		for i := 0; i < j; i += 2 {
-			m := months[i : i+2]
-			if m == month {
+			if months[i:i+2] == month {
 				matched = true
 				break
 			}
 		}
 		if matched {
 			ys := left[strings.Index(left, ":")+1 : strings.Index(left, ",")]
-			j := len(ys)
+			j = len(ys)
 			for i := 0; i < j; i += 2 {
-				m := ys[i : i+2]
-				num, _ := strconv.ParseInt(m, 16, 0)
+				num, _ := strconv.ParseInt(ys[i:i+2], 16, 0)
 				l.PushBack(yiJi[num])
 			}
 			break
@@ -1099,18 +1097,16 @@ func GetDayJi(monthGanZhi string, dayGanZhi string) *list.List {
 		months := left[0:strings.Index(left, ":")]
 		j := len(months)
 		for i := 0; i < j; i += 2 {
-			m := months[i : i+2]
-			if m == month {
+			if months[i:i+2] == month {
 				matched = true
 				break
 			}
 		}
 		if matched {
 			js := left[strings.Index(left, ",")+1:]
-			j := len(js)
+			j = len(js)
 			for i := 0; i < j; i += 2 {
-				m := js[i : i+2]
-				num, _ := strconv.ParseInt(m, 16, 0)
+				num, _ := strconv.ParseInt(js[i:i+2], 16, 0)
 				l.PushBack(yiJi[num])
 			}
 			break
@@ -1141,8 +1137,7 @@ func GetDayJiShen(lunarMonth int, dayGanZhi string) *list.List {
 		js := left[:strings.Index(left, ",")]
 		j := len(js)
 		for i := 0; i < j; i += 2 {
-			m := js[i : i+2]
-			num, _ := strconv.ParseInt(m, 16, 0)
+			num, _ := strconv.ParseInt(js[i:i+2], 16, 0)
 			l.PushBack(shenSha[num])
 		}
 	}
@@ -1170,8 +1165,7 @@ func GetDayXiongSha(lunarMonth int, dayGanZhi string) *list.List {
 		xs := left[strings.Index(left, ",")+1:]
 		j := len(xs)
 		for i := 0; i < j; i += 2 {
-			m := xs[i : i+2]
-			num, _ := strconv.ParseInt(m, 16, 0)
+			num, _ := strconv.ParseInt(xs[i:i+2], 16, 0)
 			l.PushBack(shenSha[num])
 		}
 	}
@@ -1194,8 +1188,7 @@ func GetTimeYi(dayGanZhi string, timeGanZhi string) *list.List {
 		ys := left[:strings.Index(left, ",")]
 		j := len(ys)
 		for i := 0; i < j; i += 2 {
-			m := ys[i : i+2]
-			num, _ := strconv.ParseInt(m, 16, 0)
+			num, _ := strconv.ParseInt(ys[i:i+2], 16, 0)
 			l.PushBack(yiJi[num])
 		}
 	}
@@ -1218,8 +1211,7 @@ func GetTimeJi(dayGanZhi string, timeGanZhi string) *list.List {
 		js := left[strings.Index(left, ",")+1:]
 		j := len(js)
 		for i := 0; i < j; i += 2 {
-			m := js[i : i+2]
-			num, _ := strconv.ParseInt(m, 16, 0)
+			num, _ := strconv.ParseInt(js[i:i+2], 16, 0)
 			l.PushBack(yiJi[num])
 		}
 	}

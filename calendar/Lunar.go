@@ -1075,15 +1075,11 @@ func (lunar *Lunar) GetZhiXing() string {
 }
 
 func (lunar *Lunar) GetDayTianShen() string {
-	monthZhi := lunar.GetMonthZhi()
-	offset := LunarUtil.ZHI_TIAN_SHEN_OFFSET[monthZhi]
-	return LunarUtil.TIAN_SHEN[(lunar.dayZhiIndex+offset)%12+1]
+	return LunarUtil.TIAN_SHEN[(lunar.dayZhiIndex+LunarUtil.ZHI_TIAN_SHEN_OFFSET[lunar.GetMonthZhi()])%12+1]
 }
 
 func (lunar *Lunar) GetTimeTianShen() string {
-	dayZhi := lunar.GetDayZhiExact()
-	offset := LunarUtil.ZHI_TIAN_SHEN_OFFSET[dayZhi]
-	return LunarUtil.TIAN_SHEN[(lunar.timeZhiIndex+offset)%12+1]
+	return LunarUtil.TIAN_SHEN[(lunar.timeZhiIndex+LunarUtil.ZHI_TIAN_SHEN_OFFSET[lunar.GetDayZhiExact()])%12+1]
 }
 
 func (lunar *Lunar) GetDayTianShenType() string {
