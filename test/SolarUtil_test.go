@@ -19,3 +19,17 @@ func TestSolarUtil2(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestSolarUtil3(t *testing.T) {
+	got := SolarUtil.IsLeapYear(1500)
+	if !got {
+		t.Errorf("excepted: %v, got: %v", true, got)
+	}
+}
+
+func TestSolarUtil4(t *testing.T) {
+	got := SolarUtil.IsLeapYear(1700)
+	if got {
+		t.Errorf("excepted: %v, got: %v", false, got)
+	}
+}

@@ -102,6 +102,10 @@ func NewSolarFromJulianDay(julianDay float64) *Solar {
 		minute -= 60
 		hour++
 	}
+	if hour > 23 {
+		hour -= 24
+		day += 1
+	}
 
 	return NewSolar(year, month, day, hour, minute, second)
 }
@@ -517,4 +521,51 @@ func (solar *Solar) NextHour(hours int) *Solar {
 
 func (solar *Solar) GetLunar() *Lunar {
 	return NewLunarFromSolar(solar)
+}
+
+func (solar *Solar) GetSalaryRate() int {
+	// 元旦节
+	if solar.month == 1 && solar.day == 1 {
+		return 3
+	}
+	// 劳动节
+	if solar.month == 5 && solar.day == 1 {
+		return 3
+	}
+	// 国庆
+	if solar.month == 10 && solar.day >= 1 && solar.day <= 3 {
+		return 3
+	}
+	lunar := solar.GetLunar()
+	// 春节
+	if lunar.GetMonth() == 1 && lunar.GetDay() >= 1 && lunar.GetDay() <= 3 {
+		return 3
+	}
+	// 端午
+	if lunar.GetMonth() == 5 && lunar.GetDay() == 5 {
+		return 3
+	}
+	// 中秋
+	if lunar.GetMonth() == 8 && lunar.GetDay() == 15 {
+		return 3
+	}
+	// 清明
+	if strings.Compare("清明", lunar.GetJieQi()) == 0 {
+		return 3
+	}
+	holiday := HolidayUtil.GetHolidayByYmd(solar.year, solar.month, solar.day)
+	if nil != holiday {
+		// 法定假日非上班
+		if !holiday.IsWork() {
+			return 2
+		}
+	} else {
+		// 周末
+		week := solar.GetWeek()
+		if week == 6 || week == 0 {
+			return 2
+		}
+	}
+	// 工作日
+	return 1
 }

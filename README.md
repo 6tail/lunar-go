@@ -29,3 +29,7 @@ lunar是一款无第三方依赖的日历工具，支持公历(阳历)、农历(
 ## 文档
 
 请移步至 [https://6tail.cn/calendar/api.html](https://6tail.cn/calendar/api.html "https://6tail.cn/calendar/api.html")
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=6tail/lunar-go&type=Date)](https://star-history.com/#6tail/lunar-go&Date)

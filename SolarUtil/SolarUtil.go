@@ -162,6 +162,9 @@ var OTHER_FESTIVAL = map[string][]string{
 }
 
 func IsLeapYear(year int) bool {
+	if year < 1600 {
+		return year%4 == 0
+	}
 	return (year%4 == 0 && year%100 != 0) || (year%400 == 0)
 }
 

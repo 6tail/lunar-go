@@ -7,7 +7,7 @@ import (
 
 func TestJieQi7(t *testing.T) {
 	lunar := calendar.NewLunarFromYmd(2012, 9, 1)
-	excepted := "2012-09-07 13:29:00"
+	excepted := "2012-09-07 13:29:01"
 	got := lunar.GetJieQiTable()["白露"].ToYmdHms()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
@@ -16,7 +16,7 @@ func TestJieQi7(t *testing.T) {
 
 func TestJieQi8(t *testing.T) {
 	lunar := calendar.NewLunarFromYmd(2050, 12, 1)
-	excepted := "2050-12-07 06:41:00"
+	excepted := "2050-12-07 06:41:13"
 	got := lunar.GetJieQiTable()["DA_XUE"].ToYmdHms()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
