@@ -392,17 +392,15 @@ func (solar *Solar) NextYear(years int) *Solar {
 	y := solar.GetYear() + years
 	m := solar.GetMonth()
 	d := solar.GetDay()
-	// 2月处理
-	if 2 == m {
+	if 1582 == y && 10 == m {
+		if d > 4 && d < 15 {
+			d += 10
+		}
+	} else if 2 == m {
 		if d > 28 {
 			if !SolarUtil.IsLeapYear(y) {
 				d = 28
 			}
-		}
-	}
-	if 1582 == y && 10 == m {
-		if d > 4 && d < 15 {
-			d += 10
 		}
 	}
 	return NewSolar(y, m, d, solar.GetHour(), solar.GetMinute(), solar.GetSecond())
@@ -413,17 +411,14 @@ func (solar *Solar) NextMonth(months int) *Solar {
 	y := month.GetYear()
 	m := month.GetMonth()
 	d := solar.GetDay()
-	// 2月处理
-	if 2 == m {
-		if d > 28 {
-			if !SolarUtil.IsLeapYear(y) {
-				d = 28
-			}
-		}
-	}
 	if 1582 == y && 10 == m {
 		if d > 4 && d < 15 {
 			d += 10
+		}
+	} else {
+		maxDay := SolarUtil.GetDaysOfMonth(y, m)
+		if d > maxDay {
+			d = maxDay
 		}
 	}
 	return NewSolar(y, m, d, solar.GetHour(), solar.GetMinute(), solar.GetSecond())

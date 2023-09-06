@@ -164,3 +164,39 @@ func TestSolar18(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestSolar19(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2023, 8, 31)
+	excepted := "2023-09-30"
+	got := solar.NextMonth(1).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar20(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2023, 8, 31)
+	excepted := "2023-10-31"
+	got := solar.NextMonth(2).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar21(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2023, 8, 31)
+	excepted := "2025-08-31"
+	got := solar.NextYear(2).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolar22(t *testing.T) {
+	solar := calendar.NewSolarFromYmd(2023, 8, 31)
+	excepted := "2024-02-29"
+	got := solar.NextMonth(6).ToYmd()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
