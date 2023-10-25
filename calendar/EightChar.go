@@ -58,7 +58,7 @@ func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
 	l := list.New()
 	dayGan := eightChar.GetDayGan()
 	for _, v := range LunarUtil.ZHI_HIDE_GAN[zhi] {
-		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+zhi+v])
+		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+v])
 	}
 	return l
 }
