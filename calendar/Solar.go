@@ -279,23 +279,7 @@ func (solar *Solar) GetSecond() int {
 }
 
 func (solar *Solar) GetJulianDay() float64 {
-	y := solar.year
-	m := solar.month
-	d := float64(solar.day) + ((float64(solar.second)/60+float64(solar.minute))/60+float64(solar.hour))/24
-	n := 0
-	g := false
-	if y*372+m*31+int(d) >= 588829 {
-		g = true
-	}
-	if m <= 2 {
-		m += 12
-		y--
-	}
-	if g {
-		n = y / 100
-		n = 2 - n + n/4
-	}
-	return float64(int(365.25*(float64(y)+4716))) + float64(int(30.6001*(float64(m)+1))) + d + float64(n) - 1524.5
+	return SolarUtil.GetJulianDay(solar.year, solar.month, solar.day, solar.hour, solar.minute, solar.second)
 }
 
 func (solar *Solar) ToYmd() string {

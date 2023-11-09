@@ -58,7 +58,7 @@ func (eightChar *EightChar) getShiShenZhi(zhi string) *list.List {
 	l := list.New()
 	dayGan := eightChar.GetDayGan()
 	for _, v := range LunarUtil.ZHI_HIDE_GAN[zhi] {
-		l.PushBack(LunarUtil.SHI_SHEN_ZHI[dayGan+v])
+		l.PushBack(LunarUtil.SHI_SHEN[dayGan+v])
 	}
 	return l
 }
@@ -118,7 +118,7 @@ func (eightChar *EightChar) GetYearNaYin() string {
 }
 
 func (eightChar *EightChar) GetYearShiShenGan() string {
-	return LunarUtil.SHI_SHEN_GAN[eightChar.GetDayGan()+eightChar.GetYearGan()]
+	return LunarUtil.SHI_SHEN[eightChar.GetDayGan()+eightChar.GetYearGan()]
 }
 
 func (eightChar *EightChar) GetYearShiShenZhi() *list.List {
@@ -154,7 +154,7 @@ func (eightChar *EightChar) GetMonthNaYin() string {
 }
 
 func (eightChar *EightChar) GetMonthShiShenGan() string {
-	return LunarUtil.SHI_SHEN_GAN[eightChar.GetDayGan()+eightChar.GetMonthGan()]
+	return LunarUtil.SHI_SHEN[eightChar.GetDayGan()+eightChar.GetMonthGan()]
 }
 
 func (eightChar *EightChar) GetMonthShiShenZhi() *list.List {
@@ -235,7 +235,7 @@ func (eightChar *EightChar) GetTimeNaYin() string {
 }
 
 func (eightChar *EightChar) GetTimeShiShenGan() string {
-	return LunarUtil.SHI_SHEN_GAN[eightChar.GetDayGan()+eightChar.GetTimeGan()]
+	return LunarUtil.SHI_SHEN[eightChar.GetDayGan()+eightChar.GetTimeGan()]
 }
 
 func (eightChar *EightChar) GetTimeShiShenZhi() *list.List {

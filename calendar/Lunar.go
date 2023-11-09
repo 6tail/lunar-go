@@ -1875,11 +1875,7 @@ func (lunar *Lunar) GetFu() *Fu {
 	liQiuSolar := NewSolarFromYmd(liQiu.GetYear(), liQiu.GetMonth(), liQiu.GetDay())
 
 	// 末伏
-	if !liQiuSolar.IsAfter(start) {
-		if days < 10 {
-			return NewFu("末伏", days+1)
-		}
-	} else {
+	if liQiuSolar.IsAfter(start) {
 		// 中伏
 		if days < 10 {
 			return NewFu("中伏", days+11)
@@ -1887,9 +1883,9 @@ func (lunar *Lunar) GetFu() *Fu {
 		// 末伏第1天
 		start = start.NextDay(10)
 		days = current.Subtract(start)
-		if days < 10 {
-			return NewFu("末伏", days+1)
-		}
+	}
+	if days < 10 {
+		return NewFu("末伏", days+1)
 	}
 	return nil
 }

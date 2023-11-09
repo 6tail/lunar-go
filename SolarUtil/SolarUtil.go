@@ -208,28 +208,33 @@ func GetDaysInYear(year int, month int, day int) int {
 	return days
 }
 
-func GetWeeksOfMonth(year int, month int, start int) int {
-	return int(math.Ceil(float64(GetDaysOfMonth(year, month)+GetWeek(year, month, 1)-start) / 7))
-}
-
-func GetWeek(year int, month int, day int) int {
+func GetJulianDay(year int, month int, day int, hour int, minute int, second int) float64 {
 	y := year
 	m := month
-	// 蔡勒公式
-	if m < 3 {
+	d := float64(day) + ((float64(second)/60+float64(minute))/60+float64(hour))/24
+	n := 0
+	g := false
+	if y*372+m*31+int(d) >= 588829 {
+		g = true
+	}
+	if m <= 2 {
 		m += 12
 		y--
 	}
-	c := y / 100
-	y = y - c*100
-	x := y + y/4 + c/4 - 2*c
-	w := 0
-	if IsBefore(year, month, day, 0, 0, 0, 1582, 10, 15, 0, 0, 0) {
-		w = (x + 13*(m+1)/5 + day + 2) % 7
-	} else {
-		w = (x + 26*(m+1)/10 + day - 1) % 7
+	if g {
+		n = y / 100
+		n = 2 - n + n/4
 	}
-	return (w + 7) % 7
+	return float64(int(365.25*(float64(y)+4716))) + float64(int(30.6001*(float64(m)+1))) + d + float64(n) - 1524.5
+}
+
+func GetWeek(year int, month int, day int) int {
+	jd := GetJulianDay(year, month, day, 0, 0, 0)
+	return (int(jd+0.5) + 7000001) % 7
+}
+
+func GetWeeksOfMonth(year int, month int, start int) int {
+	return int(math.Ceil(float64(GetDaysOfMonth(year, month)+GetWeek(year, month, 1)-start) / 7))
 }
 
 func IsBefore(ay int, am int, ad int, ah int, ai int, as int, by int, bm int, bd int, bh int, bi int, bs int) bool {

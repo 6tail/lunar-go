@@ -143,3 +143,93 @@ func TestSolarWeek14(t *testing.T) {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 }
+
+func TestSolarWeek15(t *testing.T) {
+	got := SolarUtil.GetWeek(1129, 11, 17)
+
+	excepted := 0
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek16(t *testing.T) {
+	got := SolarUtil.GetWeek(1129, 11, 1)
+
+	excepted := 5
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek17(t *testing.T) {
+	got := SolarUtil.GetWeek(8, 11, 1)
+
+	excepted := 4
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek18(t *testing.T) {
+	got := SolarUtil.GetWeek(1582, 9, 30)
+
+	excepted := 0
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek19(t *testing.T) {
+	got := SolarUtil.GetWeek(1582, 1, 1)
+
+	excepted := 1
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek20(t *testing.T) {
+	got := SolarUtil.GetWeek(1500, 2, 29)
+
+	excepted := 6
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek21(t *testing.T) {
+	got := SolarUtil.GetWeek(9865, 7, 26)
+
+	excepted := 3
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek22(t *testing.T) {
+	got := SolarUtil.GetWeek(1961, 9, 30)
+
+	excepted := 6
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek23(t *testing.T) {
+	got := calendar.NewSolar(1961, 9, 30, 23, 59, 59).GetWeek()
+
+	excepted := 6
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestSolarWeek24(t *testing.T) {
+	got := calendar.NewSolar(2021, 9, 15, 20, 0, 0).GetWeek()
+
+	excepted := 3
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}

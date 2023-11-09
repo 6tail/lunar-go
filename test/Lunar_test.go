@@ -355,7 +355,7 @@ func TestLunar51(t *testing.T) {
 
 func TestLunar52(t *testing.T) {
 	lunar := calendar.NewSolarFromYmd(2011, 11, 12).GetLunar()
-	excepted := "厕灶厨 外西南"
+	excepted := "厨灶厕 外西南"
 	got := lunar.GetDayPositionTai()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
