@@ -125,7 +125,7 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 	l := list.New()
 	years := list.New()
 	today := NewSolarFromDate(time.Now().Local())
-	offsetYear := LunarUtil.GetJiaZiIndex(today.GetLunar().GetYearInGanZhiExact()) - LunarUtil.GetJiaZiIndex(yearGanZhi)
+	offsetYear := (today.GetYear()-4)%60 - LunarUtil.GetJiaZiIndex(yearGanZhi)
 	if offsetYear < 0 {
 		offsetYear = offsetYear + 60
 	}
