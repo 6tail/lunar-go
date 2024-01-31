@@ -24,16 +24,20 @@ type Solar struct {
 }
 
 func NewSolar(year int, month int, day int, hour int, minute int, second int) *Solar {
-	if 1582 == year && 10 == month {
-		if day > 4 && day < 15 {
-			panic(fmt.Sprintf("wrong solar year %v month %v day %v", year, month, day))
-		}
-	}
 	if month < 1 || month > 12 {
 		panic(fmt.Sprintf("wrong month %v", month))
 	}
 	if day < 1 || day > 31 {
 		panic(fmt.Sprintf("wrong day %v", day))
+	}
+	if 1582 == year && 10 == month {
+		if day > 4 && day < 15 {
+			panic(fmt.Sprintf("wrong solar year %v month %v day %v", year, month, day))
+		}
+	} else {
+		if day > SolarUtil.GetDaysOfMonth(year, month) {
+			panic(fmt.Sprintf("wrong solar year %v month %v day %v", year, month, day))
+		}
 	}
 	if hour < 0 || hour > 23 {
 		panic(fmt.Sprintf("wrong hour %v", hour))

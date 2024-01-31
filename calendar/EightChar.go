@@ -279,28 +279,35 @@ func (eightChar *EightChar) GetTaiXiNaYin() string {
 func (eightChar *EightChar) GetMingGong() string {
 	monthZhiIndex := 0
 	timeZhiIndex := 0
+	monthZhi := eightChar.GetMonthZhi()
+	timeZhi := eightChar.GetTimeZhi()
 	size := len(MONTH_ZHI)
 	for i := 0; i < size; i++ {
-		zhi := MONTH_ZHI[i]
-		if strings.Compare(eightChar.GetMonthZhi(), zhi) == 0 {
+		if strings.Compare(monthZhi, MONTH_ZHI[i]) == 0 {
 			monthZhiIndex = i
+			break
 		}
-		if strings.Compare(eightChar.GetTimeZhi(), zhi) == 0 {
+	}
+	for i := 0; i < size; i++ {
+		if strings.Compare(timeZhi, MONTH_ZHI[i]) == 0 {
 			timeZhiIndex = i
+			break
 		}
 	}
-	zhiIndex := 26 - (monthZhiIndex + timeZhiIndex)
-	if zhiIndex > 12 {
-		zhiIndex -= 12
+	offset := monthZhiIndex + timeZhiIndex
+	if offset >= 14 {
+		offset = 26 - offset
+	} else {
+		offset = 14 - offset
 	}
-	jiaZiIndex := LunarUtil.GetJiaZiIndex(eightChar.lunar.GetMonthInGanZhiExact()) - (monthZhiIndex - zhiIndex)
-	if jiaZiIndex >= 60 {
-		jiaZiIndex -= 60
+	ganIndex := (eightChar.GetLunar().GetYearGanIndexExact()+1)*2 + offset
+	for {
+		if ganIndex <= 10 {
+			break
+		}
+		ganIndex -= 10
 	}
-	if jiaZiIndex < 0 {
-		jiaZiIndex += 60
-	}
-	return LunarUtil.JIA_ZI[jiaZiIndex]
+	return LunarUtil.GAN[ganIndex] + MONTH_ZHI[offset]
 }
 
 func (eightChar *EightChar) GetMingGongNaYin() string {
@@ -310,28 +317,36 @@ func (eightChar *EightChar) GetMingGongNaYin() string {
 func (eightChar *EightChar) GetShenGong() string {
 	monthZhiIndex := 0
 	timeZhiIndex := 0
+	monthZhi := eightChar.GetMonthZhi()
+	timeZhi := eightChar.GetTimeZhi()
 	size := len(MONTH_ZHI)
 	for i := 0; i < size; i++ {
-		zhi := MONTH_ZHI[i]
-		if strings.Compare(eightChar.GetMonthZhi(), zhi) == 0 {
+		if strings.Compare(monthZhi, MONTH_ZHI[i]) == 0 {
 			monthZhiIndex = i
+			break
 		}
-		if strings.Compare(eightChar.GetTimeZhi(), zhi) == 0 {
+	}
+	for i := 0; i < size; i++ {
+		if strings.Compare(timeZhi, LunarUtil.ZHI[i]) == 0 {
 			timeZhiIndex = i
+			break
 		}
 	}
-	zhiIndex := 2 + monthZhiIndex + timeZhiIndex
-	if zhiIndex > 12 {
-		zhiIndex -= 12
+	offset := monthZhiIndex + timeZhiIndex
+	for {
+		if offset <= 12 {
+			break
+		}
+		offset -= 12
 	}
-	jiaZiIndex := LunarUtil.GetJiaZiIndex(eightChar.lunar.GetMonthInGanZhiExact()) - (monthZhiIndex - zhiIndex)
-	if jiaZiIndex >= 60 {
-		jiaZiIndex -= 60
+	ganIndex := (eightChar.GetLunar().GetYearGanIndexExact()+1)*2 + (offset % 12)
+	for {
+		if ganIndex <= 10 {
+			break
+		}
+		ganIndex -= 10
 	}
-	if jiaZiIndex < 0 {
-		jiaZiIndex += 60
-	}
-	return LunarUtil.JIA_ZI[jiaZiIndex]
+	return LunarUtil.GAN[ganIndex] + MONTH_ZHI[offset]
 }
 
 func (eightChar *EightChar) GetShenGongNaYin() string {

@@ -50,7 +50,7 @@ func TestShenGong1(t *testing.T) {
 	lunar := calendar.NewSolar(1994, 12, 6, 2, 0, 0).GetLunar()
 	eightChar := lunar.GetEightChar()
 
-	excepted := "丁丑"
+	excepted := "乙丑"
 	got := eightChar.GetShenGong()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
@@ -269,6 +269,18 @@ func TestEightChar19(t *testing.T) {
 	got[0] = solar.Value.(*calendar.Solar).ToYmdHms()
 
 	if strings.Join(excepted, ",") != strings.Join(got, ",") {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+
+}
+
+func TestEightChar20(t *testing.T) {
+	lunar := calendar.NewSolar(1990, 1, 27, 0, 30, 0).GetLunar()
+	eightChar := lunar.GetEightChar()
+
+	excepted := "丙寅"
+	got := eightChar.GetShenGong()
+	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}
 
