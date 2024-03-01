@@ -140,7 +140,7 @@ func TestEightChar11(t *testing.T) {
 func TestEightChar12(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZi("丙辰", "丁酉", "丙子", "甲午")
 
-	excepted := []string{"1976-09-21 12:00:00", "1916-10-06 12:00:00"}
+	excepted := []string{"1916-10-06 12:00:00", "1976-09-21 12:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()
@@ -172,7 +172,7 @@ func TestEightChar13(t *testing.T) {
 func TestEightChar14(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZi("己卯", "辛未", "甲戌", "壬申")
 
-	excepted := []string{"1999-07-21 16:00:00", "1939-08-05 16:00:00"}
+	excepted := []string{"1939-08-05 16:00:00", "1999-07-21 16:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()
@@ -190,7 +190,7 @@ func TestEightChar14(t *testing.T) {
 func TestEightChar15(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZi("庚子", "戊子", "己卯", "庚午")
 
-	excepted := []string{"1960-12-17 12:00:00", "1901-01-01 12:00:00"}
+	excepted := []string{"1901-01-01 12:00:00", "1960-12-17 12:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()
@@ -208,7 +208,7 @@ func TestEightChar15(t *testing.T) {
 func TestEightChar16(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZi("庚子", "癸未", "乙丑", "丁亥")
 
-	excepted := []string{"2020-07-21 22:00:00", "1960-08-05 22:00:00"}
+	excepted := []string{"1960-08-05 22:00:00", "2020-07-21 22:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()
@@ -226,7 +226,7 @@ func TestEightChar16(t *testing.T) {
 func TestEightChar17(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZiBySectAndBaseYear("癸卯", "甲寅", "癸丑", "甲子", 2, 1843)
 
-	excepted := []string{"2023-02-24 23:00:00", "1843-02-08 23:00:00"}
+	excepted := []string{"1843-02-08 23:00:00", "2023-02-24 23:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()
@@ -244,7 +244,7 @@ func TestEightChar17(t *testing.T) {
 func TestEightChar18(t *testing.T) {
 	solarList := calendar.ListSolarFromBaZi("己亥", "丁丑", "壬寅", "戊申")
 
-	excepted := []string{"1960-01-15 16:00:00", "1900-01-29 16:00:00"}
+	excepted := []string{"1900-01-29 16:00:00", "1960-01-15 16:00:00"}
 
 	got := []string{"", ""}
 	solar := solarList.Front()

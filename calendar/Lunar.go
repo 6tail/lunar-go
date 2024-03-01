@@ -1445,7 +1445,7 @@ func (lunar *Lunar) getNearJieQi(forward bool, conditions []string, wholeDay boo
 			day = solar.ToYmdHms()
 		}
 		if forward {
-			if strings.Compare(day, today) < 0 {
+			if strings.Compare(day, today) <= 0 {
 				continue
 			}
 			if nil == near {

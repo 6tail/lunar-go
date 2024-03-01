@@ -127,55 +127,80 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 		sect = 2
 	}
 	l := list.New()
-	years := list.New()
-	today := NewSolarFromDate(time.Now().Local())
-	offsetYear := (today.GetYear()-4)%60 - LunarUtil.GetJiaZiIndex(yearGanZhi)
-	if offsetYear < 0 {
-		offsetYear = offsetYear + 60
+	monthGz := []rune(monthGanZhi)
+	monthG := string(monthGz[:1])
+	monthZ := string(monthGz[1:])
+	// 月地支距寅月的偏移值
+	m := LunarUtil.Find(monthZ, LunarUtil.ZHI, -1) - 2
+	if m < 0 {
+		m += 12
 	}
-	startYear := today.GetYear() - offsetYear - 1
-	minYear := baseYear - 2
-	for startYear >= minYear {
-		years.PushBack(startYear)
-		startYear -= 60
+	// 月天干要一致
+	if ((LunarUtil.Find(string([]rune(yearGanZhi)[:1]), LunarUtil.GAN, -1)+1)*2+m)%10 != LunarUtil.Find(monthG, LunarUtil.GAN, -1) {
+		return l
 	}
-	hours := list.New()
-	gz := []rune(timeGanZhi)
-	timeZhi := string(gz[1:])
-	for i, z := range LunarUtil.ZHI {
-		if strings.Compare(z, timeZhi) == 0 {
-			hours.PushBack((i - 1) * 2)
-			break
-		}
+	// 1年的立春是辛酉，序号57
+	y := LunarUtil.GetJiaZiIndex(yearGanZhi) - 57
+	if y < 0 {
+		y += 60
 	}
-	if strings.Compare("子", timeZhi) == 0 {
-		hours.PushBack(23)
+	y += 1
+	// 节令偏移值
+	m *= 2
+	// 时辰地支转时刻，子时按零点算
+	h := LunarUtil.Find(string([]rune(timeGanZhi)[1:]), LunarUtil.ZHI, -1) * 2
+	hours := []int{h}
+	if 0 == h && 2 == sect {
+		hours = []int{0, 23}
 	}
-	for m := hours.Front(); m != nil; m = m.Next() {
-		hour := m.Value.(int)
-		for i := years.Front(); i != nil; i = i.Next() {
-			y := i.Value.(int)
-			maxYear := y + 3
-			year := y
-			month := 11
-			if year < baseYear {
-				year = baseYear
-				month = 1
-			}
-			o := NewSolar(year, month, 1, hour, 0, 0)
-			for o.GetYear() <= maxYear {
-				lunar := o.GetLunar()
-				dgz := lunar.GetDayInGanZhiExact2()
-				if sect == 1 {
+	startYear := baseYear - 1
+
+	// 结束年
+	endYear := time.Now().Local().Year()
+
+	for y <= endYear {
+		if y >= startYear {
+			// 立春为寅月的开始
+			jieQiTable := NewLunarFromYmd(y, 1, 1).GetJieQiTable()
+			// 节令推移，年干支和月干支就都匹配上了
+			solarTime := jieQiTable[JIE_QI_IN_USE[4+m]]
+			if solarTime.GetYear() >= baseYear {
+				// 日干支和节令干支的偏移值
+				lunar := solarTime.GetLunar()
+				dgz := lunar.GetDayInGanZhiExact()
+				if 2 == sect {
+					dgz = lunar.GetDayInGanZhiExact2()
+				}
+				d := LunarUtil.GetJiaZiIndex(dayGanZhi) - LunarUtil.GetJiaZiIndex(dgz)
+				if d < 0 {
+					d += 60
+				}
+				if d > 0 {
+					// 从节令推移天数
+					solarTime = solarTime.Next(d, false)
+				}
+				for _, hour := range hours {
+					mi := 0
+					s := 0
+					if d == 0 && hour == solarTime.GetHour() {
+						// 如果正好是节令当天，且小时和节令的小时数相等的极端情况，把分钟和秒钟带上
+						mi = solarTime.GetMinute()
+						s = solarTime.GetSecond()
+					}
+					// 验证一下
+					solar := NewSolar(solarTime.GetYear(), solarTime.GetMonth(), solarTime.GetDay(), hour, mi, s)
+					lunar = solar.GetLunar()
 					dgz = lunar.GetDayInGanZhiExact()
+					if 2 == sect {
+						dgz = lunar.GetDayInGanZhiExact2()
+					}
+					if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(dgz, dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
+						l.PushBack(solar)
+					}
 				}
-				if strings.Compare(lunar.GetYearInGanZhiExact(), yearGanZhi) == 0 && strings.Compare(lunar.GetMonthInGanZhiExact(), monthGanZhi) == 0 && strings.Compare(dgz, dayGanZhi) == 0 && strings.Compare(lunar.GetTimeInGanZhi(), timeGanZhi) == 0 {
-					l.PushBack(o)
-					break
-				}
-				o = o.NextDay(1)
 			}
 		}
+		y += 60
 	}
 	return l
 }
