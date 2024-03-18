@@ -166,12 +166,7 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 			solarTime := jieQiTable[JIE_QI_IN_USE[4+m]]
 			if solarTime.GetYear() >= baseYear {
 				// 日干支和节令干支的偏移值
-				lunar := solarTime.GetLunar()
-				dgz := lunar.GetDayInGanZhiExact()
-				if 2 == sect {
-					dgz = lunar.GetDayInGanZhiExact2()
-				}
-				d := LunarUtil.GetJiaZiIndex(dayGanZhi) - LunarUtil.GetJiaZiIndex(dgz)
+				d := LunarUtil.GetJiaZiIndex(dayGanZhi) - LunarUtil.GetJiaZiIndex(solarTime.GetLunar().GetDayInGanZhiExact2())
 				if d < 0 {
 					d += 60
 				}
@@ -189,8 +184,8 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 					}
 					// 验证一下
 					solar := NewSolar(solarTime.GetYear(), solarTime.GetMonth(), solarTime.GetDay(), hour, mi, s)
-					lunar = solar.GetLunar()
-					dgz = lunar.GetDayInGanZhiExact()
+					lunar := solar.GetLunar()
+					dgz := lunar.GetDayInGanZhiExact()
 					if 2 == sect {
 						dgz = lunar.GetDayInGanZhiExact2()
 					}
