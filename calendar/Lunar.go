@@ -1074,6 +1074,22 @@ func (lunar *Lunar) GetZhiXing() string {
 	return LunarUtil.ZHI_XING[offset+1]
 }
 
+
+func (lunar *Lunar) GetYueJian() string {
+	jie := lunar.GetPrevJie().GetName()
+	return LunarUtil.JIE_YUEJIAN[jie]
+}
+
+
+func (lunar *Lunar) GetYueJiang() string {
+	qi := lunar.GetPrevQi().GetName()
+	return LunarUtil.QI_YUEJIANG[qi]
+}
+
+func (lunar *Lunar) GetYueJiangName() string {
+	return LunarUtil.YUE_JIANG_NAME[lunar.GetYueJiang()]
+}
+
 func (lunar *Lunar) GetDayTianShen() string {
 	return LunarUtil.TIAN_SHEN[(lunar.dayZhiIndex+LunarUtil.ZHI_TIAN_SHEN_OFFSET[lunar.GetMonthZhi()])%12+1]
 }
