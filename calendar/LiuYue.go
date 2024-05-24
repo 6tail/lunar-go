@@ -44,6 +44,12 @@ func (liuYue *LiuYue) GetGanZhi() string {
 	yearGan := string(gz[:1])
 	if strings.Compare("甲", yearGan) == 0 || strings.Compare("己", yearGan) == 0 {
 		offset = 2
+	} else if strings.Compare("乙", yearGan) == 0 || strings.Compare("庚", yearGan) == 0 {
+		offset = 4
+	} else if strings.Compare("丙", yearGan) == 0 || strings.Compare("辛", yearGan) == 0 {
+		offset = 6
+	} else if strings.Compare("丁", yearGan) == 0 || strings.Compare("壬", yearGan) == 0 {
+		offset = 8
 	}
 	gan := LunarUtil.GAN[(liuYue.index+offset)%10+1]
 	zhi := LunarUtil.ZHI[(liuYue.index+LunarUtil.BASE_MONTH_ZHI_INDEX)%12+1]
