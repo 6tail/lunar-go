@@ -238,6 +238,20 @@ func (lunarYear *LunarYear) GetMonth(lunarMonth int) *LunarMonth {
 	return nil
 }
 
+func (lunarYear *LunarYear) GetLeapMonth() int {
+	for i := lunarYear.months.Front(); i != nil; i = i.Next() {
+		m := i.Value.(*LunarMonth)
+		if m.GetYear() == lunarYear.year && m.IsLeap() {
+			month := m.GetMonth()
+			if month < 0 {
+				month = -month
+			}
+			return month
+		}
+	}
+	return 0
+}
+
 func (lunarYear *LunarYear) String() string {
 	return fmt.Sprintf("%d", lunarYear.year)
 }
