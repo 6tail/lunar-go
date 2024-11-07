@@ -164,7 +164,7 @@ func Fix(nms []string, dt string) {
 		remove := strings.Compare(tag_remove, segment[8:9]) == 0
 		holiday := GetHoliday(day)
 		if nil == holiday {
-			if remove {
+			if !remove {
 				appends += segment
 			}
 		} else {
