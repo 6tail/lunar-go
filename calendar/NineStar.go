@@ -6,7 +6,7 @@ import "github.com/6tail/lunar-go/LunarUtil"
 var NUMBER = []string{"一", "二", "三", "四", "五", "六", "七", "八", "九"}
 
 // COLOR 七色
-var COLOR = []string{"白", "黒", "碧", "绿", "黄", "白", "赤", "白", "紫"}
+var COLOR = []string{"白", "黑", "碧", "绿", "黄", "白", "赤", "白", "紫"}
 
 // WU_XING 五行
 var WU_XING = []string{"水", "土", "木", "木", "土", "金", "金", "土", "火"}
