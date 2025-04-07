@@ -821,11 +821,11 @@ func (lunar *Lunar) GetMonthPositionTaiSuiDescBySect(sect int) string {
 
 func (lunar *Lunar) getDayPositionTaiSui(dayInGanZhi string, yearZhiIndex int) string {
 	p := ""
-	if strings.Contains("甲子,乙丑,丙寅,丁卯,戊辰,已巳", dayInGanZhi) {
+	if strings.Contains("甲子,乙丑,丙寅,丁卯,戊辰,己巳", dayInGanZhi) {
 		p = "震"
-	} else if strings.Contains("丙子,丁丑,戊寅,已卯,庚辰,辛巳", dayInGanZhi) {
+	} else if strings.Contains("丙子,丁丑,戊寅,己卯,庚辰,辛巳", dayInGanZhi) {
 		p = "离"
-	} else if strings.Contains("戊子,已丑,庚寅,辛卯,壬辰,癸巳", dayInGanZhi) {
+	} else if strings.Contains("戊子,己丑,庚寅,辛卯,壬辰,癸巳", dayInGanZhi) {
 		p = "中"
 	} else if strings.Contains("庚子,辛丑,壬寅,癸卯,甲辰,乙巳", dayInGanZhi) {
 		p = "兑"

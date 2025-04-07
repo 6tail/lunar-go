@@ -50,7 +50,7 @@ func TestShenGong1(t *testing.T) {
 	lunar := calendar.NewSolar(1994, 12, 6, 2, 0, 0).GetLunar()
 	eightChar := lunar.GetEightChar()
 
-	excepted := "乙丑"
+	excepted := "丁丑"
 	got := eightChar.GetShenGong()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
