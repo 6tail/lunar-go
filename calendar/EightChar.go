@@ -332,7 +332,10 @@ func (eightChar *EightChar) GetShenGong() string {
 			break
 		}
 	}
-	offset := (monthZhiIndex + timeZhiIndex - 1) % 12
+	offset := monthZhiIndex + timeZhiIndex
+	if offset > 12 {
+		offset -= 12
+	}
 	ganIndex := (eightChar.GetLunar().GetYearGanIndexExact()+1)*2 + offset
 	for {
 		if ganIndex <= 10 {
@@ -340,7 +343,7 @@ func (eightChar *EightChar) GetShenGong() string {
 		}
 		ganIndex -= 10
 	}
-	return LunarUtil.GAN[ganIndex+1] + MONTH_ZHI[offset+1]
+	return LunarUtil.GAN[ganIndex] + MONTH_ZHI[offset]
 }
 
 func (eightChar *EightChar) GetShenGongNaYin() string {
