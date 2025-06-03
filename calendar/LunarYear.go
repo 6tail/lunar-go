@@ -33,6 +33,7 @@ type LunarYear struct {
 
 func NewLunarYear(lunarYear int) *LunarYear {
 	lock.Lock()
+	defer lock.Unlock()
 	var year *LunarYear
 	if nil == CACHE_YEAR || CACHE_YEAR.year != lunarYear {
 		year = new(LunarYear)
@@ -54,7 +55,6 @@ func NewLunarYear(lunarYear int) *LunarYear {
 	} else {
 		year = CACHE_YEAR
 	}
-	lock.Unlock()
 	return year
 }
 
