@@ -1172,11 +1172,11 @@ func (lunar *Lunar) GetDayJiBySect(sect int) *list.List {
 }
 
 func (lunar *Lunar) GetDayJiShen() *list.List {
-	return LunarUtil.GetDayJiShen(lunar.GetMonth(), lunar.GetDayInGanZhi())
+	return LunarUtil.GetDayJiShen(lunar.GetMonthZhiIndex(), lunar.GetDayInGanZhi())
 }
 
 func (lunar *Lunar) GetDayXiongSha() *list.List {
-	return LunarUtil.GetDayXiongSha(lunar.GetMonth(), lunar.GetDayInGanZhi())
+	return LunarUtil.GetDayXiongSha(lunar.GetMonthZhiIndex(), lunar.GetDayInGanZhi())
 }
 
 func (lunar *Lunar) GetTimeYi() *list.List {

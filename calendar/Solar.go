@@ -184,6 +184,9 @@ func ListSolarFromBaZiBySectAndBaseYear(yearGanZhi string, monthGanZhi string, d
 					}
 					// 验证一下
 					solar := NewSolar(solarTime.GetYear(), solarTime.GetMonth(), solarTime.GetDay(), hour, mi, s)
+					if d == 30 {
+						solar = solar.NextHour(-1)
+					}
 					lunar := solar.GetLunar()
 					dgz := lunar.GetDayInGanZhiExact()
 					if 2 == sect {
