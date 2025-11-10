@@ -1,3 +1,3 @@
-module github.com/6tail/lunar-go
+module github.com/azhang/lunar-go
 
 go 1.14
