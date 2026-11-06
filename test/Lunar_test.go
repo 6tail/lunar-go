@@ -1,8 +1,9 @@
 package test
 
 import (
-	"github.com/6tail/lunar-go/calendar"
 	"testing"
+
+	"github.com/6tail/lunar-go/calendar"
 )
 
 func TestLunar1(t *testing.T) {
@@ -469,6 +470,15 @@ func TestLunar63(t *testing.T) {
 	lunar := calendar.NewSolarFromYmd(918, 1, 1).GetLunar()
 	excepted := "九一七年冬月十六"
 	got := lunar.String()
+	if excepted != got {
+		t.Errorf("excepted: %v, got: %v", excepted, got)
+	}
+}
+
+func TestLunar64(t *testing.T) {
+	lunar := calendar.NewLunar(228, 12, 15, 0, 0, 0)
+	excepted := "0229-01-27"
+	got := lunar.GetSolar().String()
 	if excepted != got {
 		t.Errorf("excepted: %v, got: %v", excepted, got)
 	}

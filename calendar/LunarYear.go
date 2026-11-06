@@ -3,11 +3,12 @@ package calendar
 import (
 	"container/list"
 	"fmt"
-	"github.com/6tail/lunar-go/LunarUtil"
-	"github.com/6tail/lunar-go/ShouXingUtil"
 	"math"
 	"strings"
 	"sync"
+
+	"github.com/6tail/lunar-go/LunarUtil"
+	"github.com/6tail/lunar-go/ShouXingUtil"
 )
 
 // YUAN 元
@@ -33,6 +34,7 @@ type LunarYear struct {
 
 func NewLunarYear(lunarYear int) *LunarYear {
 	lock.Lock()
+	defer lock.Unlock()
 	var year *LunarYear
 	if nil == CACHE_YEAR || CACHE_YEAR.year != lunarYear {
 		year = new(LunarYear)
@@ -54,7 +56,6 @@ func NewLunarYear(lunarYear int) *LunarYear {
 	} else {
 		year = CACHE_YEAR
 	}
-	lock.Unlock()
 	return year
 }
 
